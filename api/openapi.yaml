@@ -1,0 +1,869 @@
+openapi: "3.0.2"
+info:
+  title: "Dogs app"
+  version: "1.0"
+  description: "This is the API definition of the dogs owners app."
+servers:
+  - url: https://api.server.test/v1
+paths:
+  /users:
+    get:
+      tags:
+        - "Users"
+      summary: "Return all users"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/AreaFilter"
+                - $ref: "#/components/schemas/RadiusFilter"
+        description: "Filter to specify the visual area or radius on the map"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+          description: A list of Users
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /users/{userId}:
+    put:
+      tags:
+        - "Users"
+      description: A user can update only his own profile.
+      summary: "Update an existing user"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        description: "User object that needs to be updated"
+      responses:
+        204:
+          description: The user was susscesfully updated
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+    get:
+      tags:
+        - "Users"
+      summary: "Return user by userId"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user to get
+      responses:
+        200:
+          description: A user with id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+    delete:
+      tags:
+        - "Users"
+      description: A user can delete his own profile.
+      summary: "Delete user with userId"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user to delete
+      responses:
+        204:
+          description: A user with id was deleted
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /users/logout:
+    put:
+      tags:
+        - "Users"
+      description: A user can log out from his/her account.
+      summary: "Log out from account"
+      responses:
+        204:
+          description: The user logged out
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+  /users/{userId}/dogs:
+    get:
+      tags:
+        - "Dogs"
+      summary: "Return all dogs of user with userId"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Dog"
+          description: A list of Dogs
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+    post:
+      tags:
+        - "Dogs"
+      description: A user can add dog to his own profile.
+      summary: "Add dog to user profile"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Dog"
+        description: "Dog object that needs to be created"
+      responses:
+        201:
+          description: The dog was susscesfully created
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+  /users/{userId}/dogs/{dogId}:
+    get:
+      tags:
+        - "Dogs"
+      summary: "Return dog of user by dogId"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+        - in: path
+          name: dogId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the dog
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dog"
+          description: A Dog object with dogId
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+    put:
+      tags:
+        - "Dogs"
+      description: A user can edit dog belonging to his profile.
+      summary: "Update an existing dog"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+        - in: path
+          name: dogId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the dog to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Dog"
+        description: "Dog object that needs to be updated"
+      responses:
+        204:
+          description: The dog's details were susscesfully updated
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+    delete:
+      tags:
+        - "Dogs"
+      description: A user can delete his own dog.
+      summary: "Delete dog with dogId"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+        - in: path
+          name: dogId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the dog to delete
+      responses:
+        204:
+          description: A dog with dogId was deleted
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /users/{userId}/conversations:
+    get:
+      tags:
+        - "Conversations"
+      summary: "Return all conversations of user by userId"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Conversation"
+          description: A list of conversations for user with userId
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /users/{userId1}/conversations/{userId2}:
+    get:
+      tags:
+        - "Conversations"
+      summary: "Return all messages between user1 and user2"
+      parameters:
+        - in: path
+          name: userId1
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user1
+        - in: path
+          name: userId2
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user2
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatMessage"
+          description: A list of messages with user with userId2
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /message:
+    post:
+      tags:
+        - "Conversations"
+      description: User can add message in a chart.
+      summary: "Add message to conversation"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatMessage"
+        description: "A message that needs to be created"
+      responses:
+        201:
+          description: The message was succesfully added
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+  /parks:
+    get:
+      tags:
+        - "Parks"
+      summary: "Return all parks"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AreaFilter"
+        description: "Filter to specify the visual area on the map"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Park"
+          description: A list of parks
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+    post:
+      tags:
+        - "Parks"
+      summary: "Create park"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Park"
+      description: "A park object that should be created"
+      responses:
+        201:
+          description: The park was succesfully created
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+  /parks/{parkId}:
+    delete:
+      tags:
+        - "Parks"
+      description: A user can delete a park created by him.
+      summary: "Delete park with parkId"
+      parameters:
+        - in: path
+          name: parkId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the park
+      responses:
+        204:
+          description: A park with parkId was deleted
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+        403:
+          $ref: "#/components/responses/403"
+  /parks/{parkId}/reviews:
+    get:
+      tags:
+        - "Parks"
+      summary: "Return all review of park by parkId"
+      parameters:
+        - in: path
+          name: parkId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the park
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+          description: A list of reviews for a park with parkId
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+    post:
+      tags:
+        - "Parks"
+      description: A user can add review to the park.
+      summary: "Add review to park with parkId"
+      parameters:
+        - in: path
+          name: parkId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the park
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Review"
+        description: "Review object that needs to be created"
+      responses:
+        201:
+          description: The review was susscesfully added
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+  /paths:
+    get:
+      tags:
+        - "Paths"
+      summary: "Return all paths"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AreaFilter"
+        description: "Filter to specify the visual area on the map"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Park"
+          description: A list of paths
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+    post:
+      tags:
+        - "Paths"
+      summary: "Create path"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WalkingRoute"
+      description: "A path object that should be created"
+      responses:
+        201:
+          description: The path was succesfully created
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+  /paths/{pathId}:
+    delete:
+      tags:
+        - "Paths"
+      description: A user can delete a path created by him.
+      summary: "Delete path with pathId"
+      parameters:
+        - in: path
+          name: pathId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the path
+      responses:
+        204:
+          description: A path with pathId was deleted
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+        403:
+          $ref: "#/components/responses/403"
+  /path/{pathId}/reviews:
+    get:
+      tags:
+        - "Paths"
+      summary: "Return all review of walking path by pathId"
+      parameters:
+        - in: path
+          name: pathId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the path
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+          description: A list of reviews for a path with pathId
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+    post:
+      tags:
+        - "Paths"
+      description: A user can add review to the walking path.
+      summary: "Add review to path with pathId"
+      parameters:
+        - in: path
+          name: pathId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Review"
+        description: "Review object that needs to be created"
+      responses:
+        201:
+          description: The review was susscesfully added
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+components:
+  responses:
+    401:
+      description: User unauthenticated
+    403:
+      description: User not permitted
+    404:
+      description: Resource not found
+    400:
+      description: Invalid Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        gender:
+          $ref: '#/components/schemas/Gender'
+        dateOfBirth:
+          type: string
+          format: date
+        bio:
+          type: string
+        status:
+          readOnly: true
+          $ref: '#/components/schemas/OnlineStatus'
+        profilePicture:
+          type: string
+          readOnly: true
+        latestLocation:
+          $ref: '#/components/schemas/Coordinate'
+          readOnly: true
+        lookingFor:
+          type: string
+          enum:
+            - PETSITTING
+            - MEETINGFORWALKS
+            - BREEDING
+        offering:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tags'
+        conversations:
+          readOnly: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Conversation'
+        dogs:
+          readOnly: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Dog'
+    Dog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+        breed:
+          type: string
+        sex:
+          $ref: '#/components/schemas/Gender'
+        dateOfBirth:
+          type: string
+          format: date
+        weight:
+          type: number
+          format: double
+        profilePicture:
+          type: string
+        description:
+          type: string
+        color:
+          type: string
+      required:
+        - name
+        - breed
+        - sex
+    Park:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        creator:
+          readOnly: true
+          $ref: '#/components/schemas/User'
+        coordinates:
+          $ref: '#/components/schemas/Coordinate'
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+      required:
+        - coordinates
+    WalkingRoute:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        creator:
+          readOnly: true
+          $ref: '#/components/schemas/User'
+        listOfCoordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+        distance:
+          type: integer
+          format: int32
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+      required:
+        - listOfCoordinates
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        creator:
+          $ref: '#/components/schemas/User'
+        rating:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+        text:
+          type: string
+        timeStamp:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - rating
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        sender:
+          $ref: '#/components/schemas/User'
+        receiver:
+          $ref: '#/components/schemas/User'
+        message:
+          type: string
+        timeStamp:
+          type: string
+          format: date-time
+          readOnly: true
+        unread:
+          type: boolean
+          readOnly: true
+      required:
+        - message
+        - receiver
+        - sender
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        participant:
+          $ref: '#/components/schemas/User'
+        message:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+    AreaFilter:
+      type: object
+      properties:
+        visibleArea:
+          minItems: 3
+          type: array
+          items:
+            $ref: "#/components/schemas/Coordinate"
+      required:
+        - visibleArea
+    RadiusFilter:
+      type: object
+      properties:
+        radius:
+          type: integer
+          format: int32
+        coordinates:
+          $ref: "#/components/schemas/Coordinate"
+      required:
+        - radius
+        - coordinates
+    ErrorResponse:
+      type: object
+      properties:
+        reason:
+          type: string
+        statusCode:
+          type: number
+    Gender:
+      type: string
+      enum: [MALE, FEMALE, OTHER]
+    OnlineStatus:
+      type: string
+      enum: [ ONLINE, OFFLINE ]
+    Tags:
+      type: string
+      enum:
+        - PETSITTING
+        - MEETINGFORWALKS
+        - BREEDING
+    Coordinate:
+      type: object
+      properties:
+        longitude:
+          type: number
+          format: double
+        latitude:
+          type: number
+          format: double
+      required:
+        - latitude
+        - longitude
