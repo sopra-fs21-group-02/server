@@ -1,3 +1,8 @@
+buildscript {
+    dependencies {
+        classpath "org.openapitools:openapi-generator-gradle-plugin:5.1.0"
+    }
+}
 plugins {
     id 'org.springframework.boot' version '2.4.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -5,7 +10,11 @@ plugins {
     id 'idea'
     id 'jacoco'
     id "org.sonarqube" version "3.1.1"
+    id "org.openapi.generator" version "5.1.0"
 }
+
+
+apply plugin: 'org.openapi.generator'
 
 group 'ch.uzh.ifi.hase'
 version '1.0.0'
@@ -102,3 +111,16 @@ project.tasks["sonarqube"].dependsOn {
 }
 
 defaultTasks 'bootJar', 'build'
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/openapi.yaml".toString()
+    outputDir = "$buildDir/generated".toString()
+    invokerPackage = "ch.uzh.ifi.hase.soprafs21"
+    apiPackage = "api"
+    modelPackage = "model"
+    modelNameSuffix = "Dto"
+    configOptions = [
+            dateLibrary: "java8"
+    ]
+}
