@@ -11,15 +11,17 @@ paths:
       tags:
         - "Users"
       summary: "Return all users"
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - $ref: "#/components/schemas/AreaFilter"
-                - $ref: "#/components/schemas/RadiusFilter"
-        description: "Filter to specify the visual area or radius on the map"
+      parameters:
+        - name: 'areaFilter'
+          in: query
+          allowEmptyValue: true
+          schema:
+            $ref: '#/components/schemas/AreaFilter'
+        - name: 'radiusFilter'
+          in: query
+          allowEmptyValue: true
+          schema:
+            $ref: '#/components/schemas/RadiusFilter'
       responses:
         200:
           content:
@@ -376,13 +378,13 @@ paths:
       tags:
         - "Parks"
       summary: "Return all parks"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AreaFilter"
-        description: "Filter to specify the visual area on the map"
+      parameters:
+        - name: 'filter'
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/AreaFilter"
+          description: "Filter to specify the visual area on the map"
       responses:
         200:
           content:
@@ -501,13 +503,13 @@ paths:
       tags:
         - "Paths"
       summary: "Return all paths"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AreaFilter"
-        description: "Filter to specify the visual area on the map"
+      parameters:
+        - name: 'filter'
+          required: true
+          in: query
+          schema:
+            $ref: "#/components/schemas/AreaFilter"
+          description: "Filter to specify the visual area on the map"
       responses:
         200:
           content:
@@ -666,16 +668,10 @@ components:
         latestLocation:
           $ref: '#/components/schemas/Coordinate'
           readOnly: true
-        lookingFor:
-          type: string
-          enum:
-            - PETSITTING
-            - MEETINGFORWALKS
-            - BREEDING
-        offering:
+        tags:
           type: array
           items:
-            $ref: '#/components/schemas/Tags'
+            $ref: '#/components/schemas/Tag'
         conversations:
           readOnly: true
           type: array
@@ -725,14 +721,14 @@ components:
         creator:
           readOnly: true
           $ref: '#/components/schemas/User'
-        coordinates:
+        coordinate:
           $ref: '#/components/schemas/Coordinate'
         reviews:
           type: array
           items:
             $ref: '#/components/schemas/Review'
       required:
-        - coordinates
+        - coordinate
     WalkingRoute:
       type: object
       properties:
@@ -831,11 +827,11 @@ components:
         radius:
           type: integer
           format: int32
-        coordinates:
+        coordinate:
           $ref: "#/components/schemas/Coordinate"
       required:
         - radius
-        - coordinates
+        - coordinate
     ErrorResponse:
       type: object
       properties:
@@ -849,12 +845,16 @@ components:
     OnlineStatus:
       type: string
       enum: [ ONLINE, OFFLINE ]
-    Tags:
-      type: string
-      enum:
-        - PETSITTING
-        - MEETINGFORWALKS
-        - BREEDING
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+        tagType:
+          type: string
+          enum:
+            - OFFERING
+            - LOOKINGFOR
     Coordinate:
       type: object
       properties:
