@@ -13,7 +13,6 @@ plugins {
     id "org.openapi.generator" version "5.1.0"
 }
 
-
 apply plugin: 'org.openapi.generator'
 
 group 'ch.uzh.ifi.hase'
@@ -56,6 +55,16 @@ dependencies {
     }
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+
+//Dependencies introduced by the OpenAPI Generator plugin
+    implementation 'org.springframework.data:spring-data-commons'
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
+    implementation 'javax.validation:validation-api'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 bootJar {
@@ -112,15 +121,21 @@ project.tasks["sonarqube"].dependsOn {
 
 defaultTasks 'bootJar', 'build'
 
-openApiGenerate {
+
+task generateSpringSources(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){
     generatorName = "spring"
-    inputSpec = "$rootDir/src/main/resources/openapi.yaml".toString()
-    outputDir = "$buildDir/generated".toString()
+    inputSpec = "$rootDir/api/openapi.yaml".toString()
+    outputDir = "$rootDir".toString()
     invokerPackage = "ch.uzh.ifi.hase.soprafs21"
-    apiPackage = "api"
-    modelPackage = "model"
+    apiPackage = "ch.uzh.ifi.hase.soprafs21.controller"
+    modelPackage = "ch.uzh.ifi.hase.soprafs21.rest.dto"
     modelNameSuffix = "Dto"
     configOptions = [
             dateLibrary: "java8"
     ]
+}
+task generateClientSources(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){
+    generatorName = "javascript"
+    inputSpec = "$rootDir/api/openapi.yaml".toString()
+    outputDir = "$buildDir/generated/client".toString()
 }
