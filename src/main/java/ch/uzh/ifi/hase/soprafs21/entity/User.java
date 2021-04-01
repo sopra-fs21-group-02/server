@@ -1,9 +1,13 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
-import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs21.constant.Gender;
+import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
 
 /**
  * Internal User Representation
@@ -14,6 +18,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "USER")
+
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,17 +27,54 @@ public class User implements Serializable {
     @GeneratedValue
     private Long id;
 
+    //Get from ExternalLogin
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    //Get from ExternalLogin
+    @Column(nullable = false)
+    private String email;
+
+    //Get from ExternalLogin
+    @Column(nullable = false)
+    private String profilePictureURL;
+
+    //Get from ExternalLogin
+    @Column(nullable = false)
+    private Date DateOfBirth;
+
+    //Get from ExternalLogin = OAuth provider
+    @Column(nullable = false)
+    private String provider;
+
+    //Get from ExternalLogin = OAuth external user ID
+    @Column(nullable = false)
+    private Long providerUid;
 
     @Column(nullable = false, unique = true)
     private String token;
 
     @Column(nullable = false)
-    private UserStatus status;
+    private OnlineStatus status;
+
+    @Column
+    private Gender gender;
+
+    @Column
+    private String bio;
+
+    /*
+    @Column
+    private GeoCoordinate latestLocation;
+    */
+
+    @OneToMany
+    @Column
+    private List<Dog> listOfDogs;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Long getId() {
         return id;
@@ -50,12 +92,44 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProfilePictureURL() {
+        return profilePictureURL;
+    }
+
+    public void setProfilePictureURL(String profilePictureURL) {
+        this.profilePictureURL = profilePictureURL;
+    }
+
+    public Date getDateOfBirth() {
+        return DateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        DateOfBirth = dateOfBirth;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public Long getProviderUid() {
+        return providerUid;
+    }
+
+    public void setProviderUid(Long providerUid) {
+        this.providerUid = providerUid;
     }
 
     public String getToken() {
@@ -66,11 +140,35 @@ public class User implements Serializable {
         this.token = token;
     }
 
-    public UserStatus getStatus() {
+    public OnlineStatus getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(OnlineStatus status) {
         this.status = status;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public List<Dog> getListOfDogs() {
+        return listOfDogs;
+    }
+
+    public void setListOfDogs(List<Dog> listOfDogs) {
+        this.listOfDogs = listOfDogs;
     }
 }

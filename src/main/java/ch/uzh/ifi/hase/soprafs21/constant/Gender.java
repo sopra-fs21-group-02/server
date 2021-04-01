@@ -1,17 +1,12 @@
-package ch.uzh.ifi.hase.soprafs21.rest.dto;
-
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.openapitools.jackson.nullable.JsonNullable;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+package ch.uzh.ifi.hase.soprafs21.constant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Gets or Sets Gender
  */
-public enum GenderDto {
+public enum Gender {
   
   MALE("MALE"),
   
@@ -21,7 +16,7 @@ public enum GenderDto {
 
   private String value;
 
-  GenderDto(String value) {
+  Gender(String value) {
     this.value = value;
   }
 
@@ -36,8 +31,8 @@ public enum GenderDto {
   }
 
   @JsonCreator
-  public static GenderDto fromValue(String value) {
-    for (GenderDto b : GenderDto.values()) {
+  public static Gender fromValue(String value) {
+    for (Gender b : Gender.values()) {
       if (b.value.equals(value)) {
         return b;
       }

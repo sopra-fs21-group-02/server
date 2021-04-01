@@ -1,14 +1,10 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.TagDto;
+
+import ch.uzh.ifi.hase.soprafs21.constant.Gender;
+import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
@@ -33,7 +29,7 @@ public class UserDto   {
   private String name;
 
   @JsonProperty("gender")
-  private GenderDto gender;
+  private Gender gender;
 
   @JsonProperty("dateOfBirth")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
@@ -43,7 +39,7 @@ public class UserDto   {
   private String bio;
 
   @JsonProperty("status")
-  private OnlineStatusDto status;
+  private OnlineStatus status;
 
   @JsonProperty("profilePicture")
   private String profilePicture;
@@ -123,7 +119,7 @@ public class UserDto   {
     this.name = name;
   }
 
-  public UserDto gender(GenderDto gender) {
+  public UserDto gender(Gender gender) {
     this.gender = gender;
     return this;
   }
@@ -136,11 +132,11 @@ public class UserDto   {
 
   @Valid
 
-  public GenderDto getGender() {
+  public Gender getGender() {
     return gender;
   }
 
-  public void setGender(GenderDto gender) {
+  public void setGender(Gender gender) {
     this.gender = gender;
   }
 
@@ -185,7 +181,7 @@ public class UserDto   {
     this.bio = bio;
   }
 
-  public UserDto status(OnlineStatusDto status) {
+  public UserDto status(OnlineStatus status) {
     this.status = status;
     return this;
   }
@@ -198,11 +194,11 @@ public class UserDto   {
 
   @Valid
 
-  public OnlineStatusDto getStatus() {
+  public OnlineStatus getStatus() {
     return status;
   }
 
-  public void setStatus(OnlineStatusDto status) {
+  public void setStatus(OnlineStatus status) {
     this.status = status;
   }
 
