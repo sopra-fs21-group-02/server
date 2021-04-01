@@ -1,0 +1,22 @@
+# Heroku Postgres DB Settings
+spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+# Hibernate ddl auto (create, create-drop, update): with "update" the database
+# schema will be automatically updated accordingly to java entities found in project
+  jpa:
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
+      hbm2ddl:
+        auto: update
+      naming:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+  
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
