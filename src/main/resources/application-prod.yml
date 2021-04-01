@@ -11,12 +11,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-      generate-ddl: true
-      hbm2ddl:
-        auto: update
       naming:
         strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    generate-ddl: true
   
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+hibernate:
+  default_schema: soprafs21
+  hbm2ddl:
+    auto: update
+
+javax:
+  persistence:
+    create-database-schemas: true
