@@ -17,7 +17,7 @@ import java.util.List;
  * - unique = true -> this value must be unqiue across the database -> composes the primary key
  */
 @Entity
-@Table(name = "USER", schema="soprafs21")
+@Table(name = "USERS", schema="soprafs21")
 
 public class User implements Serializable {
 
