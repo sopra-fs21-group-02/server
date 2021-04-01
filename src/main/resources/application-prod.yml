@@ -1,6 +1,5 @@
 # Heroku Postgres DB Settings
 spring:
-  profiles: prod
   datasource:
     url: ${JDBC_DATABASE_URL}
     username: ${JDBC_DATABASE_USERNAME}
@@ -11,6 +10,9 @@ spring:
 # schema will be automatically updated accordingly to java entities found in project
   jpa:
     hibernate:
+      default_schema: soprafs21
+      hbm2ddl:
+        auto: update
       ddl-auto: update
       naming:
         strategy: org.hibernate.cfg.ImprovedNamingStrategy
@@ -20,11 +22,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-hibernate:
-  default_schema: soprafs21
-  hbm2ddl:
-    auto: update
 
 javax:
   persistence:
