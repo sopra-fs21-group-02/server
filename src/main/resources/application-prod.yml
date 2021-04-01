@@ -5,7 +5,6 @@ spring:
     username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    type: org.apache.tomcat.jdbc.pool.DataSource
 
 # Hibernate ddl auto (create, create-drop, update): with "update" the database
 # schema will be automatically updated accordingly to java entities found in project
