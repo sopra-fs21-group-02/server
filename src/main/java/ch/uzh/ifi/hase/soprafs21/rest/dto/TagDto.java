@@ -1,9 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
+
+import ch.uzh.ifi.hase.soprafs21.constant.TagType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -18,43 +18,8 @@ public class TagDto   {
   @JsonProperty("name")
   private String name;
 
-  /**
-   * Gets or Sets tagType
-   */
-  public enum TagTypeEnum {
-    OFFERING("OFFERING"),
-    
-    LOOKINGFOR("LOOKINGFOR");
-
-    private String value;
-
-    TagTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TagTypeEnum fromValue(String value) {
-      for (TagTypeEnum b : TagTypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  @JsonProperty("tagType")
-  private TagTypeEnum tagType;
+    @JsonProperty("tagType")
+  private TagType tagType;
 
   public TagDto name(String name) {
     this.name = name;
@@ -76,7 +41,7 @@ public class TagDto   {
     this.name = name;
   }
 
-  public TagDto tagType(TagTypeEnum tagType) {
+  public TagDto tagType(TagType tagType) {
     this.tagType = tagType;
     return this;
   }
@@ -88,11 +53,11 @@ public class TagDto   {
   @ApiModelProperty(value = "")
 
 
-  public TagTypeEnum getTagType() {
+  public TagType getTagType() {
     return tagType;
   }
 
-  public void setTagType(TagTypeEnum tagType) {
+  public void setTagType(TagType tagType) {
     this.tagType = tagType;
   }
 

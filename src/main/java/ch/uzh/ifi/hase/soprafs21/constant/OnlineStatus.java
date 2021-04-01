@@ -1,17 +1,12 @@
-package ch.uzh.ifi.hase.soprafs21.rest.dto;
-
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.openapitools.jackson.nullable.JsonNullable;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+package ch.uzh.ifi.hase.soprafs21.constant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Gets or Sets OnlineStatus
  */
-public enum OnlineStatusDto {
+public enum OnlineStatus {
   
   ONLINE("ONLINE"),
   
@@ -19,7 +14,7 @@ public enum OnlineStatusDto {
 
   private String value;
 
-  OnlineStatusDto(String value) {
+  OnlineStatus(String value) {
     this.value = value;
   }
 
@@ -34,8 +29,8 @@ public enum OnlineStatusDto {
   }
 
   @JsonCreator
-  public static OnlineStatusDto fromValue(String value) {
-    for (OnlineStatusDto b : OnlineStatusDto.values()) {
+  public static OnlineStatus fromValue(String value) {
+    for (OnlineStatus b : OnlineStatus.values()) {
       if (b.value.equals(value)) {
         return b;
       }

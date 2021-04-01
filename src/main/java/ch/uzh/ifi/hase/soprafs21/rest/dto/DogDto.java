@@ -1,9 +1,8 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
+import ch.uzh.ifi.hase.soprafs21.constant.Gender;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
@@ -26,7 +25,7 @@ public class DogDto   {
   private String breed;
 
   @JsonProperty("sex")
-  private GenderDto sex;
+  private Gender sex;
 
   @JsonProperty("dateOfBirth")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
@@ -106,7 +105,7 @@ public class DogDto   {
     this.breed = breed;
   }
 
-  public DogDto sex(GenderDto sex) {
+  public DogDto sex(Gender sex) {
     this.sex = sex;
     return this;
   }
@@ -120,11 +119,11 @@ public class DogDto   {
 
   @Valid
 
-  public GenderDto getSex() {
+  public Gender getSex() {
     return sex;
   }
 
-  public void setSex(GenderDto sex) {
+  public void setSex(Gender sex) {
     this.sex = sex;
   }
 

@@ -1,9 +1,13 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
-import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs21.constant.Gender;
+import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
 
 /**
  * Internal User Representation
@@ -14,6 +18,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "USER")
+
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,55 +27,51 @@ public class User implements Serializable {
     @GeneratedValue
     private Long id;
 
+    //Get from ExternalLogin
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    //Get from ExternalLogin
+    @Column(nullable = false)
+    private String email;
+
+    //Get from ExternalLogin
+    @Column(nullable = false)
+    private String profilePictureURL;
+
+    //Get from ExternalLogin
+    @Column(nullable = false)
+    private Date DateOfBirth;
+
+    //Get from ExternalLogin = OAuth provider
+    @Column(nullable = false)
+    private String provider;
+
+    //Get from ExternalLogin = OAuth external user ID
+    @Column(nullable = false)
+    private Long providerUid;
 
     @Column(nullable = false, unique = true)
     private String token;
 
     @Column(nullable = false)
-    private UserStatus status;
+    private OnlineStatus status;
 
-    public Long getId() {
-        return id;
-    }
+    @Column
+    private Gender gender;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column
+    private String bio;
 
-    public String getName() {
-        return name;
-    }
+    /*
+    @Column
+    private GeoCoordinate latestLocation;
+    */
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @OneToMany
+    @Column
+    private List<Dog> listOfDogs;
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public UserStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(UserStatus status) {
-        this.status = status;
-    }
 }
