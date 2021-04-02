@@ -24,3 +24,4 @@
 pom.xml
 
 **/*ApiController.java
+**/OpenAPI2SpringBoot.java
