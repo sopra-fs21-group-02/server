@@ -118,6 +118,30 @@ paths:
           $ref: "#/components/responses/401"
         404:
           $ref: "#/components/responses/404"
+  /users/login:
+    post:
+      tags:
+        - "Users"
+      description: A user can register/login.
+      summary: "User is logged in/registered"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        description: "User object that needs to be created"
+      responses:
+        201:
+          description: The user registered
+        204:
+          description: The user logged in
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
   /users/logout:
     put:
       tags:
@@ -131,6 +155,8 @@ paths:
           $ref: "#/components/responses/400"
         401:
           $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
   /users/{userId}/dogs:
     get:
       tags:
@@ -734,6 +760,10 @@ components:
         name:
           type: string
           readOnly: true
+        provider:
+          type: string
+        providerUid:
+          type: string
         gender:
           $ref: '#/components/schemas/Gender'
         dateOfBirth:
