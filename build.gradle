@@ -1,6 +1,7 @@
 buildscript {
     dependencies {
         classpath "org.openapitools:openapi-generator-gradle-plugin:5.1.0"
+
     }
 }
 plugins {
@@ -41,8 +42,7 @@ springBoot {
 }
 
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.31.3'
-    compile 'com.google.http-client:google-http-client-gson:1.22.0'
+    implementation 'com.google.api-client:google-api-client:1.31.3'
 
     implementation 'org.mapstruct:mapstruct:1.3.1.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final'
