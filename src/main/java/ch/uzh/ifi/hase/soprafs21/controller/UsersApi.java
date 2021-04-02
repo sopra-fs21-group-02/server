@@ -60,12 +60,41 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"providerUid\" : \"providerUid\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ], \"profilePicture\" : \"profilePicture\", \"provider\" : \"provider\", \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"id\" : 0, \"email\" : \"email\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /users/login : User is logged in/registered
+     * A user can register/login.
+     *
+     * @param userDto User object that needs to be created (required)
+     * @return The user registered (status code 201)
+     *         or The user logged in (status code 204)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     */
+    @ApiOperation(value = "User is logged in/registered", nickname = "usersLoginPost", notes = "A user can register/login.", tags={ "Users", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 201, message = "The user registered"),
+        @ApiResponse(code = 204, message = "The user logged in"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted") })
+    @PostMapping(
+        value = "/users/login",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    default ResponseEntity<Void> usersLoginPost(@ApiParam(value = "User object that needs to be created" ,required=true )  @Valid @RequestBody UserDto userDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -78,12 +107,14 @@ public interface UsersApi {
      * @return The user logged out (status code 204)
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
      */
     @ApiOperation(value = "Log out from account", nickname = "usersLogoutPut", notes = "A user can log out from his/her account.", tags={ "Users", })
     @ApiResponses(value = { 
         @ApiResponse(code = 204, message = "The user logged out"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated") })
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted") })
     @PutMapping(
         value = "/users/logout",
         produces = { "application/json" }
@@ -431,7 +462,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"providerUid\" : \"providerUid\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ], \"profilePicture\" : \"profilePicture\", \"provider\" : \"provider\", \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"id\" : 0, \"email\" : \"email\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

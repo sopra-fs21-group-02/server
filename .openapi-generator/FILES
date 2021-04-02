@@ -1,5 +1,4 @@
 README.md
-src/main/java/ch/uzh/ifi/hase/soprafs21/OpenAPI2SpringBoot.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/RFC3339DateFormat.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/controller/ApiUtil.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/controller/MessageApi.java
