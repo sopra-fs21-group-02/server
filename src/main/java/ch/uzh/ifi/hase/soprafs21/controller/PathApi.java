@@ -22,7 +22,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
 @Api(value = "path", description = "the path API")
 public interface PathApi {
@@ -50,11 +50,11 @@ public interface PathApi {
         value = "/path/{pathId}/reviews",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<ReviewDto>> pathPathIdReviewsGet(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId) {
+    default ResponseEntity<List<ReviewDto>> pathPathIdReviewsGet(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"profilePicture\" : \"profilePicture\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"profilePicture\" : \"profilePicture\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }, \"rating\" : 1, \"id\" : 6, \"text\" : \"text\" }";
+                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }, \"rating\" : 1, \"id\" : 6, \"text\" : \"text\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -85,7 +85,7 @@ public interface PathApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Void> pathPathIdReviewsPost(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId,@ApiParam(value = "Review object that needs to be created" ,required=true )  @Valid @RequestBody ReviewDto reviewDto) {
+    default ResponseEntity<Void> pathPathIdReviewsPost(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId,@ApiParam(value = "Review object that needs to be created" ,required=true )  @Valid @RequestBody ReviewDto reviewDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

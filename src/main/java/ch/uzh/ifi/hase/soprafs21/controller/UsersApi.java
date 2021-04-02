@@ -27,7 +27,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
 @Api(value = "users", description = "the users API")
 public interface UsersApi {
@@ -56,11 +56,11 @@ public interface UsersApi {
         value = "/users",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<UserDto>> usersGet(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) {
+    default ResponseEntity<List<UserDto>> usersGet(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"profilePicture\" : \"profilePicture\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"profilePicture\" : \"profilePicture\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -88,7 +88,7 @@ public interface UsersApi {
         value = "/users/logout",
         produces = { "application/json" }
     )
-    default ResponseEntity<Void> usersLogoutPut() {
+    default ResponseEntity<Void> usersLogoutPut() throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -114,7 +114,7 @@ public interface UsersApi {
         value = "/users/{userId1}/conversations/{userId2}",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<ChatMessageDto>> usersUserId1ConversationsUserId2Get(@ApiParam(value = "Numeric ID of the user1",required=true) @PathVariable("userId1") Long userId1,@ApiParam(value = "Numeric ID of the user2",required=true) @PathVariable("userId2") Long userId2) {
+    default ResponseEntity<List<ChatMessageDto>> usersUserId1ConversationsUserId2Get(@ApiParam(value = "Numeric ID of the user1",required=true) @PathVariable("userId1") Long userId1,@ApiParam(value = "Numeric ID of the user2",required=true) @PathVariable("userId2") Long userId2) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
@@ -148,7 +148,7 @@ public interface UsersApi {
         value = "/users/{userId}/conversations",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<ConversationDto>> usersUserIdConversationsGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) {
+    default ResponseEntity<List<ConversationDto>> usersUserIdConversationsGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
@@ -185,7 +185,7 @@ public interface UsersApi {
         value = "/users/{userId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<Void> usersUserIdDelete(@ApiParam(value = "Numeric ID of the user to delete",required=true) @PathVariable("userId") Long userId) {
+    default ResponseEntity<Void> usersUserIdDelete(@ApiParam(value = "Numeric ID of the user to delete",required=true) @PathVariable("userId") Long userId) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -214,7 +214,7 @@ public interface UsersApi {
         value = "/users/{userId}/dogs/{dogId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<Void> usersUserIdDogsDogIdDelete(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to delete",required=true) @PathVariable("dogId") Long dogId) {
+    default ResponseEntity<Void> usersUserIdDogsDogIdDelete(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to delete",required=true) @PathVariable("dogId") Long dogId) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -240,16 +240,76 @@ public interface UsersApi {
         value = "/users/{userId}/dogs/{dogId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<DogDto> usersUserIdDogsDogIdGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog",required=true) @PathVariable("dogId") Long dogId) {
+    default ResponseEntity<DogDto> usersUserIdDogsDogIdGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog",required=true) @PathVariable("dogId") Long dogId) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /users/{userId}/dogs/{dogId}/image
+     * Get dog&#39;s profile image
+     *
+     * @param userId Numeric ID of the user (required)
+     * @param dogId Numeric ID of the dog (required)
+     * @return Returns dog&#39;s profile image (status code 200)
+     *         or Invalid Request (status code 400)
+     *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "", nickname = "usersUserIdDogsDogIdImageGet", notes = "Get dog's profile image", response = org.springframework.core.io.Resource.class, tags={ "Dogs", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns dog's profile image", response = org.springframework.core.io.Resource.class),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @GetMapping(
+        value = "/users/{userId}/dogs/{dogId}/image",
+        produces = { "image/gif", "image/jpeg", "image/png", "image/tiff", "application/json" }
+    )
+    default ResponseEntity<org.springframework.core.io.Resource> usersUserIdDogsDogIdImageGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog",required=true) @PathVariable("dogId") Long dogId) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /users/{userId}/dogs/{dogId}/image
+     * Upload dog&#39;s profile image
+     *
+     * @param userId Numeric ID of the user (required)
+     * @param dogId Numeric ID of the dog (required)
+     * @param body  (required)
+     * @return The image has been successfully uploaded (status code 201)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "", nickname = "usersUserIdDogsDogIdImagePost", notes = "Upload dog's profile image", tags={ "Dogs", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 201, message = "The image has been successfully uploaded"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @PostMapping(
+        value = "/users/{userId}/dogs/{dogId}/image",
+        produces = { "application/json" },
+        consumes = { "image/gif", "image/jpeg", "image/png", "image/tiff" }
+    )
+    default ResponseEntity<Void> usersUserIdDogsDogIdImagePost(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody org.springframework.core.io.Resource body) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -280,7 +340,7 @@ public interface UsersApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Void> usersUserIdDogsDogIdPut(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "Dog object that needs to be updated" ,required=true )  @Valid @RequestBody DogDto dogDto) {
+    default ResponseEntity<Void> usersUserIdDogsDogIdPut(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "Dog object that needs to be updated" ,required=true )  @Valid @RequestBody DogDto dogDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -305,11 +365,11 @@ public interface UsersApi {
         value = "/users/{userId}/dogs",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<DogDto>> usersUserIdDogsGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) {
+    default ResponseEntity<List<DogDto>> usersUserIdDogsGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -342,7 +402,7 @@ public interface UsersApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Void> usersUserIdDogsPost(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Dog object that needs to be created" ,required=true )  @Valid @RequestBody DogDto dogDto) {
+    default ResponseEntity<Void> usersUserIdDogsPost(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Dog object that needs to be created" ,required=true )  @Valid @RequestBody DogDto dogDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -367,11 +427,11 @@ public interface UsersApi {
         value = "/users/{userId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<UserDto> usersUserIdGet(@ApiParam(value = "Numeric ID of the user to get",required=true) @PathVariable("userId") Long userId) {
+    default ResponseEntity<UserDto> usersUserIdGet(@ApiParam(value = "Numeric ID of the user to get",required=true) @PathVariable("userId") Long userId) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"profilePicture\" : \"profilePicture\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"profilePicture\" : \"profilePicture\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -406,7 +466,7 @@ public interface UsersApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Void> usersUserIdPut(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "User object that needs to be updated" ,required=true )  @Valid @RequestBody UserDto userDto) {
+    default ResponseEntity<Void> usersUserIdPut(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "User object that needs to be updated" ,required=true )  @Valid @RequestBody UserDto userDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

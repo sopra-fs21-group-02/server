@@ -1,20 +1,24 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
-import ch.uzh.ifi.hase.soprafs21.constant.Gender;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import org.openapitools.jackson.nullable.JsonNullable;
+import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * DogDto
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
-public class DogDto   {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
+public class DogDto  implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   @JsonProperty("id")
   private Long id;
 
@@ -25,7 +29,7 @@ public class DogDto   {
   private String breed;
 
   @JsonProperty("sex")
-  private Gender sex;
+  private GenderDto sex;
 
   @JsonProperty("dateOfBirth")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
@@ -33,9 +37,6 @@ public class DogDto   {
 
   @JsonProperty("weight")
   private Double weight;
-
-  @JsonProperty("profilePicture")
-  private String profilePicture;
 
   @JsonProperty("description")
   private String description;
@@ -105,7 +106,7 @@ public class DogDto   {
     this.breed = breed;
   }
 
-  public DogDto sex(Gender sex) {
+  public DogDto sex(GenderDto sex) {
     this.sex = sex;
     return this;
   }
@@ -119,11 +120,11 @@ public class DogDto   {
 
   @Valid
 
-  public Gender getSex() {
+  public GenderDto getSex() {
     return sex;
   }
 
-  public void setSex(Gender sex) {
+  public void setSex(GenderDto sex) {
     this.sex = sex;
   }
 
@@ -166,26 +167,6 @@ public class DogDto   {
 
   public void setWeight(Double weight) {
     this.weight = weight;
-  }
-
-  public DogDto profilePicture(String profilePicture) {
-    this.profilePicture = profilePicture;
-    return this;
-  }
-
-  /**
-   * Get profilePicture
-   * @return profilePicture
-  */
-  @ApiModelProperty(value = "")
-
-
-  public String getProfilePicture() {
-    return profilePicture;
-  }
-
-  public void setProfilePicture(String profilePicture) {
-    this.profilePicture = profilePicture;
   }
 
   public DogDto description(String description) {
@@ -244,14 +225,13 @@ public class DogDto   {
         Objects.equals(this.sex, dog.sex) &&
         Objects.equals(this.dateOfBirth, dog.dateOfBirth) &&
         Objects.equals(this.weight, dog.weight) &&
-        Objects.equals(this.profilePicture, dog.profilePicture) &&
         Objects.equals(this.description, dog.description) &&
         Objects.equals(this.color, dog.color);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, breed, sex, dateOfBirth, weight, profilePicture, description, color);
+    return Objects.hash(id, name, breed, sex, dateOfBirth, weight, description, color);
   }
 
   @Override
@@ -265,7 +245,6 @@ public class DogDto   {
     sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
     sb.append("    weight: ").append(toIndentedString(weight)).append("\n");
-    sb.append("    profilePicture: ").append(toIndentedString(profilePicture)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    color: ").append(toIndentedString(color)).append("\n");
     sb.append("}");
