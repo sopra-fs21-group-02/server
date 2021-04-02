@@ -11,14 +11,17 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
+import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * WalkingRouteDto
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
-public class WalkingRouteDto   {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
+public class WalkingRouteDto  implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   @JsonProperty("id")
   private Long id;
 

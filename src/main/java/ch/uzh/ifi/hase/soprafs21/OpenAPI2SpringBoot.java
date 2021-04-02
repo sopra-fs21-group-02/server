@@ -8,16 +8,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.lang.Nullable;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 @SpringBootApplication
+@ComponentScan(basePackages = {"ch.uzh.ifi.hase.soprafs21", "ch.uzh.ifi.hase.soprafs21.controller" , "org.openapitools.configuration"})
 public class OpenAPI2SpringBoot implements CommandLineRunner {
 
     @Override
@@ -44,13 +39,13 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
     @Bean
     public WebMvcConfigurer webConfigurer() {
         return new WebMvcConfigurer() {
-            @Override
+            /*@Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("*")
                         .allowedMethods("*")
                         .allowedHeaders("Content-Type");
-            }
+            }*/
         };
     }
 
@@ -59,8 +54,4 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
         return new JsonNullableModule();
     }
 
-//    @Bean
-//    public NativeWebRequest webRequest(HttpServletRequest request, @Nullable HttpServletResponse response) {
-//        return new ServletWebRequest(request, response);
-//    }
 }

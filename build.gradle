@@ -130,8 +130,15 @@ task generateSpringSources(type: org.openapitools.generator.gradle.plugin.tasks.
     apiPackage = "ch.uzh.ifi.hase.soprafs21.controller"
     modelPackage = "ch.uzh.ifi.hase.soprafs21.rest.dto"
     modelNameSuffix = "Dto"
+
     configOptions = [
-            dateLibrary: "java8"
+            dateLibrary: "java8",
+            library: "spring-boot",
+            useBeanValidation: 'true',
+            serializableModel: 'true',
+            serializationLibrary: "jackson",
+            unhandledException: 'true',
+            hideGenerationTimestamp: 'true'
     ]
 }
 task generateClientSources(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){

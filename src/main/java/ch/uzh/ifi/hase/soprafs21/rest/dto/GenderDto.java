@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.rest.dto;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.openapitools.jackson.nullable.JsonNullable;
+import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 

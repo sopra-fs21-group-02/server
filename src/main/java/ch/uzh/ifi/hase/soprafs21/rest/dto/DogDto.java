@@ -8,14 +8,17 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import org.openapitools.jackson.nullable.JsonNullable;
+import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * DogDto
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
-public class DogDto   {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
+public class DogDto  implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   @JsonProperty("id")
   private Long id;
 
@@ -34,9 +37,6 @@ public class DogDto   {
 
   @JsonProperty("weight")
   private Double weight;
-
-  @JsonProperty("profilePicture")
-  private String profilePicture;
 
   @JsonProperty("description")
   private String description;
@@ -169,26 +169,6 @@ public class DogDto   {
     this.weight = weight;
   }
 
-  public DogDto profilePicture(String profilePicture) {
-    this.profilePicture = profilePicture;
-    return this;
-  }
-
-  /**
-   * Get profilePicture
-   * @return profilePicture
-  */
-  @ApiModelProperty(value = "")
-
-
-  public String getProfilePicture() {
-    return profilePicture;
-  }
-
-  public void setProfilePicture(String profilePicture) {
-    this.profilePicture = profilePicture;
-  }
-
   public DogDto description(String description) {
     this.description = description;
     return this;
@@ -245,14 +225,13 @@ public class DogDto   {
         Objects.equals(this.sex, dog.sex) &&
         Objects.equals(this.dateOfBirth, dog.dateOfBirth) &&
         Objects.equals(this.weight, dog.weight) &&
-        Objects.equals(this.profilePicture, dog.profilePicture) &&
         Objects.equals(this.description, dog.description) &&
         Objects.equals(this.color, dog.color);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, breed, sex, dateOfBirth, weight, profilePicture, description, color);
+    return Objects.hash(id, name, breed, sex, dateOfBirth, weight, description, color);
   }
 
   @Override
@@ -266,7 +245,6 @@ public class DogDto   {
     sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
     sb.append("    weight: ").append(toIndentedString(weight)).append("\n");
-    sb.append("    profilePicture: ").append(toIndentedString(profilePicture)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    color: ").append(toIndentedString(color)).append("\n");
     sb.append("}");

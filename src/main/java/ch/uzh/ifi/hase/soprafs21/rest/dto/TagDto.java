@@ -7,14 +7,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.openapitools.jackson.nullable.JsonNullable;
+import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * TagDto
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
-public class TagDto   {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
+public class TagDto  implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   @JsonProperty("name")
   private String name;
 
