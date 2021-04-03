@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.LoginPostDTO;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
@@ -33,13 +34,13 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 public class UserController {
 
     private final UserService userService;
-    private static final String CLIENT_ID = "1057742566572-4ufig26uc1s8tiggp6ja3tf13s4iuo87.apps.googleusercontent.com";
+
 
     UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    /*@GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<UserGetDTO> getAllUsers() {
@@ -66,52 +67,29 @@ public class UserController {
 
         // convert internal representation of user back to API
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
-    }
+    }*/
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Boolean getUserDetails(@RequestBody LoginPostDTO loginPostDTO) throws GeneralSecurityException, IOException {
 
-        System.out.println("tokenid:::::"+loginPostDTO.getTokenId());
-        JsonFactory factory = new GsonFactory();
+        boolean isNewUser = true;
+        System.out.println("tokenid:::::" + loginPostDTO.getTokenId());
+        GoogleIdToken token = userService.authenticateTokenId(loginPostDTO.getTokenId());
 
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), factory)
-                // Specify the CLIENT_ID of the app that accesses the backend:
-                .setAudience(Collections.singletonList(CLIENT_ID))
-                // Or, if multiple clients access the backend:
-                //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
-                .build();
 
-        GoogleIdToken idToken = verifier.verify(loginPostDTO.getTokenId());
+        if (null != token) {
+            if (userService.verifyEmailIdForToken(token, loginPostDTO.getEmailId())) {
+                Payload payload = token.getPayload();
+                isNewUser= userService.loginOrRegisterUser(payload);
 
-        if (idToken != null) {
-
-            Payload payload = idToken.getPayload();
-            if(loginPostDTO.getEmailId()==payload.getEmail()) {
-
-                // Print user identifier
-                String userId = payload.getSubject();
-                System.out.println("User ID: " + userId);
-
-                // Get profile information from payload
-                String email = payload.getEmail();
-                boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-                String name = (String) payload.get("name");
-                String pictureUrl = (String) payload.get("picture");
-                String locale = (String) payload.get("locale");
-                String familyName = (String) payload.get("family_name");
-                String givenName = (String) payload.get("given_name");
-
-                // Use or store profile information
-                // ...
-                return true;
             }
-            return false;
-        } else {
+        }else {
             System.out.println("Invalid ID token.");
             return false;
         }
+        return isNewUser;
+    }*/
 
-    }
 }
