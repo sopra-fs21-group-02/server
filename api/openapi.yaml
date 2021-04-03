@@ -118,6 +118,34 @@ paths:
           $ref: "#/components/responses/401"
         404:
           $ref: "#/components/responses/404"
+  /users/login:
+    post:
+      tags:
+        - "Users"
+      description: A user can register/login.
+      summary: "User is logged in/registered"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+        description: "User object that needs to be created"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: boolean
+          description: User is logged-in
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
   /users/logout:
     put:
       tags:
@@ -131,6 +159,8 @@ paths:
           $ref: "#/components/responses/400"
         401:
           $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
   /users/{userId}/dogs:
     get:
       tags:
@@ -288,6 +318,88 @@ paths:
           $ref: '#/components/responses/403'
         401:
           $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /users/{userId}/dogs/{dogId}/image:
+    parameters:
+      - in: path
+        name: userId
+        schema:
+          type: integer
+          format: int64
+        required: true
+        description: Numeric ID of the user
+      - in: path
+        name: dogId
+        schema:
+          type: integer
+          format: int64
+        required: true
+        description: Numeric ID of the dog
+    get:
+      tags:
+        - "Dogs"
+      description: Get dog's profile image
+      responses:
+        200:
+          description: Returns dog's profile image
+          content:
+            image/gif:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/tiff:
+              schema:
+                type: string
+                format: binary
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+    post:
+      tags:
+        - "Dogs"
+      description: Upload dog's profile image
+      requestBody:
+        required: true
+        content:
+          image/gif:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/png:
+            schema:
+              type: string
+              format: binary
+          image/tiff:
+            schema:
+              type: string
+              format: binary
+      responses:
+        201:
+          description: The image has been successfully uploaded
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: '#/components/responses/403'
         404:
           $ref: "#/components/responses/404"
   /users/{userId}/conversations:
@@ -652,6 +764,10 @@ components:
         name:
           type: string
           readOnly: true
+        provider:
+          type: string
+        providerUid:
+          type: string
         gender:
           $ref: '#/components/schemas/Gender'
         dateOfBirth:
@@ -701,8 +817,6 @@ components:
         weight:
           type: number
           format: double
-        profilePicture:
-          type: string
         description:
           type: string
         color:
@@ -867,3 +981,10 @@ components:
       required:
         - latitude
         - longitude
+    UserLogin:
+      type: object
+      properties:
+        tokenId:
+          type: string
+        emailId:
+          type: string

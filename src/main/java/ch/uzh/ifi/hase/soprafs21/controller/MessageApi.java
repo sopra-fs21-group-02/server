@@ -22,7 +22,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
 @Api(value = "message", description = "the message API")
 public interface MessageApi {
@@ -50,7 +50,7 @@ public interface MessageApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Void> messagePost(@ApiParam(value = "A message that needs to be created" ,required=true )  @Valid @RequestBody ChatMessageDto chatMessageDto) {
+    default ResponseEntity<Void> messagePost(@ApiParam(value = "A message that needs to be created" ,required=true )  @Valid @RequestBody ChatMessageDto chatMessageDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

@@ -1,25 +1,63 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
-
-import ch.uzh.ifi.hase.soprafs21.constant.TagType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.openapitools.jackson.nullable.JsonNullable;
+import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * TagDto
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
-public class TagDto   {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
+public class TagDto  implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   @JsonProperty("name")
   private String name;
 
-    @JsonProperty("tagType")
-  private TagType tagType;
+  /**
+   * Gets or Sets tagType
+   */
+  public enum TagTypeEnum {
+    OFFERING("OFFERING"),
+    
+    LOOKINGFOR("LOOKINGFOR");
+
+    private String value;
+
+    TagTypeEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TagTypeEnum fromValue(String value) {
+      for (TagTypeEnum b : TagTypeEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  @JsonProperty("tagType")
+  private TagTypeEnum tagType;
 
   public TagDto name(String name) {
     this.name = name;
@@ -41,7 +79,7 @@ public class TagDto   {
     this.name = name;
   }
 
-  public TagDto tagType(TagType tagType) {
+  public TagDto tagType(TagTypeEnum tagType) {
     this.tagType = tagType;
     return this;
   }
@@ -53,11 +91,11 @@ public class TagDto   {
   @ApiModelProperty(value = "")
 
 
-  public TagType getTagType() {
+  public TagTypeEnum getTagType() {
     return tagType;
   }
 
-  public void setTagType(TagType tagType) {
+  public void setTagType(TagTypeEnum tagType) {
     this.tagType = tagType;
   }
 

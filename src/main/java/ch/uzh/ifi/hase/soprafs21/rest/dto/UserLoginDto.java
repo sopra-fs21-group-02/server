@@ -5,64 +5,62 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * ErrorResponseDto
+ * UserLoginDto
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
-public class ErrorResponseDto  implements Serializable {
+public class UserLoginDto  implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  @JsonProperty("reason")
-  private String reason;
+  @JsonProperty("tokenId")
+  private String tokenId;
 
-  @JsonProperty("statusCode")
-  private BigDecimal statusCode;
+  @JsonProperty("emailId")
+  private String emailId;
 
-  public ErrorResponseDto reason(String reason) {
-    this.reason = reason;
+  public UserLoginDto tokenId(String tokenId) {
+    this.tokenId = tokenId;
     return this;
   }
 
   /**
-   * Get reason
-   * @return reason
+   * Get tokenId
+   * @return tokenId
   */
   @ApiModelProperty(value = "")
 
 
-  public String getReason() {
-    return reason;
+  public String getTokenId() {
+    return tokenId;
   }
 
-  public void setReason(String reason) {
-    this.reason = reason;
+  public void setTokenId(String tokenId) {
+    this.tokenId = tokenId;
   }
 
-  public ErrorResponseDto statusCode(BigDecimal statusCode) {
-    this.statusCode = statusCode;
+  public UserLoginDto emailId(String emailId) {
+    this.emailId = emailId;
     return this;
   }
 
   /**
-   * Get statusCode
-   * @return statusCode
+   * Get emailId
+   * @return emailId
   */
   @ApiModelProperty(value = "")
 
-  @Valid
 
-  public BigDecimal getStatusCode() {
-    return statusCode;
+  public String getEmailId() {
+    return emailId;
   }
 
-  public void setStatusCode(BigDecimal statusCode) {
-    this.statusCode = statusCode;
+  public void setEmailId(String emailId) {
+    this.emailId = emailId;
   }
 
 
@@ -74,23 +72,23 @@ public class ErrorResponseDto  implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ErrorResponseDto errorResponse = (ErrorResponseDto) o;
-    return Objects.equals(this.reason, errorResponse.reason) &&
-        Objects.equals(this.statusCode, errorResponse.statusCode);
+    UserLoginDto userLogin = (UserLoginDto) o;
+    return Objects.equals(this.tokenId, userLogin.tokenId) &&
+        Objects.equals(this.emailId, userLogin.emailId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(reason, statusCode);
+    return Objects.hash(tokenId, emailId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ErrorResponseDto {\n");
+    sb.append("class UserLoginDto {\n");
     
-    sb.append("    reason: ").append(toIndentedString(reason)).append("\n");
-    sb.append("    statusCode: ").append(toIndentedString(statusCode)).append("\n");
+    sb.append("    tokenId: ").append(toIndentedString(tokenId)).append("\n");
+    sb.append("    emailId: ").append(toIndentedString(emailId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

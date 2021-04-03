@@ -1,24 +1,31 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
-
-import ch.uzh.ifi.hase.soprafs21.constant.Gender;
-import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.TagDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
+import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * UserDto
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-31T23:13:43.859438600+02:00[Europe/Berlin]")
-public class UserDto   {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
+public class UserDto  implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   @JsonProperty("id")
   private Long id;
 
@@ -28,8 +35,14 @@ public class UserDto   {
   @JsonProperty("name")
   private String name;
 
+  @JsonProperty("provider")
+  private String provider;
+
+  @JsonProperty("providerUid")
+  private String providerUid;
+
   @JsonProperty("gender")
-  private Gender gender;
+  private GenderDto gender;
 
   @JsonProperty("dateOfBirth")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
@@ -39,7 +52,7 @@ public class UserDto   {
   private String bio;
 
   @JsonProperty("status")
-  private OnlineStatus status;
+  private OnlineStatusDto status;
 
   @JsonProperty("profilePicture")
   private String profilePicture;
@@ -119,7 +132,47 @@ public class UserDto   {
     this.name = name;
   }
 
-  public UserDto gender(Gender gender) {
+  public UserDto provider(String provider) {
+    this.provider = provider;
+    return this;
+  }
+
+  /**
+   * Get provider
+   * @return provider
+  */
+  @ApiModelProperty(value = "")
+
+
+  public String getProvider() {
+    return provider;
+  }
+
+  public void setProvider(String provider) {
+    this.provider = provider;
+  }
+
+  public UserDto providerUid(String providerUid) {
+    this.providerUid = providerUid;
+    return this;
+  }
+
+  /**
+   * Get providerUid
+   * @return providerUid
+  */
+  @ApiModelProperty(value = "")
+
+
+  public String getProviderUid() {
+    return providerUid;
+  }
+
+  public void setProviderUid(String providerUid) {
+    this.providerUid = providerUid;
+  }
+
+  public UserDto gender(GenderDto gender) {
     this.gender = gender;
     return this;
   }
@@ -132,11 +185,11 @@ public class UserDto   {
 
   @Valid
 
-  public Gender getGender() {
+  public GenderDto getGender() {
     return gender;
   }
 
-  public void setGender(Gender gender) {
+  public void setGender(GenderDto gender) {
     this.gender = gender;
   }
 
@@ -181,7 +234,7 @@ public class UserDto   {
     this.bio = bio;
   }
 
-  public UserDto status(OnlineStatus status) {
+  public UserDto status(OnlineStatusDto status) {
     this.status = status;
     return this;
   }
@@ -194,11 +247,11 @@ public class UserDto   {
 
   @Valid
 
-  public OnlineStatus getStatus() {
+  public OnlineStatusDto getStatus() {
     return status;
   }
 
-  public void setStatus(OnlineStatus status) {
+  public void setStatus(OnlineStatusDto status) {
     this.status = status;
   }
 
@@ -343,6 +396,8 @@ public class UserDto   {
     return Objects.equals(this.id, user.id) &&
         Objects.equals(this.email, user.email) &&
         Objects.equals(this.name, user.name) &&
+        Objects.equals(this.provider, user.provider) &&
+        Objects.equals(this.providerUid, user.providerUid) &&
         Objects.equals(this.gender, user.gender) &&
         Objects.equals(this.dateOfBirth, user.dateOfBirth) &&
         Objects.equals(this.bio, user.bio) &&
@@ -356,7 +411,7 @@ public class UserDto   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, email, name, gender, dateOfBirth, bio, status, profilePicture, latestLocation, tags, conversations, dogs);
+    return Objects.hash(id, email, name, provider, providerUid, gender, dateOfBirth, bio, status, profilePicture, latestLocation, tags, conversations, dogs);
   }
 
   @Override
@@ -367,6 +422,8 @@ public class UserDto   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
+    sb.append("    providerUid: ").append(toIndentedString(providerUid)).append("\n");
     sb.append("    gender: ").append(toIndentedString(gender)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
     sb.append("    bio: ").append(toIndentedString(bio)).append("\n");
