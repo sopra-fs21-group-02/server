@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class User implements Serializable {
     private String profilePictureURL;
 
     //Get from ExternalLogin
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Date DateOfBirth;
 
     //Get from ExternalLogin = OAuth provider
@@ -49,7 +50,7 @@ public class User implements Serializable {
 
     //Get from ExternalLogin = OAuth external user ID
     @Column(nullable = false)
-    private Long providerUid;
+    private String providerUid;
 
     @Column(nullable = false, unique = true)
     private String token;
@@ -124,11 +125,11 @@ public class User implements Serializable {
         this.provider = provider;
     }
 
-    public Long getProviderUid() {
+    public String getProviderUid() {
         return providerUid;
     }
 
-    public void setProviderUid(Long providerUid) {
+    public void setProviderUid(String providerUid) {
         this.providerUid = providerUid;
     }
 

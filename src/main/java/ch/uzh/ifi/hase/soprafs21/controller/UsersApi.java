@@ -12,6 +12,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -75,26 +76,26 @@ public interface UsersApi {
      * POST /users/login : User is logged in/registered
      * A user can register/login.
      *
-     * @param userDto User object that needs to be created (required)
-     * @return The user registered (status code 201)
-     *         or The user logged in (status code 204)
+     * @param userLoginDto User object that needs to be created (required)
+     * @return User is logged-in (status code 200)
      *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
      *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
      */
-    @ApiOperation(value = "User is logged in/registered", nickname = "usersLoginPost", notes = "A user can register/login.", tags={ "Users", })
+    @ApiOperation(value = "User is logged in/registered", nickname = "usersLoginPost", notes = "A user can register/login.", response = Boolean.class, tags={ "Users", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "The user registered"),
-        @ApiResponse(code = 204, message = "The user logged in"),
+        @ApiResponse(code = 200, message = "User is logged-in", response = Boolean.class),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 403, message = "User not permitted"),
         @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 403, message = "User not permitted") })
+        @ApiResponse(code = 404, message = "Resource not found") })
     @PostMapping(
         value = "/users/login",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Void> usersLoginPost(@ApiParam(value = "User object that needs to be created" ,required=true )  @Valid @RequestBody UserDto userDto) throws Exception {
+    default ResponseEntity<Boolean> usersLoginPost(@ApiParam(value = "User object that needs to be created" ,required=true )  @Valid @RequestBody UserLoginDto userLoginDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

@@ -21,9 +21,9 @@ public class Dog implements Serializable {
     @Column(nullable = false)
     private String breed;
 
-    @OneToOne
+    /*@OneToOne
     @JoinColumn(name = "image", nullable = false)
-    private Image image;
+    private Image image;*/
 
     @Column(nullable = false)
     private Date DateOfBirth;
@@ -68,13 +68,13 @@ public class Dog implements Serializable {
         this.breed = breed;
     }
 
-    public Image getImage() {
+    /*public Image getImage() {
         return image;
     }
 
     public void setImage(Image image) {
         this.image = image;
-    }
+    }*/
 
     public Date getDateOfBirth() {
         return DateOfBirth;
