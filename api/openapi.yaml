@@ -424,8 +424,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/Conversation"
           description: A list of conversations for user with userId
-        400:
-          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
         401:
           $ref: "#/components/responses/401"
         404:
@@ -459,8 +459,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/ChatMessage"
           description: A list of messages with user with userId2
-        400:
-          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
         401:
           $ref: "#/components/responses/401"
         404:
@@ -485,6 +485,8 @@ paths:
           $ref: "#/components/responses/400"
         401:
           $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
   /parks:
     get:
       tags:
@@ -764,10 +766,6 @@ components:
         name:
           type: string
           readOnly: true
-        provider:
-          type: string
-        providerUid:
-          type: string
         gender:
           $ref: '#/components/schemas/Gender'
         dateOfBirth:
@@ -798,6 +796,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Dog'
+    UserOverview:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        profilePicture:
+          type: string
+          readOnly: true
+        status:
+          readOnly: true
+          $ref: '#/components/schemas/OnlineStatus'
     Dog:
       type: object
       properties:
@@ -896,9 +914,9 @@ components:
           format: int64
           readOnly: true
         sender:
-          $ref: '#/components/schemas/User'
+          $ref: '#/components/schemas/UserOverview'
         receiver:
-          $ref: '#/components/schemas/User'
+          $ref: '#/components/schemas/UserOverview'
         message:
           type: string
         timeStamp:
@@ -915,16 +933,10 @@ components:
     Conversation:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
         participant:
-          $ref: '#/components/schemas/User'
-        message:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessage'
+          $ref: '#/components/schemas/UserOverview'
+        lastMessage:
+          $ref: '#/components/schemas/ChatMessage'
     AreaFilter:
       type: object
       properties:

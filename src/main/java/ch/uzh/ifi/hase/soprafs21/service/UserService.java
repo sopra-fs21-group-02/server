@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -45,22 +46,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    /*public List<User> getUsers() {
-        return this.userRepository.findAll();
+    public User getUserById(Long id) {
+        return userRepository.getOne(id);
     }
-
-    public User createUser(User newUser) {
-        newUser.setToken(UUID.randomUUID().toString());
-        newUser.setStatus(OnlineStatus.OFFLINE);
-
-        // saves the given entity but data is only persisted in the database once flush() is called
-        newUser = userRepository.save(newUser);
-        userRepository.flush();
-
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
-    }*/
-
 
 
     /**
@@ -105,24 +93,28 @@ public class UserService {
 
     public boolean loginOrRegisterUser(GoogleIdToken.Payload payload){
         boolean isNewUser = false;
-        User user = userRepository.findByEmail(payload.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail(payload.getEmail());
 
-        if(user==null){
-            user = new User();
-            user.setProviderUid(payload.getSubject());
-            user.setProvider(payload.getIssuer());
-            user.setName((String) payload.get("name"));
-            user.setProfilePictureURL((String) payload.get("picture"));
-            user.setEmail(payload.getEmail());
-            user.setStatus(OnlineStatus.ONLINE);
-            user.setToken(payload.getAccessTokenHash());
+        if(optionalUser.isEmpty()){
+            User user = User.builder()
+            .providerUid(payload.getSubject())
+            .provider(payload.getIssuer())
+            .name((String) payload.get("name"))
+            .profilePictureURL((String) payload.get("picture"))
+            .email(payload.getEmail())
+            .status(OnlineStatus.ONLINE)
+            .token(payload.getAccessTokenHash()).build();
             isNewUser = true;
             userRepository.saveAndFlush(user);
         }else{
-            user.setStatus(OnlineStatus.ONLINE);
+            optionalUser.get().setStatus(OnlineStatus.ONLINE);
             userRepository.flush();
         }
         return isNewUser;
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 }

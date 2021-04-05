@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "DOG", schema="soprafs21")
+@Table(name = "DOGS", schema="soprafs21")
 public class Dog implements Serializable {
     private static final long serialVersionUID = 1L;
 

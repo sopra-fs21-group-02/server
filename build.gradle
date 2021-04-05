@@ -44,9 +44,9 @@ springBoot {
 dependencies {
     implementation 'com.google.api-client:google-api-client:1.31.3'
 
-    implementation 'org.mapstruct:mapstruct:1.3.1.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final'
-    testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final'
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
@@ -69,11 +69,23 @@ dependencies {
     implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
     implementation 'javax.validation:validation-api'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+//    add Lombok depndencies
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.1.0"
+
+//    add OAuth2 client
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 bootJar {
     archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
 }
+
 
 test {
     useJUnitPlatform()

@@ -2,6 +2,10 @@ package ch.uzh.ifi.hase.soprafs21.entity;
 
 import ch.uzh.ifi.hase.soprafs21.constant.Gender;
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,9 +21,12 @@ import java.util.List;
  * - nullable = false -> this cannot be left empty
  * - unique = true -> this value must be unqiue across the database -> composes the primary key
  */
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "USERS", schema="soprafs21")
-
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,9 +63,11 @@ public class User implements Serializable {
     private String token;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OnlineStatus status;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column
@@ -70,7 +79,7 @@ public class User implements Serializable {
     */
 
     @OneToMany
-    @Column
+    @JoinColumn
     private List<Dog> listOfDogs;
 
     public static long getSerialVersionUID() {

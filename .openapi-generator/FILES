@@ -20,7 +20,7 @@ src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/ReviewDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/TagDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/UserDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/UserLoginDto.java
+src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/UserOverviewDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/WalkingRouteDto.java
 src/main/java/org/openapitools/configuration/HomeController.java
 src/main/java/org/openapitools/configuration/OpenAPIDocumentationConfig.java
-src/main/resources/application.properties

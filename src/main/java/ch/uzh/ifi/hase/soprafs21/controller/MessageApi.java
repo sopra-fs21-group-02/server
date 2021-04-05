@@ -39,12 +39,14 @@ public interface MessageApi {
      * @return The message was succesfully added (status code 201)
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
      */
     @ApiOperation(value = "Add message to conversation", nickname = "messagePost", notes = "User can add message in a chart.", tags={ "Conversations", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "The message was succesfully added"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated") })
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted") })
     @PostMapping(
         value = "/message",
         produces = { "application/json" },
