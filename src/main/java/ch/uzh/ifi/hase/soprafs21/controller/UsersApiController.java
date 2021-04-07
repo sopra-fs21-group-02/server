@@ -1,8 +1,11 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,31 +30,34 @@ public class UsersApiController implements UsersApi {
 
     private final UserService userService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
     @Override
     public Optional<NativeWebRequest> getRequest() {
         return Optional.ofNullable(request);
     }
 
     @Override
-    public ResponseEntity<Boolean> usersLoginPost(@RequestBody UserLoginDto userLoginDto) throws GeneralSecurityException, IOException {
+    public ResponseEntity<UserLoginPostDto> usersLoginPost(@RequestBody UserLoginDto userLoginDto) throws GeneralSecurityException, IOException {
 
         boolean isNewUser = true;
-        System.out.println("tokenid:::::" + userLoginDto.getTokenId());
-        System.out.println("email:::::" + userLoginDto.getEmailId());
+        String jwtToken =null;
         GoogleIdToken token = userService.authenticateTokenId(userLoginDto.getTokenId());
-
 
         if (null != token) {
             if (userService.verifyEmailIdForToken(token, userLoginDto.getEmailId())) {
                 GoogleIdToken.Payload payload = token.getPayload();
                 isNewUser= userService.loginOrRegisterUser(payload);
-
+                jwtToken = jwtTokenUtil.generateToken(userLoginDto.getEmailId());
             }
         }else {
-            System.out.println("Invalid ID token.");
-            return new ResponseEntity<Boolean>(HttpStatus.CONFLICT);
+            return new ResponseEntity<UserLoginPostDto>(HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<Boolean>(isNewUser,HttpStatus.OK);
+
+        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
+        userLoginPostDto.setIsNewUser(isNewUser);
+        userLoginPostDto.setJwtToken(jwtToken);
+        return new ResponseEntity<UserLoginPostDto>(userLoginPostDto, HttpStatus.OK);
     }
 
 

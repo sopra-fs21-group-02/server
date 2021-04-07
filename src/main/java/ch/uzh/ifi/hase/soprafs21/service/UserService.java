@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -38,30 +40,13 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private static final String CLIENT_ID = "1057742566572-4ufig26uc1s8tiggp6ja3tf13s4iuo87.apps.googleusercontent.com";
+    @Autowired
+    private Environment env;
 
     @Autowired
     public UserService(@Qualifier("userRepository") UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-    /*public List<User> getUsers() {
-        return this.userRepository.findAll();
-    }
-
-    public User createUser(User newUser) {
-        newUser.setToken(UUID.randomUUID().toString());
-        newUser.setStatus(OnlineStatus.OFFLINE);
-
-        // saves the given entity but data is only persisted in the database once flush() is called
-        newUser = userRepository.save(newUser);
-        userRepository.flush();
-
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
-    }*/
-
-
 
     /**
      * Helper class to authenticate tokenId passed from client with Google
@@ -74,10 +59,7 @@ public class UserService {
         JsonFactory factory = new GsonFactory();
 
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), factory)
-                // Specify the CLIENT_ID of the app that accesses the backend:
-                .setAudience(Collections.singletonList(CLIENT_ID))
-                // Or, if multiple clients access the backend:
-                //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+                .setAudience(Collections.singletonList(env.getProperty("spring.security.oauth2.client.registration.google.clientId")))
                 .build();
 
         return verifier.verify(tokenId);
@@ -105,10 +87,10 @@ public class UserService {
 
     public boolean loginOrRegisterUser(GoogleIdToken.Payload payload){
         boolean isNewUser = false;
-        User user = userRepository.findByEmail(payload.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail(payload.getEmail());
 
-        if(user==null){
-            user = new User();
+        if(optionalUser.isEmpty()){
+            User user = new User();
             user.setProviderUid(payload.getSubject());
             user.setProvider(payload.getIssuer());
             user.setName((String) payload.get("name"));
@@ -119,10 +101,14 @@ public class UserService {
             isNewUser = true;
             userRepository.saveAndFlush(user);
         }else{
-            user.setStatus(OnlineStatus.ONLINE);
+            optionalUser.get().setStatus(OnlineStatus.ONLINE);
             userRepository.flush();
         }
         return isNewUser;
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 }

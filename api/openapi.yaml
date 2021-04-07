@@ -136,7 +136,7 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
+                $ref: "#/components/schemas/UserLoginPost"
           description: User is logged-in
         400:
           $ref: '#/components/responses/400'
@@ -680,7 +680,7 @@ paths:
           $ref: "#/components/responses/404"
         403:
           $ref: "#/components/responses/403"
-  /path/{pathId}/reviews:
+  /paths/{pathId}/reviews:
     get:
       tags:
         - "Paths"
@@ -988,3 +988,10 @@ components:
           type: string
         emailId:
           type: string
+    UserLoginPost:
+      type: object
+      properties:
+        jwtToken:
+          type: string
+        isNewUser:
+          type: boolean

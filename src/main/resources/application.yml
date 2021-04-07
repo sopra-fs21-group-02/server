@@ -36,6 +36,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 1057742566572-4ufig26uc1s8tiggp6ja3tf13s4iuo87.apps.googleusercontent.com
+            clientSecret: tm10uDPQnBy0HHYv4xS5xmtR
+
+
 hibernate:
   default_schema: soprafs21
   hbm2ddl: 

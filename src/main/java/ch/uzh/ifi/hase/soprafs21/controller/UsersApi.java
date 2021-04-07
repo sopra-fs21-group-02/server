@@ -13,6 +13,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -83,9 +84,9 @@ public interface UsersApi {
      *         or User unauthenticated (status code 401)
      *         or Resource not found (status code 404)
      */
-    @ApiOperation(value = "User is logged in/registered", nickname = "usersLoginPost", notes = "A user can register/login.", response = Boolean.class, tags={ "Users", })
+    @ApiOperation(value = "User is logged in/registered", nickname = "usersLoginPost", notes = "A user can register/login.", response = UserLoginPostDto.class, tags={ "Users", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "User is logged-in", response = Boolean.class),
+        @ApiResponse(code = 200, message = "User is logged-in", response = UserLoginPostDto.class),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
         @ApiResponse(code = 403, message = "User not permitted"),
         @ApiResponse(code = 401, message = "User unauthenticated"),
@@ -95,7 +96,16 @@ public interface UsersApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Boolean> usersLoginPost(@ApiParam(value = "User object that needs to be created" ,required=true )  @Valid @RequestBody UserLoginDto userLoginDto) throws Exception {
+    default ResponseEntity<UserLoginPostDto> usersLoginPost(@ApiParam(value = "User object that needs to be created" ,required=true )  @Valid @RequestBody UserLoginDto userLoginDto) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"jwtToken\" : \"jwtToken\", \"isNewUser\" : true }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
