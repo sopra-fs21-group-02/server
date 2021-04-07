@@ -69,40 +69,26 @@ public class UsersApiController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<ChatMessageDto>> usersUserId1ConversationsUserId2Get(@ApiParam(value = "Numeric ID of the user1",required=true) @PathVariable("userId1") Long userId1, @ApiParam(value = "Numeric ID of the user2",required=true) @PathVariable("userId2") Long userId2) throws Exception {
-        if (!isRequesterAndAuthenticatedUserTheSame(userId1)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
+    public ResponseEntity<List<ChatMessageDto>> getAllMessages(@ApiParam(value = "Numeric ID of the user1",required=true) @PathVariable("userId1") Long userId1, @ApiParam(value = "Numeric ID of the user2",required=true) @PathVariable("userId2") Long userId2) throws Exception {
         User receiver = userService.getUserById(userId2);
+        User sender = userService.getUserById(userId1);
         try {
-            List<ChatMessage> messages = chatService.getAllMessages(receiver);
+            List<ChatMessage> messages = chatService.getAllMessages(sender, receiver);
             return ResponseEntity.ok(ChatMessageDTOMapper.INSTANCE.toDTO(messages));
         } catch (NoSuchElementException exception){
             return ResponseEntity.notFound().build();
         }
     }
 
-    private boolean isRequesterAndAuthenticatedUserTheSame(Long userId1) {
-        String authenticatedUserEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User authenticatedUser = userService.getUserByEmail(authenticatedUserEmail).orElseThrow();
-        User sender = userService.getUserById(userId1);
-        return authenticatedUser.equals(sender);
-    }
-
     @Override
-    public ResponseEntity<List<ConversationDto>> usersUserIdConversationsGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) throws Exception {
-        if (!isRequesterAndAuthenticatedUserTheSame(userId)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    public ResponseEntity<List<ConversationDto>> getAllConversations(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) throws Exception {
         User sender = userService.getUserById(userId);
         try {
-            List<Conversation> conversations = chatService.getAllConversations();
+            List<Conversation> conversations = chatService.getAllConversations(userId);
             return ResponseEntity.ok(ConversationDTOMapper.INSTANCE.toDTO(conversations));
         } catch (NoSuchElementException exception){
             return ResponseEntity.notFound().build();
         }
     }
-
 
 }

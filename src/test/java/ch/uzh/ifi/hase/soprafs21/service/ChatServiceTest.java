@@ -38,6 +38,8 @@ class ChatServiceTest {
     @Autowired
     private ConversationRepository conversationRepository;
 
+    private User sender,receiver;
+
     @Mock
     private Authentication authenticationMock;
 
@@ -52,11 +54,13 @@ class ChatServiceTest {
         Mockito.when(authenticationMock.getPrincipal()).thenReturn("mark@twen.de");
         Mockito.when(securityContextMock.getAuthentication()).thenReturn(authenticationMock);
         SecurityContextHolder.setContext(securityContextMock);
+        sender = userRepository.findById(1L).orElseThrow();
+        receiver = userRepository.findById(2L).orElseThrow();
     }
 
     @Test
     void getAllConversations() {
-        List<Conversation> conversations = chatService.getAllConversations();
+        List<Conversation> conversations = chatService.getAllConversations(1l);
         assertEquals(2, conversations.size());
         assertEquals(5, conversations.get(0).getMessages().size());
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -69,8 +73,7 @@ class ChatServiceTest {
 
     @Test
     void getALLMessagesByConversation() {
-        User participant2 = userRepository.findById(2L).orElseThrow();
-        List<ChatMessage> messages = chatService.getAllMessages(participant2);
+        List<ChatMessage> messages = chatService.getAllMessages(sender, receiver);
 
         assertEquals(5, messages.size());
 
@@ -80,7 +83,7 @@ class ChatServiceTest {
             assertTrue(chatMessage.isUnread());
             currentDateTime = chatMessage.getTimeStamp();
         }
-        messages = chatService.getAllMessages(participant2);
+        messages = chatService.getAllMessages(sender, receiver);
         for(ChatMessage chatMessage: messages) {
             assertFalse(chatMessage.isUnread());
         }
@@ -88,9 +91,8 @@ class ChatServiceTest {
 
     @Test
     void createMessageExistingConversation() {
-        User participant2 = userRepository.findById(2L).orElseThrow();
-        chatService.createMessage(participant2, "newMessage");
-        List<ChatMessage> messages = chatService.getAllMessages(participant2);
+        chatService.createMessage(sender, receiver, "newMessage");
+        List<ChatMessage> messages = chatService.getAllMessages(sender, receiver);
 
         assertEquals(6, messages.size());
     }
@@ -98,8 +100,8 @@ class ChatServiceTest {
     @Test
     void createMessageNewConversation() {
         User newParticipant = userRepository.findById(3L).orElseThrow();
-        chatService.createMessage(newParticipant, "newMessage");
-        List<ChatMessage> messages = chatService.getAllMessages(newParticipant);
+        chatService.createMessage(sender, newParticipant, "newMessage");
+        List<ChatMessage> messages = chatService.getAllMessages(sender, newParticipant);
 
         assertEquals(1, messages.size());
         assertEquals("mark@twen.de", messages.get(0).getConversation().getParticipant1().getEmail());

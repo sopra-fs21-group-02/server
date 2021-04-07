@@ -23,13 +23,13 @@ public interface UserDTOMapper {
 
     UserDTOMapper INSTANCE = Mappers.getMapper(UserDTOMapper.class);
 
-    @Mapping(source = "name", target = "name")
-    User convertUserPostDTOtoEntity(UserDto userPostDTO);
-
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "status", target = "status")
-    UserDto convertEntityToUserGetDTO(User user);
+//    @Mapping(source = "name", target = "name")
+//    User convertUserDTOtoEntity(UserDto userDTO);
+//
+//    @Mapping(source = "id", target = "id")
+//    @Mapping(source = "name", target = "name")
+//    @Mapping(source = "status", target = "status")
+//    UserDto convertEntityToUserDTO(User user);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")

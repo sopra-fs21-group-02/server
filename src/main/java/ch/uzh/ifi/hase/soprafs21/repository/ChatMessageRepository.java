@@ -11,10 +11,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
-    @Query("SELECT m FROM ChatMessage m WHERE m.sender = ?1 and m.timeStamp in " +
-            "(select max(m1.timeStamp) from ChatMessage m1 where m1.sender = ?1 GROUP BY m.receiver)")
-    List<ChatMessage> findAllLastMessagesBySender(User sender);
-
     @Transactional
     @Modifying
     @Query("UPDATE ChatMessage c SET c.unread = false WHERE c.conversation = ?1 and c.unread = true")

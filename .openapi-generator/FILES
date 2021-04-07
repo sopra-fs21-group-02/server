@@ -8,6 +8,7 @@ src/main/java/ch/uzh/ifi/hase/soprafs21/controller/PathsApi.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/controller/UsersApi.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/AreaFilterDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/ChatMessageDto.java
+src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/ChatMessagePostDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/ConversationDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/CoordinateDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/DogDto.java

@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.entity.ChatMessage;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessagePostDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ChatMessageDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.ChatService;
@@ -48,6 +49,8 @@ class MessageApiControllerTest {
     private SecurityContext securityContextMock;
 
     private User authenticatedUser;
+    @Mock
+    private User senderMock;
 
     @BeforeEach
     public void setup() {
@@ -63,20 +66,16 @@ class MessageApiControllerTest {
 
     @Test
     void testPostMessageSuccess() throws Exception {
-        UserOverviewDto receiver = new UserOverviewDto();
-        receiver.setId(2l);
-        UserOverviewDto sender = new UserOverviewDto();
-        sender.setId(1l);
-        when(this.userServiceMock.getUserByEmail(eq("mark@twen.de"))).thenReturn(Optional.of(authenticatedUser));
-        when(this.userServiceMock.getUserById(eq(1l))).thenReturn(authenticatedUser);
-        when(this.userServiceMock.getUserById(eq(2l))).thenReturn(receiverMock);
-        ChatMessageDto message = new ChatMessageDto();
+        ChatMessagePostDto message = new ChatMessagePostDto();
         message.setMessage("Hello");
-        message.setReceiver(receiver);
-        message.setSender(sender);
+        message.setReceiverId(2L);
+        message.setSenderId(1L);
 
-        ResponseEntity<Void> responseEntity = messageApiController.messagePost(message);
-        verify(chatServiceMock).createMessage(eq(receiverMock), eq(message.getMessage()));
+        when(userServiceMock.getUserById(eq(1l))).thenReturn(senderMock);
+        when(userServiceMock.getUserById(eq(2l))).thenReturn(receiverMock);
+
+        ResponseEntity<Void> responseEntity = messageApiController.sendMessage(message);
+        verify(chatServiceMock).createMessage(eq(senderMock), eq(receiverMock), eq(message.getMessage()));
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     }
 }

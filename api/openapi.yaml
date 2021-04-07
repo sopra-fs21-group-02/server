@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.0"
+  version: "1.0.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -404,6 +404,7 @@ paths:
           $ref: "#/components/responses/404"
   /users/{userId}/conversations:
     get:
+      operationId: getAllConversations
       tags:
         - "Conversations"
       summary: "Return all conversations of user by userId"
@@ -432,6 +433,7 @@ paths:
           $ref: "#/components/responses/404"
   /users/{userId1}/conversations/{userId2}:
     get:
+      operationId: getAllMessages
       tags:
         - "Conversations"
       summary: "Return all messages between user1 and user2"
@@ -467,6 +469,7 @@ paths:
           $ref: "#/components/responses/404"
   /message:
     post:
+      operationId: sendMessage
       tags:
         - "Conversations"
       description: User can add message in a chart.
@@ -476,7 +479,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChatMessage"
+              $ref: "#/components/schemas/ChatMessagePost"
         description: "A message that needs to be created"
       responses:
         201:
@@ -930,6 +933,21 @@ components:
         - message
         - receiver
         - sender
+    ChatMessagePost:
+      type: object
+      properties:
+        senderId:
+          type: integer
+          format: int64
+        receiverId:
+          type: integer
+          format: int64
+        message:
+          type: string
+      required:
+        - message
+        - receiverId
+        - senderId
     Conversation:
       type: object
       properties:

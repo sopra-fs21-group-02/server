@@ -5,7 +5,7 @@
  */
 package ch.uzh.ifi.hase.soprafs21.controller;
 
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessagePostDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -35,13 +35,13 @@ public interface MessageApi {
      * POST /message : Add message to conversation
      * User can add message in a chart.
      *
-     * @param chatMessageDto A message that needs to be created (required)
+     * @param chatMessagePostDto A message that needs to be created (required)
      * @return The message was succesfully added (status code 201)
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
      *         or User not permitted (status code 403)
      */
-    @ApiOperation(value = "Add message to conversation", nickname = "messagePost", notes = "User can add message in a chart.", tags={ "Conversations", })
+    @ApiOperation(value = "Add message to conversation", nickname = "sendMessage", notes = "User can add message in a chart.", tags={ "Conversations", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "The message was succesfully added"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
@@ -52,7 +52,7 @@ public interface MessageApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Void> messagePost(@ApiParam(value = "A message that needs to be created" ,required=true )  @Valid @RequestBody ChatMessageDto chatMessageDto) throws Exception {
+    default ResponseEntity<Void> sendMessage(@ApiParam(value = "A message that needs to be created" ,required=true )  @Valid @RequestBody ChatMessagePostDto chatMessagePostDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

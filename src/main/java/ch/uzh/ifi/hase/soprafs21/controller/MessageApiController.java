@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessagePostDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ConversationDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
@@ -44,19 +45,13 @@ public class MessageApiController implements MessageApi {
     }
 
     @Override
-    public ResponseEntity<Void> messagePost(@ApiParam(value = "A message that needs to be created" ,required=true )  @Valid @RequestBody ChatMessageDto chatMessageDto) throws Exception {
-        Long senderId = chatMessageDto.getSender().getId();
-        Long receiverId = chatMessageDto.getReceiver().getId();
-
-        String authenticatedUserEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User authenticatedUser = userService.getUserByEmail(authenticatedUserEmail).orElseThrow();
-        User sender = userService.getUserById(senderId);
-        if (!authenticatedUser.equals(sender)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    public ResponseEntity<Void> sendMessage(@ApiParam(value = "A message that needs to be created" ,required=true )  @Valid @RequestBody ChatMessagePostDto chatMessagePostDto) throws Exception {
+        Long senderId = chatMessagePostDto.getSenderId();
+        Long receiverId = chatMessagePostDto.getReceiverId();
 
         User receiver = userService.getUserById(receiverId);
-        chatService.createMessage(receiver, chatMessageDto.getMessage());
+        User sender = userService.getUserById(senderId);
+        chatService.createMessage(sender, receiver, chatMessagePostDto.getMessage());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

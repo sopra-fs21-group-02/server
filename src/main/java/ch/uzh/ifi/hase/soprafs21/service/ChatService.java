@@ -7,10 +7,13 @@ import ch.uzh.ifi.hase.soprafs21.repository.ChatMessageRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -25,12 +28,20 @@ public class ChatService {
     private ConversationRepository conversationRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
-    public List<Conversation> getAllConversations(){
+    public List<Conversation> getAllConversations(Long senderId){
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(senderId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         return conversationRepository.findByUser(getCurrentlyLoggedinUser().orElseThrow());
     }
 
-    public List<ChatMessage> getAllMessages(User participant2) {
+    public List<ChatMessage> getAllMessages(User participant1, User participant2) {
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(participant1.getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         Conversation currentConversation = findConversationByParticipants(participant2).orElseThrow();
         List<ChatMessage> allMessages = currentConversation.getMessages();
         chatMessageRepository.setMessagesReadByConversation(currentConversation);
@@ -42,7 +53,10 @@ public class ChatService {
     }
 
     @Transactional
-    public void createMessage(User participant2, String message) {
+    public void createMessage(User participant1, User participant2, String message) {
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(participant1.getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         Optional<Conversation> optionalConversation = findConversationByParticipants(participant2);
         Conversation conversation;
         if(optionalConversation.isEmpty()) {
@@ -74,4 +88,5 @@ public class ChatService {
             return Optional.empty();
         }
     }
+
 }
