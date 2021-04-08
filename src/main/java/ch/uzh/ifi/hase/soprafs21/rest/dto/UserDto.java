@@ -35,12 +35,6 @@ public class UserDto  implements Serializable {
   @JsonProperty("name")
   private String name;
 
-  @JsonProperty("provider")
-  private String provider;
-
-  @JsonProperty("providerUid")
-  private String providerUid;
-
   @JsonProperty("gender")
   private GenderDto gender;
 
@@ -130,46 +124,6 @@ public class UserDto  implements Serializable {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public UserDto provider(String provider) {
-    this.provider = provider;
-    return this;
-  }
-
-  /**
-   * Get provider
-   * @return provider
-  */
-  @ApiModelProperty(value = "")
-
-
-  public String getProvider() {
-    return provider;
-  }
-
-  public void setProvider(String provider) {
-    this.provider = provider;
-  }
-
-  public UserDto providerUid(String providerUid) {
-    this.providerUid = providerUid;
-    return this;
-  }
-
-  /**
-   * Get providerUid
-   * @return providerUid
-  */
-  @ApiModelProperty(value = "")
-
-
-  public String getProviderUid() {
-    return providerUid;
-  }
-
-  public void setProviderUid(String providerUid) {
-    this.providerUid = providerUid;
   }
 
   public UserDto gender(GenderDto gender) {
@@ -396,8 +350,6 @@ public class UserDto  implements Serializable {
     return Objects.equals(this.id, user.id) &&
         Objects.equals(this.email, user.email) &&
         Objects.equals(this.name, user.name) &&
-        Objects.equals(this.provider, user.provider) &&
-        Objects.equals(this.providerUid, user.providerUid) &&
         Objects.equals(this.gender, user.gender) &&
         Objects.equals(this.dateOfBirth, user.dateOfBirth) &&
         Objects.equals(this.bio, user.bio) &&
@@ -411,7 +363,7 @@ public class UserDto  implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, email, name, provider, providerUid, gender, dateOfBirth, bio, status, profilePicture, latestLocation, tags, conversations, dogs);
+    return Objects.hash(id, email, name, gender, dateOfBirth, bio, status, profilePicture, latestLocation, tags, conversations, dogs);
   }
 
   @Override
@@ -422,8 +374,6 @@ public class UserDto  implements Serializable {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
-    sb.append("    providerUid: ").append(toIndentedString(providerUid)).append("\n");
     sb.append("    gender: ").append(toIndentedString(gender)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
     sb.append("    bio: ").append(toIndentedString(bio)).append("\n");

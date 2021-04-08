@@ -19,7 +19,6 @@ spring:
       enabled: true
       settings:
         web-allow-others: true
-
   datasource:
     url: jdbc:h2:mem:soprafsdb;MODE=PostgreSQL;IGNORECASE=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS soprafs21
     driver-class-name: org.h2.Driver
@@ -30,11 +29,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     generate-ddl: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
 
 hibernate:
   default_schema: soprafs21

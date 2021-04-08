@@ -1,7 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
@@ -23,10 +23,10 @@ public class ChatMessageDto  implements Serializable {
   private Long id;
 
   @JsonProperty("sender")
-  private UserDto sender;
+  private UserOverviewDto sender;
 
   @JsonProperty("receiver")
-  private UserDto receiver;
+  private UserOverviewDto receiver;
 
   @JsonProperty("message")
   private String message;
@@ -58,7 +58,7 @@ public class ChatMessageDto  implements Serializable {
     this.id = id;
   }
 
-  public ChatMessageDto sender(UserDto sender) {
+  public ChatMessageDto sender(UserOverviewDto sender) {
     this.sender = sender;
     return this;
   }
@@ -72,15 +72,15 @@ public class ChatMessageDto  implements Serializable {
 
   @Valid
 
-  public UserDto getSender() {
+  public UserOverviewDto getSender() {
     return sender;
   }
 
-  public void setSender(UserDto sender) {
+  public void setSender(UserOverviewDto sender) {
     this.sender = sender;
   }
 
-  public ChatMessageDto receiver(UserDto receiver) {
+  public ChatMessageDto receiver(UserOverviewDto receiver) {
     this.receiver = receiver;
     return this;
   }
@@ -94,11 +94,11 @@ public class ChatMessageDto  implements Serializable {
 
   @Valid
 
-  public UserDto getReceiver() {
+  public UserOverviewDto getReceiver() {
     return receiver;
   }
 
-  public void setReceiver(UserDto receiver) {
+  public void setReceiver(UserOverviewDto receiver) {
     this.receiver = receiver;
   }
 
