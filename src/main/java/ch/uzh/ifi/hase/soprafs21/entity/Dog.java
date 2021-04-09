@@ -26,7 +26,7 @@ public class Dog implements Serializable {
     private Image image;*/
 
     @Column(nullable = false)
-    private Date DateOfBirth;
+    private Date dateOfBirth;
 
     @Column(nullable = false)
     private Gender gender;
@@ -77,11 +77,11 @@ public class Dog implements Serializable {
     }*/
 
     public Date getDateOfBirth() {
-        return DateOfBirth;
+        return dateOfBirth;
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
-        DateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Gender getGender() {
