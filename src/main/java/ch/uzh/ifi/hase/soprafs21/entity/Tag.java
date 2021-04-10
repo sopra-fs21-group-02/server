@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "DOGS", schema="soprafs21")
+@Table(name = "TAGS", schema="soprafs21")
 public class Tag  implements Serializable {
     private static final long serialVersionUID = 1L;
 
