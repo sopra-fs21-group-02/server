@@ -39,6 +39,75 @@ public interface UsersApi {
     }
 
     /**
+     * GET /users/{userId}/conversations : Return all conversations of user by userId
+     *
+     * @param userId Numeric ID of the user (required)
+     * @return A list of conversations for user with userId (status code 200)
+     *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Return all conversations of user by userId", nickname = "getAllConversations", notes = "", response = ConversationDto.class, responseContainer = "List", tags={ "Conversations", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "A list of conversations for user with userId", response = ConversationDto.class, responseContainer = "List"),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @GetMapping(
+        value = "/users/{userId}/conversations",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<ConversationDto>> getAllConversations(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /users/{userId1}/conversations/{userId2} : Return all messages between user1 and user2
+     *
+     * @param userId1 Numeric ID of the user1 (required)
+     * @param userId2 Numeric ID of the user2 (required)
+     * @return A list of messages with user with userId2 (status code 200)
+     *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Return all messages between user1 and user2", nickname = "getAllMessages", notes = "", response = ChatMessageDto.class, responseContainer = "List", tags={ "Conversations", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "A list of messages with user with userId2", response = ChatMessageDto.class, responseContainer = "List"),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @GetMapping(
+        value = "/users/{userId1}/conversations/{userId2}",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<ChatMessageDto>> getAllMessages(@ApiParam(value = "Numeric ID of the user1",required=true) @PathVariable("userId1") Long userId1,@ApiParam(value = "Numeric ID of the user2",required=true) @PathVariable("userId2") Long userId2) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
      * GET /users : Return all users
      *
      * @param areaFilter  (optional)
@@ -62,7 +131,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"providerUid\" : \"providerUid\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ], \"profilePicture\" : \"profilePicture\", \"provider\" : \"provider\", \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"id\" : 0, \"email\" : \"email\" }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } }, { \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -131,75 +200,6 @@ public interface UsersApi {
         produces = { "application/json" }
     )
     default ResponseEntity<Void> usersLogoutPut() throws Exception {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * GET /users/{userId1}/conversations/{userId2} : Return all messages between user1 and user2
-     *
-     * @param userId1 Numeric ID of the user1 (required)
-     * @param userId2 Numeric ID of the user2 (required)
-     * @return A list of messages with user with userId2 (status code 200)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     *         or Resource not found (status code 404)
-     */
-    @ApiOperation(value = "Return all messages between user1 and user2", nickname = "usersUserId1ConversationsUserId2Get", notes = "", response = ChatMessageDto.class, responseContainer = "List", tags={ "Conversations", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "A list of messages with user with userId2", response = ChatMessageDto.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 404, message = "Resource not found") })
-    @GetMapping(
-        value = "/users/{userId1}/conversations/{userId2}",
-        produces = { "application/json" }
-    )
-    default ResponseEntity<List<ChatMessageDto>> usersUserId1ConversationsUserId2Get(@ApiParam(value = "Numeric ID of the user1",required=true) @PathVariable("userId1") Long userId1,@ApiParam(value = "Numeric ID of the user2",required=true) @PathVariable("userId2") Long userId2) throws Exception {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * GET /users/{userId}/conversations : Return all conversations of user by userId
-     *
-     * @param userId Numeric ID of the user (required)
-     * @return A list of conversations for user with userId (status code 200)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     *         or Resource not found (status code 404)
-     */
-    @ApiOperation(value = "Return all conversations of user by userId", nickname = "usersUserIdConversationsGet", notes = "", response = ConversationDto.class, responseContainer = "List", tags={ "Conversations", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "A list of conversations for user with userId", response = ConversationDto.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 404, message = "Resource not found") })
-    @GetMapping(
-        value = "/users/{userId}/conversations",
-        produces = { "application/json" }
-    )
-    default ResponseEntity<List<ConversationDto>> usersUserIdConversationsGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) throws Exception {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -473,7 +473,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"conversations\" : [ { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] }, { \"id\" : 5, \"message\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"unread\" : true, \"id\" : 5, \"message\" : \"message\" } ] } ], \"providerUid\" : \"providerUid\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ], \"profilePicture\" : \"profilePicture\", \"provider\" : \"provider\", \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"id\" : 0, \"email\" : \"email\" }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } }, { \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

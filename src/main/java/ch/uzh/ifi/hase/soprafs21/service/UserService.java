@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -47,6 +48,11 @@ public class UserService {
     public UserService(@Qualifier("userRepository") UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    public User getUserById(Long id) {
+        return userRepository.getOne(id);
+    }
+
 
     /**
      * Helper class to authenticate tokenId passed from client with Google
@@ -109,6 +115,13 @@ public class UserService {
 
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public boolean isRequesterAndAuthenticatedUserTheSame(Long senderId) {
+        String authenticatedUserEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User authenticatedUser = userRepository.findByEmail(authenticatedUserEmail).orElseThrow();
+        User sender = userRepository.getOne(senderId);
+        return authenticatedUser.equals(sender);
     }
 
 }

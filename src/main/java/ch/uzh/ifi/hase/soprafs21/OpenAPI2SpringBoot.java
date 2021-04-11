@@ -54,6 +54,7 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
         };
     }
 
+
     @Bean
     public Module jsonNullableModule() {
         return new JsonNullableModule();

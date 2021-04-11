@@ -2,13 +2,11 @@ package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import javax.validation.Valid;
@@ -21,37 +19,13 @@ import javax.validation.constraints.*;
 public class ConversationDto  implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  @JsonProperty("id")
-  private Long id;
-
   @JsonProperty("participant")
-  private UserDto participant;
+  private UserOverviewDto participant;
 
-  @JsonProperty("message")
-  @Valid
-  private List<ChatMessageDto> message = null;
+  @JsonProperty("lastMessage")
+  private ChatMessageDto lastMessage;
 
-  public ConversationDto id(Long id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   * @return id
-  */
-  @ApiModelProperty(readOnly = true, value = "")
-
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public ConversationDto participant(UserDto participant) {
+  public ConversationDto participant(UserOverviewDto participant) {
     this.participant = participant;
     return this;
   }
@@ -64,41 +38,33 @@ public class ConversationDto  implements Serializable {
 
   @Valid
 
-  public UserDto getParticipant() {
+  public UserOverviewDto getParticipant() {
     return participant;
   }
 
-  public void setParticipant(UserDto participant) {
+  public void setParticipant(UserOverviewDto participant) {
     this.participant = participant;
   }
 
-  public ConversationDto message(List<ChatMessageDto> message) {
-    this.message = message;
-    return this;
-  }
-
-  public ConversationDto addMessageItem(ChatMessageDto messageItem) {
-    if (this.message == null) {
-      this.message = new ArrayList<>();
-    }
-    this.message.add(messageItem);
+  public ConversationDto lastMessage(ChatMessageDto lastMessage) {
+    this.lastMessage = lastMessage;
     return this;
   }
 
   /**
-   * Get message
-   * @return message
+   * Get lastMessage
+   * @return lastMessage
   */
   @ApiModelProperty(value = "")
 
   @Valid
 
-  public List<ChatMessageDto> getMessage() {
-    return message;
+  public ChatMessageDto getLastMessage() {
+    return lastMessage;
   }
 
-  public void setMessage(List<ChatMessageDto> message) {
-    this.message = message;
+  public void setLastMessage(ChatMessageDto lastMessage) {
+    this.lastMessage = lastMessage;
   }
 
 
@@ -111,14 +77,13 @@ public class ConversationDto  implements Serializable {
       return false;
     }
     ConversationDto conversation = (ConversationDto) o;
-    return Objects.equals(this.id, conversation.id) &&
-        Objects.equals(this.participant, conversation.participant) &&
-        Objects.equals(this.message, conversation.message);
+    return Objects.equals(this.participant, conversation.participant) &&
+        Objects.equals(this.lastMessage, conversation.lastMessage);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, participant, message);
+    return Objects.hash(participant, lastMessage);
   }
 
   @Override
@@ -126,9 +91,8 @@ public class ConversationDto  implements Serializable {
     StringBuilder sb = new StringBuilder();
     sb.append("class ConversationDto {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    participant: ").append(toIndentedString(participant)).append("\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    lastMessage: ").append(toIndentedString(lastMessage)).append("\n");
     sb.append("}");
     return sb.toString();
   }

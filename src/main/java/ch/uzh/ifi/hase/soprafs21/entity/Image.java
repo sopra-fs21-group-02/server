@@ -1,11 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "IMAGES", schema="soprafs21")
 public class Image {
 
     @Id
