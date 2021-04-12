@@ -76,15 +76,6 @@ public class User implements Serializable {
     @JoinColumn
     private List<Tag> tags;
 
-    /*
-    @Column
-    private GeoCoordinate latestLocation;
-     */
-
-    @OneToMany
-    @JoinColumn
-    private List<Conversation> conversations;
-
     @OneToMany
     @JoinColumn
     private List<Dog> listOfDogs;
