@@ -1,11 +1,8 @@
 package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -20,16 +17,31 @@ import org.mapstruct.factory.Mappers;
  */
 @Mapper
 public interface UserDTOMapper {
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "profilePicture", target = "profilePictureURL")
+    @Mapping(source = "tags", target = "tags")
+    @Mapping(source = "dogs", target = "listOfDogs")
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "gender", target = "gender")
+    @Mapping(source = "dateOfBirth", target = "dateOfBirth")
+    @Mapping(source = "bio", target = "bio")
+    User convertUserPostDTOtoEntity(UserDto userDto);
+
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "profilePictureURL", target = "profilePicture")
+    @Mapping(source = "tags", target = "tags")
+    @Mapping(source = "listOfDogs", target = "dogs")
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "gender", target = "gender")
+    @Mapping(source = "dateOfBirth", target = "dateOfBirth")
+    @Mapping(source = "bio", target = "bio")
+    UserDto convertEntityToUserDTO(User user);
 
     UserDTOMapper INSTANCE = Mappers.getMapper(UserDTOMapper.class);
-
-//    @Mapping(source = "name", target = "name")
-//    User convertUserDTOtoEntity(UserDto userDTO);
-//
-//    @Mapping(source = "id", target = "id")
-//    @Mapping(source = "name", target = "name")
-//    @Mapping(source = "status", target = "status")
-//    UserDto convertEntityToUserDTO(User user);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
@@ -37,5 +49,4 @@ public interface UserDTOMapper {
     @Mapping(source = "profilePictureURL", target = "profilePicture")
     @Mapping(source = "status", target = "status")
     UserOverviewDto toOverviewDTO(User entity);
-
 }
