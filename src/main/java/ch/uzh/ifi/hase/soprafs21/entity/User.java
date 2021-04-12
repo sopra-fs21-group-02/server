@@ -48,7 +48,7 @@ public class User implements Serializable {
 
     //Get from ExternalLogin
     @Column(nullable = true)
-    private Date DateOfBirth;
+    private Date dateOfBirth;
 
     //Get from ExternalLogin = OAuth provider
     @Column(nullable = false)
@@ -72,10 +72,9 @@ public class User implements Serializable {
     @Column
     private String bio;
 
-    /*
-    @Column
-    private GeoCoordinate latestLocation;
-    */
+    @OneToMany
+    @JoinColumn
+    private List<Tag> tags;
 
     @OneToMany
     @JoinColumn
@@ -118,11 +117,11 @@ public class User implements Serializable {
     }
 
     public Date getDateOfBirth() {
-        return DateOfBirth;
+        return dateOfBirth;
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
-        DateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getProvider() {
