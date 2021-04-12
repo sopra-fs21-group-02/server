@@ -27,7 +27,6 @@ public interface UserDTOMapper {
     @Mapping(source = "gender", target = "gender")
     @Mapping(source = "dateOfBirth", target = "dateOfBirth")
     @Mapping(source = "bio", target = "bio")
-    @Mapping(source = "conversations", target = "conversations")
     User convertUserPostDTOtoEntity(UserDto userDto);
 
     @Mapping(source = "name", target = "name")
@@ -40,7 +39,6 @@ public interface UserDTOMapper {
     @Mapping(source = "gender", target = "gender")
     @Mapping(source = "dateOfBirth", target = "dateOfBirth")
     @Mapping(source = "bio", target = "bio")
-    @Mapping(source = "conversations", target = "conversations")
     UserDto convertEntityToUserDTO(User user);
 
     UserDTOMapper INSTANCE = Mappers.getMapper(UserDTOMapper.class);
