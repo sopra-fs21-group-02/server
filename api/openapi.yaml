@@ -467,6 +467,36 @@ paths:
           $ref: "#/components/responses/401"
         404:
           $ref: "#/components/responses/404"
+  /users/refreshtoken:
+    put:
+      tags:
+        - "Users"
+      description: Update refresh token.
+      summary: "Silent refresh of tokens"
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: false
+        description: "No body. Refresh token is passed in HTTPOnly cookie"
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserLoginPost"
+          description: Refresh token and access token regenerated
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
   /message:
     post:
       operationId: sendMessage
@@ -1021,7 +1051,15 @@ components:
     UserLoginPost:
       type: object
       properties:
-        jwtToken:
+        accessToken:
           type: string
+        accessTokenExpiry:
+          type: string
+          format: date-time
         isNewUser:
           type: boolean
+  securitySchemes:
+    cookieAuth: # arbitrary name for the security scheme; will be used in the "security" key later
+      type: apiKey
+      in: cookie
+      name: refresh_token

@@ -40,8 +40,8 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
         String token = header.replace(SecurityConstants.TOKEN_PREFIX, "");
 
-        if(jwtTokenUtil.validateToken(token)) {
-            Claims claims = jwtTokenUtil.getClaimsFromJWT(token);
+        if(jwtTokenUtil.validateToken(token, SecurityConstants.SECRET)) {
+            Claims claims = jwtTokenUtil.getClaimsFromJWT(token, SecurityConstants.SECRET);
             String emailId = claims.getSubject();
 
             UsernamePasswordAuthenticationToken auth =

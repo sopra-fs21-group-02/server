@@ -2,7 +2,9 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import io.jsonwebtoken.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 
@@ -24,31 +26,46 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public Claims getClaimsFromJWT(String token) {
+    public String generateRefreshToken(String emailId) {
+
+        Long now = System.currentTimeMillis();
+        return Jwts.builder()
+                .setSubject(emailId)
+                .setIssuedAt(new Date(now))
+                .setExpiration(new Date(now + SecurityConstants.REFRESH_EXPIRATION_TIME))  // in milliseconds
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.REFRESH_SECRET)
+                .compact();
+    }
+
+    public Claims getClaimsFromJWT(String token, String secret) {
         return Jwts.parser()
-                .setSigningKey(SecurityConstants.SECRET)
+                .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public boolean validateToken(String authToken) {
+    public Date getExpirationTimeForAccessToken(String token){
+        Claims claims = getClaimsFromJWT(token, SecurityConstants.SECRET);
+        return claims.getExpiration();
+    }
+
+    public boolean validateToken(String authToken, String secret) {
         try {
             Jwts.parser()
-                    .setSigningKey(SecurityConstants.SECRET)
+                    .setSigningKey(secret)
                     .parseClaimsJws(authToken);
 
             return true;
         } catch (SignatureException ex) {
-            System.out.println("Invalid JWT signature");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT signature");
         } catch (MalformedJwtException ex) {
-            System.out.println("Invalid JWT token");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            System.out.println("Expired JWT token");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Expired JWT token");
         } catch (UnsupportedJwtException ex) {
-            System.out.println("Unsupported JWT token");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
-            System.out.println("JWT claims string is empty.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"JWT claims string is empty.");
         }
-        return false;
     }
 }

@@ -4,11 +4,14 @@ import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +26,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.ZoneOffset;
+import java.util.*;
 
 /**
  * User Service
@@ -40,6 +41,9 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private Environment env;
@@ -91,7 +95,7 @@ public class UserService {
         return Boolean.FALSE;
     }
 
-    public boolean loginOrRegisterUser(GoogleIdToken.Payload payload){
+    public boolean loginOrRegisterUser(GoogleIdToken.Payload payload, String refreshToken){
         boolean isNewUser = false;
         Optional<User> optionalUser = userRepository.findByEmail(payload.getEmail());
 
@@ -103,7 +107,7 @@ public class UserService {
             user.setProfilePictureURL((String) payload.get("picture"));
             user.setEmail(payload.getEmail());
             user.setStatus(OnlineStatus.ONLINE);
-            user.setToken(payload.getAccessTokenHash());
+            user.setToken(refreshToken);
             isNewUser = true;
             userRepository.saveAndFlush(user);
         }else{
@@ -124,4 +128,41 @@ public class UserService {
         return authenticatedUser.equals(sender);
     }
 
+
+    public String refreshToken(String refreshToken) {
+        if (jwtTokenUtil.validateToken(refreshToken, SecurityConstants.REFRESH_SECRET)) {
+            Claims claims = jwtTokenUtil.getClaimsFromJWT(refreshToken, SecurityConstants.REFRESH_SECRET);
+            String emailId = claims.getSubject();
+            Optional<User> optionalUser = userRepository.findByEmail(emailId);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                if (user.getToken().equals(refreshToken)) {
+                    return emailId;
+                }
+                else {
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
+                }
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+        }
+       return null;
+
+    }
+
+    public void updateRefreshTokenForUser(String newRefreshToken, String emailId) {
+
+        Optional<User> optionalUser = userRepository.findByEmail(emailId);
+
+        if(optionalUser.isPresent()) {
+
+            User user = optionalUser.get();
+            user.setToken(newRefreshToken);
+            userRepository.saveAndFlush(user);
+        }
+
+
+
+    }
 }

@@ -33,10 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(new JwtTokenAuthenticationFilter(jwtTokenUtil, userService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/users/*","/message","/parks/*","/paths/*").permitAll()
-                .antMatchers(HttpMethod.GET, "/users/*","/parks/*","/paths/*").permitAll()
-                .antMatchers(HttpMethod.PUT, "/users/*").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/users/*","/parks/*","/paths/*").permitAll()
+                .antMatchers("/*").permitAll()
+                //.antMatchers(HttpMethod.GET, "/*").permitAll()
+                //.antMatchers(HttpMethod.PUT, "/*").permitAll()
+                //.antMatchers(HttpMethod.DELETE, "/*").permitAll()
                 .anyRequest().authenticated();
     }
 

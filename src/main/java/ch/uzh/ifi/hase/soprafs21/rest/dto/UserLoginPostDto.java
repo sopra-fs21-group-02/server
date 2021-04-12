@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import javax.validation.Valid;
@@ -17,30 +18,55 @@ import javax.validation.constraints.*;
 public class UserLoginPostDto  implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  @JsonProperty("jwtToken")
-  private String jwtToken;
+  @JsonProperty("accessToken")
+  private String accessToken;
+
+  @JsonProperty("accessTokenExpiry")
+  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime accessTokenExpiry;
 
   @JsonProperty("isNewUser")
   private Boolean isNewUser;
 
-  public UserLoginPostDto jwtToken(String jwtToken) {
-    this.jwtToken = jwtToken;
+  public UserLoginPostDto accessToken(String accessToken) {
+    this.accessToken = accessToken;
     return this;
   }
 
   /**
-   * Get jwtToken
-   * @return jwtToken
+   * Get accessToken
+   * @return accessToken
   */
   @ApiModelProperty(value = "")
 
 
-  public String getJwtToken() {
-    return jwtToken;
+  public String getAccessToken() {
+    return accessToken;
   }
 
-  public void setJwtToken(String jwtToken) {
-    this.jwtToken = jwtToken;
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
+
+  public UserLoginPostDto accessTokenExpiry(OffsetDateTime accessTokenExpiry) {
+    this.accessTokenExpiry = accessTokenExpiry;
+    return this;
+  }
+
+  /**
+   * Get accessTokenExpiry
+   * @return accessTokenExpiry
+  */
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public OffsetDateTime getAccessTokenExpiry() {
+    return accessTokenExpiry;
+  }
+
+  public void setAccessTokenExpiry(OffsetDateTime accessTokenExpiry) {
+    this.accessTokenExpiry = accessTokenExpiry;
   }
 
   public UserLoginPostDto isNewUser(Boolean isNewUser) {
@@ -73,13 +99,14 @@ public class UserLoginPostDto  implements Serializable {
       return false;
     }
     UserLoginPostDto userLoginPost = (UserLoginPostDto) o;
-    return Objects.equals(this.jwtToken, userLoginPost.jwtToken) &&
+    return Objects.equals(this.accessToken, userLoginPost.accessToken) &&
+        Objects.equals(this.accessTokenExpiry, userLoginPost.accessTokenExpiry) &&
         Objects.equals(this.isNewUser, userLoginPost.isNewUser);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(jwtToken, isNewUser);
+    return Objects.hash(accessToken, accessTokenExpiry, isNewUser);
   }
 
   @Override
@@ -87,7 +114,8 @@ public class UserLoginPostDto  implements Serializable {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserLoginPostDto {\n");
     
-    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
+    sb.append("    accessToken: ").append(toIndentedString(accessToken)).append("\n");
+    sb.append("    accessTokenExpiry: ").append(toIndentedString(accessTokenExpiry)).append("\n");
     sb.append("    isNewUser: ").append(toIndentedString(isNewUser)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -169,7 +169,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"jwtToken\" : \"jwtToken\", \"isNewUser\" : true }";
+                    String exampleString = "{ \"accessTokenExpiry\" : \"2000-01-23T04:56:07.000+00:00\", \"accessToken\" : \"accessToken\", \"isNewUser\" : true }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -200,6 +200,47 @@ public interface UsersApi {
         produces = { "application/json" }
     )
     default ResponseEntity<Void> usersLogoutPut() throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /users/refreshtoken : Silent refresh of tokens
+     * Update refresh token.
+     *
+     * @param body No body. Refresh token is passed in HTTPOnly cookie (optional)
+     * @return Refresh token and access token regenerated (status code 200)
+     *         or Invalid Request (status code 400)
+     *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Silent refresh of tokens", nickname = "usersRefreshtokenPut", notes = "Update refresh token.", response = UserLoginPostDto.class, authorizations = {
+        
+        @Authorization(value = "cookieAuth")
+         }, tags={ "Users", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Refresh token and access token regenerated", response = UserLoginPostDto.class),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @PutMapping(
+        value = "/users/refreshtoken",
+        produces = { "application/json" },
+        consumes = { "text/plain" }
+    )
+    default ResponseEntity<UserLoginPostDto> usersRefreshtokenPut(@ApiParam(value = "No body. Refresh token is passed in HTTPOnly cookie"  )  @Valid @RequestBody(required = false) String body) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"accessTokenExpiry\" : \"2000-01-23T04:56:07.000+00:00\", \"accessToken\" : \"accessToken\", \"isNewUser\" : true }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
