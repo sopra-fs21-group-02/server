@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.0.0"
+  version: "1.1.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1

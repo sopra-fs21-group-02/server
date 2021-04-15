@@ -2,9 +2,11 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.geo.Point;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -34,7 +36,7 @@ public class UserServiceIntegrationTest {
     @Test
     public void testUpdateUserLocation() {
         assertNull(userRepository.findById(1l).get().getLastUserLocation());
-        Point newLocation = new Point(47.35997146785179, 8.461859195948641);
+        Point newLocation = new GeometryFactory().createPoint(new Coordinate(47.35997146785179, 8.461859195948641));
         this.userService.updateUserLocation(1l, newLocation);
 
         assertNotNull(userRepository.findById(1l).get().getLastUserLocation());
