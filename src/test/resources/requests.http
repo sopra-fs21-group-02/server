@@ -12,7 +12,7 @@ GET http://localhost:8080/v1/users/1
 Content-Type: application/json
 
 ###
-PUT https://sopra-fs21-test.herokuapp.com/v1/users/1/location
+PUT https://sopra-fs21-test.herokuapp.com/v1/users/2/location
 Content-Type: application/json
 
 {
