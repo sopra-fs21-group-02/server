@@ -1,7 +1,10 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "IMAGES", schema="soprafs21")
 public class Image {
@@ -16,22 +19,4 @@ public class Image {
     String name;
     // Getters and Setters
 
-    public Long getId() {
-        return id;
-    }
-
-    public byte[] getContent() {
-        return content;
-    }
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

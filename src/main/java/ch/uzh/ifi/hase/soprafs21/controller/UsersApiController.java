@@ -13,7 +13,9 @@ import ch.uzh.ifi.hase.soprafs21.service.ChatService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import io.swagger.annotations.ApiParam;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -96,7 +98,7 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> updateLocation(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Coordinate object that needs to be updated in user with userId" ,required=true )  @Valid @RequestBody CoordinateDto coordinateDto) throws Exception {
-        Point newLocation = new Point(coordinateDto.getLongitude(), coordinateDto.getLatitude());
+        Point newLocation = new GeometryFactory().createPoint(new Coordinate(coordinateDto.getLongitude(), coordinateDto.getLatitude()));
         userService.updateUserLocation(userId, newLocation);
         return ResponseEntity.noContent().build();
     }
