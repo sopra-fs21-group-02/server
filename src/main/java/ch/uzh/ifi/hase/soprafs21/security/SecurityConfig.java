@@ -1,22 +1,45 @@
 package ch.uzh.ifi.hase.soprafs21.security;
 
-import org.springframework.beans.factory.annotation.Value;
+import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
+import ch.uzh.ifi.hase.soprafs21.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-//TODO to be enabled back once the security is implemented
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.http.HttpServletResponse;
+
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public SecurityConfig() {
-        super(true); // this will disable the security
-    }
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private UserService userService;
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // .. and this
-        /*http.authorizeRequests().antMatchers("/h2-console/**").permitAll()
-                .and().csrf().ignoringAntMatchers("/h2-console/**")
-                .and().headers().frameOptions().sameOrigin();*/
+        http.cors()
+                .and().csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().exceptionHandling()
+                .authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .and()
+                .addFilterBefore(new JwtTokenAuthenticationFilter(jwtTokenUtil, userService), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers("/*").permitAll()
+                .anyRequest().authenticated();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/v1/users/login");
     }
 }

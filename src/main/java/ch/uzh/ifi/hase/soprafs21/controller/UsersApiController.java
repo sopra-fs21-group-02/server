@@ -7,28 +7,40 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
+import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ChatMessageDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ConversationDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.ChatService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.ApiParam;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.time.ZoneOffset;
+import java.util.*;
+
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Controller
 @RequestMapping("${openapi.dogsApp.base-path:/v1}")
@@ -37,40 +49,65 @@ public class UsersApiController implements UsersApi {
     private final NativeWebRequest request;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService) {
+    public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil) {
         this.request = request;
         this.userService = userService;
         this.chatService = chatService;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     private final UserService userService;
     private final ChatService chatService;
-
+    private JwtTokenUtil jwtTokenUtil;
     @Override
     public Optional<NativeWebRequest> getRequest() {
         return Optional.ofNullable(request);
     }
 
     @Override
-    public ResponseEntity<Boolean> usersLoginPost(@RequestBody UserLoginDto userLoginDto) throws GeneralSecurityException, IOException {
+    public ResponseEntity<UserLoginPostDto> usersLoginPost(@RequestBody UserLoginDto userLoginDto) throws GeneralSecurityException, IOException {
 
         boolean isNewUser = true;
-        System.out.println("tokenid:::::" + userLoginDto.getTokenId());
-        System.out.println("email:::::" + userLoginDto.getEmailId());
+        String accessToken =null;
+        String refreshToken = null;
+        Date accessTokenExpiry = null;
         GoogleIdToken token = userService.authenticateTokenId(userLoginDto.getTokenId());
-
+        ResponseCookie refreshTokenCookie =null;
 
         if (null != token) {
             if (userService.verifyEmailIdForToken(token, userLoginDto.getEmailId())) {
-                GoogleIdToken.Payload payload = token.getPayload();
-                isNewUser= userService.loginOrRegisterUser(payload);
 
+                //generation of access token
+                accessToken = jwtTokenUtil.generateToken(userLoginDto.getEmailId());
+                //get expiry time of access token
+                accessTokenExpiry = jwtTokenUtil.getExpirationTimeForAccessToken(accessToken);
+                //generate refresh token
+                refreshToken = jwtTokenUtil.generateRefreshToken(userLoginDto.getEmailId());
+                //call method to save or update user in database
+                isNewUser= userService.loginOrRegisterUser(token.getPayload(), refreshToken);
+                //create cookie to hold refresh token
+                refreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
+                        .httpOnly(true)
+                        .secure(true)
+                        .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME/1000) //convert expiry time from ms to sec
+                        .build();
+
+            }else{
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
             }
         }else {
-            System.out.println("Invalid ID token.");
-            return new ResponseEntity<Boolean>(HttpStatus.CONFLICT);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
-        return new ResponseEntity<Boolean>(isNewUser,HttpStatus.OK);
+        //response object
+        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
+        userLoginPostDto.setIsNewUser(isNewUser);
+        userLoginPostDto.setAccessToken(accessToken);
+        userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .body(userLoginPostDto);
     }
 
     @Override
@@ -102,4 +139,42 @@ public class UsersApiController implements UsersApi {
         userService.updateUserLocation(userId, newLocation);
         return ResponseEntity.noContent().build();
     }
+    @Override
+    public ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@NotNull String refreshToken) throws Exception {
+
+        String newAccessToken =null;
+        String newRefreshToken = null;
+        Date accessTokenExpiry = null;
+        ResponseCookie newRefreshTokenCookie =null;
+        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
+
+        String validatedUserEmailId = userService.refreshToken(refreshToken);
+
+        //generation of access token
+        newAccessToken = jwtTokenUtil.generateToken(validatedUserEmailId);
+        //get expiry time of access token
+        accessTokenExpiry = jwtTokenUtil.getExpirationTimeForAccessToken(newAccessToken);
+        //generate refresh token
+        newRefreshToken = jwtTokenUtil.generateRefreshToken(validatedUserEmailId);
+
+        userService.updateRefreshTokenForUser(newRefreshToken, validatedUserEmailId);
+
+        userLoginPostDto.setAccessToken(newAccessToken);
+        userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
+        userLoginPostDto.setIsNewUser(Boolean.FALSE);
+        //create cookie to hold refresh token
+        newRefreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME/1000) //convert expiry time from ms to sec
+                .build();
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString())
+                .body(userLoginPostDto);
+    }
+
+
+
 }

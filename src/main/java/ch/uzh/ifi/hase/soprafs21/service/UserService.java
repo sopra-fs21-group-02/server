@@ -3,16 +3,21 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import org.locationtech.jts.geom.Point;
+import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,8 +26,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.Optional;
+import java.time.ZoneOffset;
+import java.util.*;
 
 /**
  * User Service
@@ -37,7 +42,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private static final String CLIENT_ID = "1057742566572-4ufig26uc1s8tiggp6ja3tf13s4iuo87.apps.googleusercontent.com";
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private Environment env;
 
     @Autowired
     public UserService(@Qualifier("userRepository") UserRepository userRepository) {
@@ -60,10 +69,7 @@ public class UserService {
         JsonFactory factory = new GsonFactory();
 
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), factory)
-                // Specify the CLIENT_ID of the app that accesses the backend:
-                .setAudience(Collections.singletonList(CLIENT_ID))
-                // Or, if multiple clients access the backend:
-                //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+                .setAudience(Collections.singletonList(env.getProperty("spring.security.oauth2.client.registration.google.clientId")))
                 .build();
 
         return verifier.verify(tokenId);
@@ -89,7 +95,7 @@ public class UserService {
         return Boolean.FALSE;
     }
 
-    public boolean loginOrRegisterUser(GoogleIdToken.Payload payload){
+    public boolean loginOrRegisterUser(GoogleIdToken.Payload payload, String refreshToken){
         boolean isNewUser = false;
         Optional<User> optionalUser = userRepository.findByEmail(payload.getEmail());
 
@@ -101,13 +107,14 @@ public class UserService {
             .profilePictureURL((String) payload.get("picture"))
             .email(payload.getEmail())
             .status(OnlineStatus.ONLINE)
-            .token(payload.getAccessTokenHash()).build();
+            .token(refreshToken).build();
             isNewUser = true;
             userRepository.saveAndFlush(user);
         }else{
             optionalUser.get().setStatus(OnlineStatus.ONLINE);
             userRepository.flush();
         }
+
         return isNewUser;
     }
 
@@ -125,5 +132,42 @@ public class UserService {
     @Transactional
     public void updateUserLocation(Long userId, Point newLocation) {
         this.userRepository.updateUserLocation(userId, newLocation);
+    }
+
+    public String refreshToken(String refreshToken) {
+        if (jwtTokenUtil.validateToken(refreshToken, SecurityConstants.REFRESH_SECRET)) {
+            Claims claims = jwtTokenUtil.getClaimsFromJWT(refreshToken, SecurityConstants.REFRESH_SECRET);
+            String emailId = claims.getSubject();
+            Optional<User> optionalUser = userRepository.findByEmail(emailId);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                if (user.getToken().equals(refreshToken)) {
+                    return emailId;
+                }
+                else {
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
+                }
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+        }
+       return null;
+
+    }
+
+    public void updateRefreshTokenForUser(String newRefreshToken, String emailId) {
+
+        Optional<User> optionalUser = userRepository.findByEmail(emailId);
+
+        if(optionalUser.isPresent()) {
+
+            User user = optionalUser.get();
+            user.setToken(newRefreshToken);
+            userRepository.saveAndFlush(user);
+        }
+
+
+
     }
 }

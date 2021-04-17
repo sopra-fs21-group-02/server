@@ -8,6 +8,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.AreaFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ParkDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.ReviewDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.WalkingRouteDto;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -90,6 +91,66 @@ public interface PathsApi {
         produces = { "application/json" }
     )
     default ResponseEntity<Void> pathsPathIdDelete(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /paths/{pathId}/reviews : Return all review of walking path by pathId
+     *
+     * @param pathId Numeric ID of the path (required)
+     * @return A list of reviews for a path with pathId (status code 200)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Return all review of walking path by pathId", nickname = "pathsPathIdReviewsGet", notes = "", response = ReviewDto.class, responseContainer = "List", tags={ "Paths", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "A list of reviews for a path with pathId", response = ReviewDto.class, responseContainer = "List"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @GetMapping(
+        value = "/paths/{pathId}/reviews",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<ReviewDto>> pathsPathIdReviewsGet(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"creator\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }, \"rating\" : 3, \"id\" : 5, \"text\" : \"text\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /paths/{pathId}/reviews : Add review to path with pathId
+     * A user can add review to the walking path.
+     *
+     * @param pathId Numeric ID of the path (required)
+     * @param reviewDto Review object that needs to be created (required)
+     * @return The review was susscesfully added (status code 201)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     */
+    @ApiOperation(value = "Add review to path with pathId", nickname = "pathsPathIdReviewsPost", notes = "A user can add review to the walking path.", tags={ "Paths", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 201, message = "The review was susscesfully added"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated") })
+    @PostMapping(
+        value = "/paths/{pathId}/reviews",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    default ResponseEntity<Void> pathsPathIdReviewsPost(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId,@ApiParam(value = "Review object that needs to be created" ,required=true )  @Valid @RequestBody ReviewDto reviewDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

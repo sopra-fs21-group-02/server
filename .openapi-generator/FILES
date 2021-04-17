@@ -3,7 +3,6 @@ src/main/java/ch/uzh/ifi/hase/soprafs21/RFC3339DateFormat.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/controller/ApiUtil.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/controller/MessageApi.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/controller/ParksApi.java
-src/main/java/ch/uzh/ifi/hase/soprafs21/controller/PathApi.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/controller/PathsApi.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/controller/UsersApi.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/AreaFilterDto.java
@@ -21,6 +20,7 @@ src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/ReviewDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/TagDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/UserDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/UserLoginDto.java
+src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/UserLoginPostDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/UserOverviewDto.java
 src/main/java/ch/uzh/ifi/hase/soprafs21/rest/dto/WalkingRouteDto.java
 src/main/java/org/openapitools/configuration/HomeController.java

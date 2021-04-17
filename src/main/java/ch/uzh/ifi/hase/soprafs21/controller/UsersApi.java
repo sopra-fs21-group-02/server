@@ -14,6 +14,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -183,9 +184,9 @@ public interface UsersApi {
      *         or User unauthenticated (status code 401)
      *         or Resource not found (status code 404)
      */
-    @ApiOperation(value = "User is logged in/registered", nickname = "usersLoginPost", notes = "A user can register/login.", response = Boolean.class, tags={ "Users", })
+    @ApiOperation(value = "User is logged in/registered", nickname = "usersLoginPost", notes = "A user can register/login.", response = UserLoginPostDto.class, tags={ "Users", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "User is logged-in", response = Boolean.class),
+        @ApiResponse(code = 200, message = "User is logged-in", response = UserLoginPostDto.class),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
         @ApiResponse(code = 403, message = "User not permitted"),
         @ApiResponse(code = 401, message = "User unauthenticated"),
@@ -195,7 +196,16 @@ public interface UsersApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Boolean> usersLoginPost(@ApiParam(value = "User object that needs to be created" ,required=true )  @Valid @RequestBody UserLoginDto userLoginDto) throws Exception {
+    default ResponseEntity<UserLoginPostDto> usersLoginPost(@ApiParam(value = "User object that needs to be created" ,required=true )  @Valid @RequestBody UserLoginDto userLoginDto) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"accessTokenExpiry\" : \"2000-01-23T04:56:07.000+00:00\", \"accessToken\" : \"accessToken\", \"isNewUser\" : true }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -221,6 +231,43 @@ public interface UsersApi {
         produces = { "application/json" }
     )
     default ResponseEntity<Void> usersLogoutPut() throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /users/refreshToken : Silent refresh of tokens
+     * Update refresh token.
+     *
+     * @param refreshToken  (required)
+     * @return Refresh token and access token regenerated (status code 200)
+     *         or Invalid Request (status code 400)
+     *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Silent refresh of tokens", nickname = "usersRefreshTokenPut", notes = "Update refresh token.", response = UserLoginPostDto.class, tags={ "Users", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Refresh token and access token regenerated", response = UserLoginPostDto.class),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @PutMapping(
+        value = "/users/refreshToken",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@NotNull @ApiParam(value = "",required=true) @CookieValue("refresh_token") String refreshToken) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"accessTokenExpiry\" : \"2000-01-23T04:56:07.000+00:00\", \"accessToken\" : \"accessToken\", \"isNewUser\" : true }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
