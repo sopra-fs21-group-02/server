@@ -71,7 +71,7 @@ class UsersApiControllerTest {
     }
 
     @Test
-    void refreshToken() {
+    void refreshToken() throws Exception {
         String mockAccessToken = "mockAccessToken";
         String mockRefreshToken = "mockRefreshToken";
         String mockEmailId = "mock@gmail.com";
@@ -81,7 +81,7 @@ class UsersApiControllerTest {
         given(jwtTokenUtil.getExpirationTimeForAccessToken(Mockito.any())).willReturn(new Date());
         given(jwtTokenUtil.generateRefreshToken(Mockito.any())).willReturn(mockRefreshToken);
 
-        ResponseEntity<UserLoginPostDto> responseEntity = usersApiController.refreshToken(mockRefreshToken);
+        ResponseEntity<UserLoginPostDto> responseEntity = usersApiController.usersRefreshTokenPut(mockRefreshToken);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getHeaders().get("Set-Cookie").get(0).contains("mockRefreshToken"));
         assertEquals(mockAccessToken, responseEntity.getBody().getAccessToken());
