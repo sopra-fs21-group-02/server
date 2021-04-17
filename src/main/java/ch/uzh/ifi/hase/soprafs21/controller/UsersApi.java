@@ -206,20 +206,17 @@ public interface UsersApi {
 
 
     /**
-     * PUT /users/refreshtoken : Silent refresh of tokens
+     * PUT /users/refreshToken : Silent refresh of tokens
      * Update refresh token.
      *
-     * @param body No body. Refresh token is passed in HTTPOnly cookie (optional)
+     * @param refreshToken  (required)
      * @return Refresh token and access token regenerated (status code 200)
      *         or Invalid Request (status code 400)
      *         or User not permitted (status code 403)
      *         or User unauthenticated (status code 401)
      *         or Resource not found (status code 404)
      */
-    @ApiOperation(value = "Silent refresh of tokens", nickname = "usersRefreshtokenPut", notes = "Update refresh token.", response = UserLoginPostDto.class, authorizations = {
-        
-        @Authorization(value = "cookieAuth")
-         }, tags={ "Users", })
+    @ApiOperation(value = "Silent refresh of tokens", nickname = "usersRefreshTokenPut", notes = "Update refresh token.", response = UserLoginPostDto.class, tags={ "Users", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Refresh token and access token regenerated", response = UserLoginPostDto.class),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
@@ -227,11 +224,10 @@ public interface UsersApi {
         @ApiResponse(code = 401, message = "User unauthenticated"),
         @ApiResponse(code = 404, message = "Resource not found") })
     @PutMapping(
-        value = "/users/refreshtoken",
-        produces = { "application/json" },
-        consumes = { "text/plain" }
+        value = "/users/refreshToken",
+        produces = { "application/json" }
     )
-    default ResponseEntity<UserLoginPostDto> usersRefreshtokenPut(@ApiParam(value = "No body. Refresh token is passed in HTTPOnly cookie"  )  @Valid @RequestBody(required = false) String body) throws Exception {
+    default ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@NotNull @ApiParam(value = "",required=true) @CookieValue("refresh_token") String refreshToken) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {

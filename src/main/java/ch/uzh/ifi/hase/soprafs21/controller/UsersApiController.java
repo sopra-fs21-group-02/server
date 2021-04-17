@@ -30,6 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.ZoneOffset;
@@ -127,10 +128,9 @@ public class UsersApiController implements UsersApi {
         }
     }
 
-    @PutMapping("/users/refreshToken")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public ResponseEntity<UserLoginPostDto> refreshToken(@CookieValue(name = "refresh_token", required = false) String refreshToken) {
+    @Override
+    public ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@NotNull String refreshToken) throws Exception {
+
         String newAccessToken =null;
         String newRefreshToken = null;
         Date accessTokenExpiry = null;
@@ -150,6 +150,7 @@ public class UsersApiController implements UsersApi {
 
         userLoginPostDto.setAccessToken(newAccessToken);
         userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
+        userLoginPostDto.setIsNewUser(Boolean.FALSE);
         //create cookie to hold refresh token
         newRefreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
                 .httpOnly(true)

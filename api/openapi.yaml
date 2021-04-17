@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.0.0"
+  version: "1.0.1"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -467,21 +467,18 @@ paths:
           $ref: "#/components/responses/401"
         404:
           $ref: "#/components/responses/404"
-  /users/refreshtoken:
+  /users/refreshToken:
     put:
       tags:
         - "Users"
       description: Update refresh token.
       summary: "Silent refresh of tokens"
-      security:
-        - cookieAuth: []
-      requestBody:
-        required: false
-        description: "No body. Refresh token is passed in HTTPOnly cookie"
-        content:
-          text/plain:
-            schema:
-              type: string
+      parameters:
+        - in: cookie
+          name: refresh_token
+          schema:
+            type: string
+          required: true
       responses:
         200:
           content:
@@ -715,7 +712,7 @@ paths:
           $ref: "#/components/responses/404"
         403:
           $ref: "#/components/responses/403"
-  /path/{pathId}/reviews:
+  /paths/{pathId}/reviews:
     get:
       tags:
         - "Paths"
@@ -1058,8 +1055,3 @@ components:
           format: date-time
         isNewUser:
           type: boolean
-  securitySchemes:
-    cookieAuth: # arbitrary name for the security scheme; will be used in the "security" key later
-      type: apiKey
-      in: cookie
-      name: refresh_token
