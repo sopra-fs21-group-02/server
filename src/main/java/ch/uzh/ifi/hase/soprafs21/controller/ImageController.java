@@ -19,7 +19,7 @@ class ImageController {
     @Qualifier("ImageRepository")
     @Autowired
     ImageRepository imageDbRepository;
-
+/*
     @PostMapping
     Long uploadImage(@RequestParam MultipartFile multipartImage) throws Exception {
         Image dbImage = new Image();
@@ -37,5 +37,5 @@ class ImageController {
                 .getContent();
 
         return new ByteArrayResource(image);
-    }
+    }*/
 }

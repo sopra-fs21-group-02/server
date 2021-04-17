@@ -8,6 +8,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.AreaFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
@@ -61,7 +62,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } }";
+                    String exampleString = "{ \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 6, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -96,12 +97,42 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }";
+                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 6, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /users/{userId}/location : Update user&#39;s location
+     * The location of the user is updated.
+     *
+     * @param userId Numeric ID of the user to update (required)
+     * @param coordinateDto Coordinate object that needs to be updated in user with userId (required)
+     * @return The user&#39;s location was susscesfully updated (status code 204)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Update user's location", nickname = "updateLocation", notes = "The location of the user is updated.", tags={ "Users", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "The user's location was susscesfully updated"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @PutMapping(
+        value = "/users/{userId}/location",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    default ResponseEntity<Void> updateLocation(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Coordinate object that needs to be updated in user with userId" ,required=true )  @Valid @RequestBody CoordinateDto coordinateDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -131,7 +162,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } }, { \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -323,7 +354,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -448,7 +479,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -510,7 +541,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 7.061401241503109, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 2, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"conversations\" : [ { \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } }, { \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 5, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 5, \"email\" : \"email\" } } ], \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

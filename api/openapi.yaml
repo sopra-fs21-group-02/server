@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.0.1"
+  version: "1.2.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -116,6 +116,39 @@ paths:
           $ref: '#/components/responses/403'
         401:
           $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /users/{userId}/location:
+    put:
+      operationId: updateLocation
+      tags:
+        - "Users"
+      description: The location of the user is updated.
+      summary: "Update user's location"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Coordinate"
+        description: "Coordinate object that needs to be updated in user with userId"
+      responses:
+        204:
+          description: The user's location was susscesfully updated
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
         404:
           $ref: "#/components/responses/404"
   /users/login:
@@ -809,18 +842,10 @@ components:
         profilePicture:
           type: string
           readOnly: true
-        latestLocation:
-          $ref: '#/components/schemas/Coordinate'
-          readOnly: true
         tags:
           type: array
           items:
             $ref: '#/components/schemas/Tag'
-        conversations:
-          readOnly: true
-          type: array
-          items:
-            $ref: '#/components/schemas/Conversation'
         dogs:
           readOnly: true
           type: array

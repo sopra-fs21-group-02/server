@@ -1,8 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
@@ -51,16 +49,9 @@ public class UserDto  implements Serializable {
   @JsonProperty("profilePicture")
   private String profilePicture;
 
-  @JsonProperty("latestLocation")
-  private CoordinateDto latestLocation;
-
   @JsonProperty("tags")
   @Valid
   private List<TagDto> tags = null;
-
-  @JsonProperty("conversations")
-  @Valid
-  private List<ConversationDto> conversations = null;
 
   @JsonProperty("dogs")
   @Valid
@@ -229,27 +220,6 @@ public class UserDto  implements Serializable {
     this.profilePicture = profilePicture;
   }
 
-  public UserDto latestLocation(CoordinateDto latestLocation) {
-    this.latestLocation = latestLocation;
-    return this;
-  }
-
-  /**
-   * Get latestLocation
-   * @return latestLocation
-  */
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public CoordinateDto getLatestLocation() {
-    return latestLocation;
-  }
-
-  public void setLatestLocation(CoordinateDto latestLocation) {
-    this.latestLocation = latestLocation;
-  }
-
   public UserDto tags(List<TagDto> tags) {
     this.tags = tags;
     return this;
@@ -277,35 +247,6 @@ public class UserDto  implements Serializable {
 
   public void setTags(List<TagDto> tags) {
     this.tags = tags;
-  }
-
-  public UserDto conversations(List<ConversationDto> conversations) {
-    this.conversations = conversations;
-    return this;
-  }
-
-  public UserDto addConversationsItem(ConversationDto conversationsItem) {
-    if (this.conversations == null) {
-      this.conversations = new ArrayList<>();
-    }
-    this.conversations.add(conversationsItem);
-    return this;
-  }
-
-  /**
-   * Get conversations
-   * @return conversations
-  */
-  @ApiModelProperty(readOnly = true, value = "")
-
-  @Valid
-
-  public List<ConversationDto> getConversations() {
-    return conversations;
-  }
-
-  public void setConversations(List<ConversationDto> conversations) {
-    this.conversations = conversations;
   }
 
   public UserDto dogs(List<DogDto> dogs) {
@@ -355,15 +296,13 @@ public class UserDto  implements Serializable {
         Objects.equals(this.bio, user.bio) &&
         Objects.equals(this.status, user.status) &&
         Objects.equals(this.profilePicture, user.profilePicture) &&
-        Objects.equals(this.latestLocation, user.latestLocation) &&
         Objects.equals(this.tags, user.tags) &&
-        Objects.equals(this.conversations, user.conversations) &&
         Objects.equals(this.dogs, user.dogs);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, email, name, gender, dateOfBirth, bio, status, profilePicture, latestLocation, tags, conversations, dogs);
+    return Objects.hash(id, email, name, gender, dateOfBirth, bio, status, profilePicture, tags, dogs);
   }
 
   @Override
@@ -379,9 +318,7 @@ public class UserDto  implements Serializable {
     sb.append("    bio: ").append(toIndentedString(bio)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    profilePicture: ").append(toIndentedString(profilePicture)).append("\n");
-    sb.append("    latestLocation: ").append(toIndentedString(latestLocation)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
-    sb.append("    conversations: ").append(toIndentedString(conversations)).append("\n");
     sb.append("    dogs: ").append(toIndentedString(dogs)).append("\n");
     sb.append("}");
     return sb.toString();

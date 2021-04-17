@@ -11,6 +11,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import org.locationtech.jts.geom.Point;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -100,20 +100,21 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByEmail(payload.getEmail());
 
         if(optionalUser.isEmpty()){
-            User user = new User();
-            user.setProviderUid(payload.getSubject());
-            user.setProvider(payload.getIssuer());
-            user.setName((String) payload.get("name"));
-            user.setProfilePictureURL((String) payload.get("picture"));
-            user.setEmail(payload.getEmail());
-            user.setStatus(OnlineStatus.ONLINE);
-            user.setToken(refreshToken);
+            User user = User.builder()
+            .providerUid(payload.getSubject())
+            .provider(payload.getIssuer())
+            .name((String) payload.get("name"))
+            .profilePictureURL((String) payload.get("picture"))
+            .email(payload.getEmail())
+            .status(OnlineStatus.ONLINE)
+            .token(refreshToken).build();
             isNewUser = true;
             userRepository.saveAndFlush(user);
         }else{
             optionalUser.get().setStatus(OnlineStatus.ONLINE);
             userRepository.flush();
         }
+
         return isNewUser;
     }
 
@@ -128,6 +129,10 @@ public class UserService {
         return authenticatedUser.equals(sender);
     }
 
+    @Transactional
+    public void updateUserLocation(Long userId, Point newLocation) {
+        this.userRepository.updateUserLocation(userId, newLocation);
+    }
 
     public String refreshToken(String refreshToken) {
         if (jwtTokenUtil.validateToken(refreshToken, SecurityConstants.REFRESH_SECRET)) {

@@ -1,0 +1,23 @@
+PUT http://localhost:8080/v1/users/1/location
+Content-Type: application/json
+
+{
+    "longitude": 47.35997146785179,
+    "latitude": 8.461859195948641
+}
+
+###
+
+GET http://localhost:8080/v1/users/1
+Content-Type: application/json
+
+###
+PUT https://sopra-fs21-test.herokuapp.com/v1/users/2/location
+Content-Type: application/json
+
+{
+    "longitude": 47.35997146785179,
+    "latitude": 8.461859195948641
+}
+
+###

@@ -33,6 +33,7 @@ public class ChatMessage {
 
     @Column(nullable = false)
     private boolean unread;
+
     @JoinColumn(name = "conversation_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Conversation conversation;

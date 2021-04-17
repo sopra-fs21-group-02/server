@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
@@ -16,6 +17,9 @@ import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.ApiParam;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -128,6 +133,12 @@ public class UsersApiController implements UsersApi {
         }
     }
 
+    @Override
+    public ResponseEntity<Void> updateLocation(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Coordinate object that needs to be updated in user with userId" ,required=true )  @Valid @RequestBody CoordinateDto coordinateDto) throws Exception {
+        Point newLocation = new GeometryFactory().createPoint(new Coordinate(coordinateDto.getLongitude(), coordinateDto.getLatitude()));
+        userService.updateUserLocation(userId, newLocation);
+        return ResponseEntity.noContent().build();
+    }
     @Override
     public ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@NotNull String refreshToken) throws Exception {
 
