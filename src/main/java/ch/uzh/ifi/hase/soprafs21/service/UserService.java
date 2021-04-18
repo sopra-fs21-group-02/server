@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -123,10 +124,16 @@ public class UserService {
     }
 
     public boolean isRequesterAndAuthenticatedUserTheSame(Long senderId) {
-        String authenticatedUserEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User authenticatedUser = userRepository.findByEmail(authenticatedUserEmail).orElseThrow();
-        User sender = userRepository.getOne(senderId);
-        return authenticatedUser.equals(sender);
+        //String authenticatedUserEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //User authenticatedUser = userRepository.findByEmail(authenticatedUserEmail).orElseThrow();
+        //User sender = userRepository.getOne(senderId);
+        //return authenticatedUser.equals(sender);
+        boolean isSame =Boolean.FALSE;
+        UserOverviewDto userDetails = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(userDetails != null && senderId !=null){
+            isSame = senderId.equals(userDetails.getId());
+        }
+        return isSame;
     }
 
     @Transactional
@@ -157,17 +164,21 @@ public class UserService {
     }
 
     public void updateRefreshTokenForUser(String newRefreshToken, String emailId) {
-
         Optional<User> optionalUser = userRepository.findByEmail(emailId);
-
         if(optionalUser.isPresent()) {
-
             User user = optionalUser.get();
             user.setToken(newRefreshToken);
             userRepository.saveAndFlush(user);
         }
+    }
 
-
-
+    public void logoutUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setToken(null);
+            user.setStatus(OnlineStatus.OFFLINE);
+            userRepository.saveAndFlush(user);
+        }
     }
 }

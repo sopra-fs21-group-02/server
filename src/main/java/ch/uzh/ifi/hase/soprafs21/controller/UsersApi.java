@@ -215,6 +215,7 @@ public interface UsersApi {
      * PUT /users/logout : Log out from account
      * A user can log out from his/her account.
      *
+     * @param body Numeric ID of the user (required)
      * @return The user logged out (status code 204)
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
@@ -228,9 +229,10 @@ public interface UsersApi {
         @ApiResponse(code = 403, message = "User not permitted") })
     @PutMapping(
         value = "/users/logout",
-        produces = { "application/json" }
+        produces = { "application/json" },
+        consumes = { "application/json" }
     )
-    default ResponseEntity<Void> usersLogoutPut() throws Exception {
+    default ResponseEntity<Void> usersLogoutPut(@ApiParam(value = "Numeric ID of the user" ,required=true )  @Valid @RequestBody Long body) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
