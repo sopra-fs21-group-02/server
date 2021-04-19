@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -166,8 +167,21 @@ public class UserService {
             user.setToken(newRefreshToken);
             userRepository.saveAndFlush(user);
         }
+    }
 
+    public UserDto getUserDetails(Long userId) {
 
+        User user = null;
+        UserDto userDto = null;
+        Optional<User> optionalUser =  userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            user = optionalUser.get();
+        }
+        if (user != null){
+            userDto = UserDTOMapper.INSTANCE.convertEntityToUserDTO(user);
+        }
+
+        return userDto;
 
     }
 }

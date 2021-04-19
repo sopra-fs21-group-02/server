@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.2.0"
+  version: "1.4.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -851,6 +851,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Dog'
+        latestLocation:
+          $ref: '#/components/schemas/Coordinate'
+          readOnly: true
     UserOverview:
       type: object
       properties:

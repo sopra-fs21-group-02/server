@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
@@ -56,6 +57,9 @@ public class UserDto  implements Serializable {
   @JsonProperty("dogs")
   @Valid
   private List<DogDto> dogs = null;
+
+  @JsonProperty("latestLocation")
+  private CoordinateDto latestLocation;
 
   public UserDto id(Long id) {
     this.id = id;
@@ -278,6 +282,27 @@ public class UserDto  implements Serializable {
     this.dogs = dogs;
   }
 
+  public UserDto latestLocation(CoordinateDto latestLocation) {
+    this.latestLocation = latestLocation;
+    return this;
+  }
+
+  /**
+   * Get latestLocation
+   * @return latestLocation
+  */
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public CoordinateDto getLatestLocation() {
+    return latestLocation;
+  }
+
+  public void setLatestLocation(CoordinateDto latestLocation) {
+    this.latestLocation = latestLocation;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -297,12 +322,13 @@ public class UserDto  implements Serializable {
         Objects.equals(this.status, user.status) &&
         Objects.equals(this.profilePicture, user.profilePicture) &&
         Objects.equals(this.tags, user.tags) &&
-        Objects.equals(this.dogs, user.dogs);
+        Objects.equals(this.dogs, user.dogs) &&
+        Objects.equals(this.latestLocation, user.latestLocation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, email, name, gender, dateOfBirth, bio, status, profilePicture, tags, dogs);
+    return Objects.hash(id, email, name, gender, dateOfBirth, bio, status, profilePicture, tags, dogs, latestLocation);
   }
 
   @Override
@@ -320,6 +346,7 @@ public class UserDto  implements Serializable {
     sb.append("    profilePicture: ").append(toIndentedString(profilePicture)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("    dogs: ").append(toIndentedString(dogs)).append("\n");
+    sb.append("    latestLocation: ").append(toIndentedString(latestLocation)).append("\n");
     sb.append("}");
     return sb.toString();
   }

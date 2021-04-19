@@ -3,11 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.entity.ChatMessage;
 import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ChatMessageDTOMapper;
@@ -175,6 +171,20 @@ public class UsersApiController implements UsersApi {
                 .body(userLoginPostDto);
     }
 
-
-
+    @Override
+    public ResponseEntity<UserDto> usersUserIdGet(Long userId) throws Exception {
+        UserDto userDto = null;
+        if (userId != null) {
+            userDto = userService.getUserDetails(userId);
+            if(null == userDto){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid input userId cannot be null");
+        }
+        return ResponseEntity
+                .ok()
+                .body(userDto);
+    }
 }

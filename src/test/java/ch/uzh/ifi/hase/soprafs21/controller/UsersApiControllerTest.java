@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -21,7 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -85,5 +86,77 @@ class UsersApiControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getHeaders().get("Set-Cookie").get(0).contains("mockRefreshToken"));
         assertEquals(mockAccessToken, responseEntity.getBody().getAccessToken());
+    }
+
+    @Test
+    void getUserSuccess() throws Exception {
+        UserDto mockedUserDto = getMockedUserDto();
+        given(userService.getUserDetails(Mockito.any())).willReturn(mockedUserDto);
+        ResponseEntity<UserDto> responseEntity = usersApiController.usersUserIdGet(1L);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(mockedUserDto,responseEntity.getBody());
+    }
+
+    @Test
+    void getUserNotFound() throws Exception {
+        UserDto mockedUserDto = getMockedUserDto();
+
+        given(userService.getUserDetails(Mockito.any())).willReturn(null);
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            usersApiController.usersUserIdGet(1L);
+        });
+
+        String expectedMessage = "User not found";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void getUserNullId() throws Exception {
+        UserDto mockedUserDto = getMockedUserDto();
+
+        given(userService.getUserDetails(Mockito.any())).willReturn(null);
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            usersApiController.usersUserIdGet(null);
+        });
+
+        String expectedMessage = "Invalid input userId cannot be null";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    private UserDto getMockedUserDto() {
+        UserDto mockedDto = new UserDto();
+        mockedDto.setId(1L);
+        mockedDto.setName("mockName");
+        mockedDto.setEmail("mock@gmail.com");
+        mockedDto.setStatus(OnlineStatusDto.ONLINE);
+
+        DogDto d1 = new DogDto();
+        d1.setName("D1");
+        d1.setBreed("B1");
+        d1.setSex(GenderDto.MALE);
+
+        DogDto d2 = new DogDto();
+        d2.setName("D2");
+        d2.setBreed("B2");
+        d2.setSex(GenderDto.FEMALE);
+
+        List<DogDto> dogList = new ArrayList<DogDto>();
+
+        dogList.add(d1);
+        dogList.add(d2);
+        mockedDto.setDogs(dogList);
+
+        CoordinateDto coordinateDto = new CoordinateDto();
+        coordinateDto.setLongitude(47.35997146785179);
+        coordinateDto.setLongitude(8.461859195948641);
+
+        mockedDto.setLatestLocation(coordinateDto);
+        return mockedDto;
     }
 }
