@@ -40,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/v1/users/login");
+                .antMatchers("/v1/users/login")
+                .antMatchers("/h2-console/**");
     }
 }

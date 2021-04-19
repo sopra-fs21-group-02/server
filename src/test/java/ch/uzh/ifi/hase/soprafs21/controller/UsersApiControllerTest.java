@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 
 class UsersApiControllerTest {
@@ -87,6 +89,48 @@ class UsersApiControllerTest {
         assertTrue(responseEntity.getHeaders().get("Set-Cookie").get(0).contains("mockRefreshToken"));
         assertEquals(mockAccessToken, responseEntity.getBody().getAccessToken());
     }
+
+    @Test
+    void logoutSuccess () throws Exception{
+        Long mockUserId = 1L;
+        given(userService.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.TRUE);
+
+        ResponseEntity<Void> responseEntity = usersApiController.usersUserIdLogoutPut(mockUserId);
+        verify(userService).logoutUser(eq(mockUserId));
+        assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
+    }
+
+    @Test
+    void logoutForbidden () throws Exception{
+        Long mockUserId = 1L;
+        given(userService.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.FALSE);
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            usersApiController.usersUserIdLogoutPut(mockUserId);
+        });
+
+        String expectedMessage = "Do not have permission to logout other user";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void logoutNullObject () throws Exception{
+
+        given(userService.isRequesterAndAuthenticatedUserTheSame(null)).willReturn(Boolean.FALSE);
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            usersApiController.usersUserIdLogoutPut(null);
+        });
+
+        String expectedMessage = "Invalid input userId cannot be null";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+
 
     @Test
     void getUserSuccess() throws Exception {

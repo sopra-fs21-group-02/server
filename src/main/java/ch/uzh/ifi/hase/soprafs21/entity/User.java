@@ -58,7 +58,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String providerUid;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String token;
 
     @Column(nullable = false)
