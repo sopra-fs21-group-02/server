@@ -22,11 +22,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -171,6 +176,20 @@ public class UsersApiController implements UsersApi {
                 .body(userLoginPostDto);
     }
 
+    @Override
+    public ResponseEntity<Void> usersUserIdLogoutPut(Long userId) throws Exception {
+        if(userId != null){
+            if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+                userService.logoutUser(userId);
+            }else{
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to logout other user");
+            }
+        }else{
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid input userId cannot be null");
+        }
+
+        return ResponseEntity.noContent().build();
+    }
     @Override
     public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
         areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon

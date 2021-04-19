@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.security;
 
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
@@ -49,7 +50,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                             .map(userDetails -> {
                                 UsernamePasswordAuthenticationToken authentication =
                                         new UsernamePasswordAuthenticationToken(
-                                                emailId, null, null);
+                                                UserDTOMapper.INSTANCE.toOverviewDTO(userDetails), null, null);
                                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                                 return authentication;
