@@ -1,11 +1,17 @@
 package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs21.entity.ChatMessage;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
+import org.locationtech.jts.geom.Point;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * DTOMapper
@@ -48,5 +54,13 @@ public interface UserDTOMapper {
     @Mapping(source = "email", target = "email")
     @Mapping(source = "profilePictureURL", target = "profilePicture")
     @Mapping(source = "status", target = "status")
+    @Mapping(expression = "java(getCoordinateDTO(entity.getLastUserLocation()))", target = "latestLocation")
     UserOverviewDto toOverviewDTO(User entity);
+
+    List<UserOverviewDto> toOverviewDTOList(List<User> entities);
+
+    default CoordinateDto getCoordinateDTO(Point lastUserLocation) {
+        return new CoordinateDto().longitude(lastUserLocation.getX()).latitude(lastUserLocation.getX());
+    }
+
 }

@@ -31,15 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling()
                 .authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
-                .addFilterBefore(new JwtTokenAuthenticationFilter(jwtTokenUtil, userService), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtTokenAuthenticationFilter(jwtTokenUtil, userService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/*").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated();
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/v1/users/login");
+                .antMatchers("/**");
     }
 }
