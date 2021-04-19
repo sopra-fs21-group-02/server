@@ -21,7 +21,7 @@ import java.util.List;
  * Additional mappers can be defined for new entities.
  * Always created one mapper for getting information (GET) and one mapper for creating information (POST).
  */
-@Mapper
+@Mapper(uses = SpatialDTOMapper.class)
 public interface UserDTOMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "id", target = "id")
@@ -54,13 +54,9 @@ public interface UserDTOMapper {
     @Mapping(source = "email", target = "email")
     @Mapping(source = "profilePictureURL", target = "profilePicture")
     @Mapping(source = "status", target = "status")
-    @Mapping(expression = "java(getCoordinateDTO(entity.getLastUserLocation()))", target = "latestLocation")
+    @Mapping(source = "lastUserLocation", target = "latestLocation")
     UserOverviewDto toOverviewDTO(User entity);
 
     List<UserOverviewDto> toOverviewDTOList(List<User> entities);
-
-    default CoordinateDto getCoordinateDTO(Point lastUserLocation) {
-        return new CoordinateDto().longitude(lastUserLocation.getX()).latitude(lastUserLocation.getX());
-    }
 
 }

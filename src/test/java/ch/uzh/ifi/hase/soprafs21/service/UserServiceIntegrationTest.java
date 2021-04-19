@@ -42,7 +42,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testUpdateUserLocation() {
-        assertNull(userRepository.findById(1L).get().getLastUserLocation());
+        assertNull(userRepository.findById(4L).get().getLastUserLocation());
         Point newLocation = geometryFactory.createPoint(new Coordinate(47.35997146785179, 8.461859195948641));
         this.userService.updateUserLocation(1L, newLocation);
 
