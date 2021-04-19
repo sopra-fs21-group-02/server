@@ -179,7 +179,7 @@ paths:
           $ref: "#/components/responses/401"
         404:
           $ref: "#/components/responses/404"
-  /users/logout/{userId}:
+  /users/{userId}/logout:
     put:
       tags:
         - "Users"
