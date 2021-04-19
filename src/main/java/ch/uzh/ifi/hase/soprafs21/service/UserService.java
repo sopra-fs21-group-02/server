@@ -14,6 +14,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import org.locationtech.jts.geom.Point;
 import io.jsonwebtoken.Claims;
+import org.locationtech.jts.geom.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,5 +179,9 @@ public class UserService {
             user.setStatus(OnlineStatus.OFFLINE);
             userRepository.saveAndFlush(user);
         }
+    }
+
+    public List<User> getAllUsersInArea(Polygon areaFilterPolygon){
+        return this.userRepository.findByArea(areaFilterPolygon);
     }
 }
