@@ -26,7 +26,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 class UsersApiControllerTest {
@@ -94,9 +94,9 @@ class UsersApiControllerTest {
         Long mockUserId = 1L;
         given(userService.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.TRUE);
 
-        ResponseEntity<Void> responseEntity = usersApiController.usersLogoutPut(mockUserId);
+        ResponseEntity<Void> responseEntity = usersApiController.usersLogoutUserIdPut(mockUserId);
+        verify(userService).logoutUser(eq(mockUserId));
         assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
-
     }
 
     @Test
@@ -105,7 +105,7 @@ class UsersApiControllerTest {
         given(userService.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.FALSE);
 
         Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            usersApiController.usersLogoutPut(mockUserId);
+            usersApiController.usersLogoutUserIdPut(mockUserId);
         });
 
         String expectedMessage = "Do not have permission to logout other user";
@@ -120,7 +120,7 @@ class UsersApiControllerTest {
         given(userService.isRequesterAndAuthenticatedUserTheSame(null)).willReturn(Boolean.FALSE);
 
         Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            usersApiController.usersLogoutPut(null);
+            usersApiController.usersLogoutUserIdPut(null);
         });
 
         String expectedMessage = "Invalid input userId cannot be null";

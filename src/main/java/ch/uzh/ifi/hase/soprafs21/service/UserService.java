@@ -124,10 +124,6 @@ public class UserService {
     }
 
     public boolean isRequesterAndAuthenticatedUserTheSame(Long senderId) {
-        //String authenticatedUserEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //User authenticatedUser = userRepository.findByEmail(authenticatedUserEmail).orElseThrow();
-        //User sender = userRepository.getOne(senderId);
-        //return authenticatedUser.equals(sender);
         boolean isSame =Boolean.FALSE;
         UserOverviewDto userDetails = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(userDetails != null && senderId !=null){
@@ -163,6 +159,7 @@ public class UserService {
 
     }
 
+    @Transactional
     public void updateRefreshTokenForUser(String newRefreshToken, String emailId) {
         Optional<User> optionalUser = userRepository.findByEmail(emailId);
         if(optionalUser.isPresent()) {
@@ -172,6 +169,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void logoutUser(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()) {

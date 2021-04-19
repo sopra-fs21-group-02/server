@@ -179,20 +179,20 @@ paths:
           $ref: "#/components/responses/401"
         404:
           $ref: "#/components/responses/404"
-  /users/logout:
+  /users/logout/{userId}:
     put:
       tags:
         - "Users"
       description: A user can log out from his/her account.
       summary: "Log out from account"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: integer
-              format: int64
-        description: Numeric ID of the user
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user to logout
       responses:
         204:
           description: The user logged out

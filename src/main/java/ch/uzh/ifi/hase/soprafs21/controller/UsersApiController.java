@@ -175,9 +175,8 @@ public class UsersApiController implements UsersApi {
                 .body(userLoginPostDto);
     }
 
-
     @Override
-    public ResponseEntity<Void> usersLogoutPut(@Valid Long userId) throws Exception {
+    public ResponseEntity<Void> usersLogoutUserIdPut(Long userId) throws Exception {
         if(userId != null){
             if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
                 userService.logoutUser(userId);
