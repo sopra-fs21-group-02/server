@@ -94,7 +94,7 @@ class UsersApiControllerTest {
         Long mockUserId = 1L;
         given(userService.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.TRUE);
 
-        ResponseEntity<Void> responseEntity = usersApiController.usersLogoutUserIdPut(mockUserId);
+        ResponseEntity<Void> responseEntity = usersApiController.usersUserIdLogoutPut(mockUserId);
         verify(userService).logoutUser(eq(mockUserId));
         assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
     }
@@ -105,7 +105,7 @@ class UsersApiControllerTest {
         given(userService.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.FALSE);
 
         Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            usersApiController.usersLogoutUserIdPut(mockUserId);
+            usersApiController.usersUserIdLogoutPut(mockUserId);
         });
 
         String expectedMessage = "Do not have permission to logout other user";
@@ -120,7 +120,7 @@ class UsersApiControllerTest {
         given(userService.isRequesterAndAuthenticatedUserTheSame(null)).willReturn(Boolean.FALSE);
 
         Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            usersApiController.usersLogoutUserIdPut(null);
+            usersApiController.usersUserIdLogoutPut(null);
         });
 
         String expectedMessage = "Invalid input userId cannot be null";
