@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.ChatMessageRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,7 +83,7 @@ public class ChatService {
     private Optional<User> getCurrentlyLoggedinUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            String currentUserEmail = (String) auth.getPrincipal();
+            String currentUserEmail = ((UserOverviewDto)auth.getPrincipal()).getEmail();
             return userRepository.findByEmail(currentUserEmail);
         } else {
             return Optional.empty();

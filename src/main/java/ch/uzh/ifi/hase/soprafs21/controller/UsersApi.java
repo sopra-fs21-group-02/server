@@ -212,31 +212,6 @@ public interface UsersApi {
 
 
     /**
-     * PUT /users/logout : Log out from account
-     * A user can log out from his/her account.
-     *
-     * @return The user logged out (status code 204)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     *         or User not permitted (status code 403)
-     */
-    @ApiOperation(value = "Log out from account", nickname = "usersLogoutPut", notes = "A user can log out from his/her account.", tags={ "Users", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 204, message = "The user logged out"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 403, message = "User not permitted") })
-    @PutMapping(
-        value = "/users/logout",
-        produces = { "application/json" }
-    )
-    default ResponseEntity<Void> usersLogoutPut() throws Exception {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
      * PUT /users/refreshToken : Silent refresh of tokens
      * Update refresh token.
      *
@@ -547,6 +522,32 @@ public interface UsersApi {
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /users/{userId}/logout : Log out from account
+     * A user can log out from his/her account.
+     *
+     * @param userId Numeric ID of the user to logout (required)
+     * @return The user logged out (status code 204)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     */
+    @ApiOperation(value = "Log out from account", nickname = "usersUserIdLogoutPut", notes = "A user can log out from his/her account.", tags={ "Users", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "The user logged out"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted") })
+    @PutMapping(
+        value = "/users/{userId}/logout",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<Void> usersUserIdLogoutPut(@ApiParam(value = "Numeric ID of the user to logout",required=true) @PathVariable("userId") Long userId) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

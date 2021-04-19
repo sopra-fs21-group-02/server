@@ -175,6 +175,18 @@ public class UsersApiController implements UsersApi {
                 .body(userLoginPostDto);
     }
 
+    @Override
+    public ResponseEntity<Void> usersUserIdLogoutPut(Long userId) throws Exception {
+        if(userId != null){
+            if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+                userService.logoutUser(userId);
+            }else{
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to logout other user");
+            }
+        }else{
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid input userId cannot be null");
+        }
 
-
+        return ResponseEntity.noContent().build();
+    }
 }

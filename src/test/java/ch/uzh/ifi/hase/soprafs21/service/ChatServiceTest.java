@@ -6,6 +6,8 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.ChatMessageRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +53,12 @@ class ChatServiceTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(authenticationMock.getPrincipal()).thenReturn("mark@twen.de");
+        UserOverviewDto userOverviewDto =new UserOverviewDto();
+        userOverviewDto.setEmail("mark@twen.de");
+        userOverviewDto.setId(1L);
+        userOverviewDto.setName("mark");
+        userOverviewDto.setStatus(OnlineStatusDto.ONLINE);
+        Mockito.when(authenticationMock.getPrincipal()).thenReturn(userOverviewDto);
         Mockito.when(securityContextMock.getAuthentication()).thenReturn(authenticationMock);
         SecurityContextHolder.setContext(securityContextMock);
         sender = userRepository.findById(1L).orElseThrow();

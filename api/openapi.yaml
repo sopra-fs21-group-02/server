@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.2.0"
+  version: "1.3.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -179,12 +179,20 @@ paths:
           $ref: "#/components/responses/401"
         404:
           $ref: "#/components/responses/404"
-  /users/logout:
+  /users/{userId}/logout:
     put:
       tags:
         - "Users"
       description: A user can log out from his/her account.
       summary: "Log out from account"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user to logout
       responses:
         204:
           description: The user logged out
