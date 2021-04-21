@@ -29,7 +29,7 @@ import java.util.List;
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ChatServiceTest {
+class ChatServiceIntegrationTest {
 
     @Autowired
     private ChatService chatService;
@@ -53,7 +53,7 @@ class ChatServiceTest {
 
     @BeforeEach
     void setUp() {
-        UserOverviewDto userOverviewDto =new UserOverviewDto();
+        UserOverviewDto userOverviewDto = new UserOverviewDto();
         userOverviewDto.setEmail("mark@twen.de");
         userOverviewDto.setId(1L);
         userOverviewDto.setName("mark");

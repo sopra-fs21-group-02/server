@@ -46,15 +46,15 @@ public class UsersApiController implements UsersApi {
 
     private final NativeWebRequest request;
 
-    @Autowired
     private GeometryFactory geometryFactory;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil) {
+    public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil, GeometryFactory geometryFactory) {
         this.request = request;
         this.userService = userService;
         this.chatService = chatService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.geometryFactory = geometryFactory;
     }
 
     private final UserService userService;
@@ -190,12 +190,18 @@ public class UsersApiController implements UsersApi {
 
         return ResponseEntity.noContent().build();
     }
+
     @Override
     public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
-        areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
-        Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
-        List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
-        return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
+        if(areaFilter != null) {
+            areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
+            Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
+            List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
+            return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
+        } else {
+            List<User> users = userService.getAllUsers();
+            return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(users));
+        }
     }
 
 }
