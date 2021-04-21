@@ -4,6 +4,8 @@ import ch.uzh.ifi.hase.soprafs21.entity.ChatMessage;
 import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ChatMessageDTOMapper;
@@ -11,9 +13,9 @@ import ch.uzh.ifi.hase.soprafs21.rest.mapper.ConversationDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.ChatService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.ApiParam;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.http.HttpHeaders;
@@ -43,6 +45,9 @@ import java.util.*;
 public class UsersApiController implements UsersApi {
 
     private final NativeWebRequest request;
+
+    @Autowired
+    private GeometryFactory geometryFactory;
 
     @org.springframework.beans.factory.annotation.Autowired
     public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil) {
@@ -131,7 +136,7 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> updateLocation(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Coordinate object that needs to be updated in user with userId" ,required=true )  @Valid @RequestBody CoordinateDto coordinateDto) throws Exception {
-        Point newLocation = new GeometryFactory().createPoint(new Coordinate(coordinateDto.getLongitude(), coordinateDto.getLatitude()));
+        Point newLocation = geometryFactory.createPoint(SpatialDTOMapper.INSTANCE.getCoordinate(coordinateDto));
         userService.updateUserLocation(userId, newLocation);
         return ResponseEntity.noContent().build();
     }
@@ -173,32 +178,30 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> usersUserIdLogoutPut(Long userId) throws Exception {
-        if(userId != null){
-            if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
-                userService.logoutUser(userId);
-            }else{
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to logout other user");
-            }
+        if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+            userService.logoutUser(userId);
         }else{
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid input userId cannot be null");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to logout other user");
         }
-
         return ResponseEntity.noContent().build();
     }
     @Override
+    public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
+        areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
+        Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
+        List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
+        return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
+    }
+
+    @Override
     public ResponseEntity<UserDto> usersUserIdGet(Long userId) throws Exception {
-        UserDto userDto = null;
-        if (userId != null) {
-            userDto = userService.getUserDetails(userId);
-            if(null == userDto){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid input userId cannot be null");
+        User user = userService.getUserDetails(userId);
+
+        if(null == user){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
         return ResponseEntity
                 .ok()
-                .body(userDto);
+                .body(UserDTOMapper.INSTANCE.convertEntityToUserDTO(user));
     }
 }

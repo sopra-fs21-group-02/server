@@ -15,6 +15,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -62,7 +63,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 6, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" } }";
+                    String exampleString = "{ \"lastMessage\" : { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 0, \"message\" : \"message\" }, \"participant\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -97,7 +98,42 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 6, \"message\" : \"message\" }";
+                    String exampleString = "{ \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"receiver\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"sender\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"unread\" : true, \"id\" : 0, \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /users : Return all users
+     *
+     * @param areaFilter  (optional)
+     * @param radiusFilter  (optional)
+     * @return A list of Users (status code 200)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Return all users", nickname = "getUsers", notes = "", response = UserOverviewDto.class, responseContainer = "List", tags={ "Users", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "A list of Users", response = UserOverviewDto.class, responseContainer = "List"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @GetMapping(
+        value = "/users",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -133,41 +169,6 @@ public interface UsersApi {
         consumes = { "application/json" }
     )
     default ResponseEntity<Void> updateLocation(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Coordinate object that needs to be updated in user with userId" ,required=true )  @Valid @RequestBody CoordinateDto coordinateDto) throws Exception {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * GET /users : Return all users
-     *
-     * @param areaFilter  (optional)
-     * @param radiusFilter  (optional)
-     * @return A list of Users (status code 200)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     *         or Resource not found (status code 404)
-     */
-    @ApiOperation(value = "Return all users", nickname = "usersGet", notes = "", response = UserDto.class, responseContainer = "List", tags={ "Users", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "A list of Users", response = UserDto.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 404, message = "Resource not found") })
-    @GetMapping(
-        value = "/users",
-        produces = { "application/json" }
-    )
-    default ResponseEntity<List<UserDto>> usersGet(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 5.637376656633329, \"longitude\" : 5.962133916683182 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -516,7 +517,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 5.637376656633329, \"longitude\" : 5.962133916683182 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

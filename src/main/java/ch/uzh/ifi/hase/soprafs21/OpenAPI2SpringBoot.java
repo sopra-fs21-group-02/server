@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs21;
 
 import com.fasterxml.jackson.databind.Module;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -39,6 +41,12 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
             return 10;
         }
 
+    }
+
+    @Bean
+    public GeometryFactory geometryFactory() {
+        // 3857 is the most common spatial reference identifier, also used in Google Maps.
+        return new GeometryFactory(new PrecisionModel(), 3857);
     }
 
     @Bean

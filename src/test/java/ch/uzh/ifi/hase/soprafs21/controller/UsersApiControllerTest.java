@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
+import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -8,6 +10,8 @@ import com.google.api.client.json.webtoken.JsonWebSignature;
 import org.junit.jupiter.api.BeforeEach;
 
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,6 +44,9 @@ class UsersApiControllerTest {
 
     @Mock
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private GeometryFactory geometryFactory;
 
     @BeforeEach
     public void setup() {
@@ -116,29 +123,19 @@ class UsersApiControllerTest {
     }
 
     @Test
-    void logoutNullObject () throws Exception{
-
-        given(userService.isRequesterAndAuthenticatedUserTheSame(null)).willReturn(Boolean.FALSE);
-
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            usersApiController.usersUserIdLogoutPut(null);
-        });
-
-        String expectedMessage = "Invalid input userId cannot be null";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-
-
-    @Test
     void getUserSuccess() throws Exception {
-        UserDto mockedUserDto = getMockedUserDto();
-        given(userService.getUserDetails(Mockito.any())).willReturn(mockedUserDto);
+
+        User mockedUser = User.builder().id(1l).email("email1").name("name1").profilePictureURL("url1").build();
+
+        given(userService.getUserDetails(1L)).willReturn(mockedUser);
+
         ResponseEntity<UserDto> responseEntity = usersApiController.usersUserIdGet(1L);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(mockedUserDto,responseEntity.getBody());
+        assertEquals(mockedUser.getEmail() ,responseEntity.getBody().getEmail());
+        assertEquals(mockedUser.getId(),responseEntity.getBody().getId());
+        assertEquals(mockedUser.getName(),responseEntity.getBody().getName());
+        assertEquals(mockedUser.getProfilePictureURL(),responseEntity.getBody().getProfilePicture());
+
     }
 
     @Test
@@ -152,22 +149,6 @@ class UsersApiControllerTest {
         });
 
         String expectedMessage = "User not found";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
-    void getUserNullId() throws Exception {
-        UserDto mockedUserDto = getMockedUserDto();
-
-        given(userService.getUserDetails(Mockito.any())).willReturn(null);
-
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            usersApiController.usersUserIdGet(null);
-        });
-
-        String expectedMessage = "Invalid input userId cannot be null";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));

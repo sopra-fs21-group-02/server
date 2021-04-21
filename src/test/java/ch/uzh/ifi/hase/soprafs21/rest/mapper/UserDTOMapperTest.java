@@ -5,6 +5,9 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,7 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UserDTOMapperTest {
     @Test
     public void toOverviewDTO() {
-        User user = User.builder().id(1l).email("email1").name("name1").profilePictureURL("url1").status(OnlineStatus.ONLINE).build();
+        Point newLocation = new GeometryFactory().createPoint(new Coordinate(8.461859195948641, 47.35997146785179));
+        User user = User.builder().id(1L).email("email1").name("name1").profilePictureURL("url1").status(OnlineStatus.ONLINE).lastUserLocation(newLocation).build();
 
         UserOverviewDto overviewDto = UserDTOMapper.INSTANCE.toOverviewDTO(user);
         assertEquals(user.getId(), overviewDto.getId());
@@ -23,5 +27,7 @@ public class UserDTOMapperTest {
         assertEquals(user.getName(), overviewDto.getName());
         assertEquals(user.getProfilePictureURL(), overviewDto.getProfilePicture());
         assertEquals(OnlineStatusDto.fromValue(user.getStatus().getValue()), overviewDto.getStatus());
+        assertEquals(newLocation.getX(), overviewDto.getLatestLocation().getLongitude());
+        assertEquals(newLocation.getY(), overviewDto.getLatestLocation().getLatitude());
     }
 }
