@@ -76,7 +76,7 @@ public class User implements Serializable {
     @JoinColumn
     private List<Tag> tags;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn
     private List<Dog> listOfDogs;
 
