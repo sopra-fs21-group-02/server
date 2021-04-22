@@ -7,6 +7,8 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import org.locationtech.jts.geom.Point;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -45,6 +47,7 @@ public interface UserDTOMapper {
     @Mapping(source = "gender", target = "gender")
     @Mapping(source = "dateOfBirth", target = "dateOfBirth")
     @Mapping(source = "bio", target = "bio")
+    @Mapping(source = "lastUserLocation", target = "latestLocation")
     UserDto convertEntityToUserDTO(User user);
 
     UserDTOMapper INSTANCE = Mappers.getMapper(UserDTOMapper.class);
