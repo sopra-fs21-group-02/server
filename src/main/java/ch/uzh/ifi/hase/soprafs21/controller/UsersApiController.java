@@ -178,16 +178,11 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> usersUserIdLogoutPut(Long userId) throws Exception {
-        if(userId != null){
-            if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
-                userService.logoutUser(userId);
-            }else{
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to logout other user");
-            }
+        if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+            userService.logoutUser(userId);
         }else{
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid input userId cannot be null");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to logout other user");
         }
-
         return ResponseEntity.noContent().build();
     }
     @Override
@@ -198,4 +193,15 @@ public class UsersApiController implements UsersApi {
         return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
     }
 
+    @Override
+    public ResponseEntity<UserDto> usersUserIdGet(Long userId) throws Exception {
+        User user = userService.getUserDetails(userId);
+
+        if(null == user){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        return ResponseEntity
+                .ok()
+                .body(UserDTOMapper.INSTANCE.convertEntityToUserDTO(user));
+    }
 }

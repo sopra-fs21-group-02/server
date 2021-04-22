@@ -1,10 +1,13 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
+import ch.uzh.ifi.hase.soprafs21.constant.Gender;
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
+import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -12,6 +15,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import io.jsonwebtoken.Claims;
 import org.locationtech.jts.geom.Polygon;
@@ -183,5 +188,14 @@ public class UserService {
 
     public List<User> getAllUsersInArea(Polygon areaFilterPolygon){
         return this.userRepository.findByArea(areaFilterPolygon);
+    }
+
+    public User getUserDetails(Long userId) {
+        User user = null;
+        Optional<User> optionalUser =  userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            user = optionalUser.get();
+        }
+        return user;
     }
 }
