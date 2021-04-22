@@ -25,5 +25,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByArea(Polygon areaFilterPolygon);
 
     @Query("select u from User u where u.id <> ?1")
-    List<User> findAll(Long userId);
+    List<User> findAll(Long userIdToExclude);
 }
