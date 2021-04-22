@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
-import ch.uzh.ifi.hase.soprafs21.constant.Gender;
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
@@ -60,10 +59,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Gets the user with provided id
+     * @param id id of user to be returned
+     * @return user
+     */
     public User getUserById(Long id) {
         return userRepository.getOne(id);
     }
-
 
     /**
      * Helper class to authenticate tokenId passed from client with Google
@@ -138,6 +141,11 @@ public class UserService {
         return isSame;
     }
 
+    /**
+     * Updates the location of the provided user
+     * @param userId the id of the user to be updated
+     * @param newLocation the new location of the user
+     */
     @Transactional
     public void updateUserLocation(Long userId, Point newLocation) {
         this.userRepository.updateUserLocation(userId, newLocation);
@@ -186,9 +194,24 @@ public class UserService {
         }
     }
 
+    /**
+     * Returns a list of Users in the provided area/polygon
+     * @param areaFilterPolygon the area from where users are returned
+     * @return list of Users
+     */
     public List<User> getAllUsersInArea(Polygon areaFilterPolygon){
         return this.userRepository.findByArea(areaFilterPolygon);
     }
+
+    /**
+     * Returns a list of all Users but the authenticated one
+     * @return list of Users without the authenticated user
+     */
+    public List<User> getAllUsers(){
+        UserOverviewDto currentUser = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.userRepository.findAll(currentUser.getId());
+    }
+
 
     public User getUserDetails(Long userId) {
         User user = null;

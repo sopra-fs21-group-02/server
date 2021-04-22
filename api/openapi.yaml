@@ -860,9 +860,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Dog'
-        latestLocation:
-          $ref: '#/components/schemas/Coordinate'
-          readOnly: true
     UserOverview:
       type: object
       properties:

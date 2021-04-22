@@ -2,18 +2,25 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,10 +42,25 @@ public class UserServiceIntegrationTest {
     private UserService userService;
 
     @Autowired
-    private EntityManager entityManager;
-
-    @Autowired
     private GeometryFactory geometryFactory;
+
+    @Mock
+    private Authentication authenticationMock;
+
+    @Mock
+    private SecurityContext securityContextMock;
+
+    @BeforeEach
+    void setUp() {
+        UserOverviewDto userOverviewDto = new UserOverviewDto();
+        userOverviewDto.setEmail("mark@twen.de");
+        userOverviewDto.setId(1L);
+        userOverviewDto.setName("mark");
+        userOverviewDto.setStatus(OnlineStatusDto.ONLINE);
+        Mockito.when(authenticationMock.getPrincipal()).thenReturn(userOverviewDto);
+        Mockito.when(securityContextMock.getAuthentication()).thenReturn(authenticationMock);
+        SecurityContextHolder.setContext(securityContextMock);
+    }
 
     @Test
     public void testUpdateUserLocation() {
@@ -64,5 +86,13 @@ public class UserServiceIntegrationTest {
         assertEquals(2, usersInArea.size());
         assertEquals(1, usersInArea.get(0).getId());
         assertEquals(2, usersInArea.get(1).getId());
+    }
+
+    @Test
+    public void testGetUsers() {
+        List<User> users = userService.getAllUsers();
+        UserOverviewDto userOverview = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        assertEquals(3, users.size());
+        assertFalse(users.stream().anyMatch(user -> user.getId().equals(userOverview.getId())));
     }
 }

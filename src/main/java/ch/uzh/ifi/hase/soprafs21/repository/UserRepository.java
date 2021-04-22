@@ -23,4 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where within(u.lastUserLocation, ?1) = true")
     List<User> findByArea(Polygon areaFilterPolygon);
+
+    @Query("select u from User u where u.id <> ?1")
+    List<User> findAll(Long userIdToExclude);
 }
