@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.core.io.Resource;
 
 @Mapper
 public interface DogDTOMapper {
@@ -20,4 +21,12 @@ public interface DogDTOMapper {
     @Mapping(source = "color", target = "color")
     @Mapping(source = "profilePicture", target = "profilePicture")
     DogDto toDogDTO(Dog entity);
+
+    default Resource map(byte[] value) {
+        return null;
+    }
+
+    default byte[] map(Resource value){
+        return null;
+    }
 }
