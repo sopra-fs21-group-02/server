@@ -6,10 +6,15 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+
+/**
+ * Internal Dog representation
+ */
 @Data
 @Entity
 @Table(name = "DOGS", schema="soprafs21")
 public class Dog implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -22,14 +27,15 @@ public class Dog implements Serializable {
     @Column(nullable = false)
     private String breed;
 
-    /*@OneToOne
-    @JoinColumn(name = "image", nullable = false)
-    private Image image;*/
+    @Column
+    @Lob
+    private byte[] profilePicture;
 
-    @Column(nullable = false)
+    @Column
     private Date dateOfBirth;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column
@@ -39,5 +45,9 @@ public class Dog implements Serializable {
     private String color;
 
     @Column
-    private Double weight;
+    private Float weight;
+
+    @ManyToOne
+    @JoinColumn
+    private User owner;
    }

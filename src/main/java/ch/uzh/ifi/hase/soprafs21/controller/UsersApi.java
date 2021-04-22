@@ -11,6 +11,8 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
+import java.time.LocalDate;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
@@ -330,7 +332,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"profilePicture\" : \"\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -371,43 +373,20 @@ public interface UsersApi {
 
 
     /**
-     * POST /users/{userId}/dogs/{dogId}/image
-     * Upload dog&#39;s profile image
-     *
-     * @param userId Numeric ID of the user (required)
-     * @param dogId Numeric ID of the dog (required)
-     * @param body  (required)
-     * @return The image has been successfully uploaded (status code 201)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     *         or User not permitted (status code 403)
-     *         or Resource not found (status code 404)
-     */
-    @ApiOperation(value = "", nickname = "usersUserIdDogsDogIdImagePost", notes = "Upload dog's profile image", tags={ "Dogs", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "The image has been successfully uploaded"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 403, message = "User not permitted"),
-        @ApiResponse(code = 404, message = "Resource not found") })
-    @PostMapping(
-        value = "/users/{userId}/dogs/{dogId}/image",
-        produces = { "application/json" },
-        consumes = { "image/gif", "image/jpeg", "image/png", "image/tiff" }
-    )
-    default ResponseEntity<Void> usersUserIdDogsDogIdImagePost(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody org.springframework.core.io.Resource body) throws Exception {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
      * PUT /users/{userId}/dogs/{dogId} : Update an existing dog
      * A user can edit dog belonging to his profile.
      *
      * @param userId Numeric ID of the user (required)
      * @param dogId Numeric ID of the dog to update (required)
-     * @param dogDto Dog object that needs to be updated (required)
+     * @param name  (required)
+     * @param breed  (required)
+     * @param sex  (required)
+     * @param id  (optional)
+     * @param dateOfBirth  (optional)
+     * @param weight  (optional)
+     * @param description  (optional)
+     * @param color  (optional)
+     * @param profilePicture  (optional)
      * @return The dog&#39;s details were susscesfully updated (status code 204)
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
@@ -424,9 +403,9 @@ public interface UsersApi {
     @PutMapping(
         value = "/users/{userId}/dogs/{dogId}",
         produces = { "application/json" },
-        consumes = { "application/json" }
+        consumes = { "multipart/mixed" }
     )
-    default ResponseEntity<Void> usersUserIdDogsDogIdPut(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "Dog object that needs to be updated" ,required=true )  @Valid @RequestBody DogDto dogDto) throws Exception {
+    default ResponseEntity<Void> usersUserIdDogsDogIdPut(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "name", required = true)  String name,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "breed", required = true)  String breed,@ApiParam(value = "", required=true, allowableValues="MALE, FEMALE, OTHER") @Valid @RequestPart(value = "sex", required = true)  GenderDto sex,@ApiParam(value = "") @Valid @RequestPart(value = "id", required = false)  Long id,@ApiParam(value = "") @Valid @RequestPart(value = "dateOfBirth", required = false)  LocalDate dateOfBirth,@ApiParam(value = "") @Valid @RequestPart(value = "weight", required = false)  Double weight,@ApiParam(value = "") @Valid @RequestPart(value = "description", required = false)  String description,@ApiParam(value = "") @Valid @RequestPart(value = "color", required = false)  String color,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -455,7 +434,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"profilePicture\" : \"\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -471,7 +450,15 @@ public interface UsersApi {
      * A user can add dog to his own profile.
      *
      * @param userId Numeric ID of the user (required)
-     * @param dogDto Dog object that needs to be created (required)
+     * @param name  (required)
+     * @param breed  (required)
+     * @param sex  (required)
+     * @param id  (optional)
+     * @param dateOfBirth  (optional)
+     * @param weight  (optional)
+     * @param description  (optional)
+     * @param color  (optional)
+     * @param profilePicture  (optional)
      * @return The dog was susscesfully created (status code 201)
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
@@ -486,9 +473,9 @@ public interface UsersApi {
     @PostMapping(
         value = "/users/{userId}/dogs",
         produces = { "application/json" },
-        consumes = { "application/json" }
+        consumes = { "multipart/mixed" }
     )
-    default ResponseEntity<Void> usersUserIdDogsPost(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Dog object that needs to be created" ,required=true )  @Valid @RequestBody DogDto dogDto) throws Exception {
+    default ResponseEntity<Void> usersUserIdDogsPost(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "name", required = true)  String name,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "breed", required = true)  String breed,@ApiParam(value = "", required=true, allowableValues="MALE, FEMALE, OTHER") @Valid @RequestPart(value = "sex", required = true)  GenderDto sex,@ApiParam(value = "") @Valid @RequestPart(value = "id", required = false)  Long id,@ApiParam(value = "") @Valid @RequestPart(value = "dateOfBirth", required = false)  LocalDate dateOfBirth,@ApiParam(value = "") @Valid @RequestPart(value = "weight", required = false)  Double weight,@ApiParam(value = "") @Valid @RequestPart(value = "description", required = false)  String description,@ApiParam(value = "") @Valid @RequestPart(value = "color", required = false)  String color,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -517,7 +504,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"name\" : \"name\", \"dogs\" : [ { \"profilePicture\" : \"\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"profilePicture\" : \"\", \"color\" : \"color\", \"name\" : \"name\", \"weight\" : 1.4658129805029452, \"description\" : \"description\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

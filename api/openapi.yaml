@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.5.0"
+  version: "1.6.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -247,9 +247,12 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/mixed:
             schema:
               $ref: "#/components/schemas/Dog"
+            encoding:
+              profilePicture:
+                contentType: image/png, image/jpeg, image/gif, image/tiff
         description: "Dog object that needs to be created"
       responses:
         201:
@@ -316,9 +319,12 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/mixed:
             schema:
               $ref: "#/components/schemas/Dog"
+            encoding:
+              profilePicture:
+                contentType: image/png, image/jpeg, image/gif, image/tiff
         description: "Dog object that needs to be updated"
       responses:
         204:
@@ -408,40 +414,6 @@ paths:
           $ref: '#/components/responses/403'
         401:
           $ref: "#/components/responses/401"
-        404:
-          $ref: "#/components/responses/404"
-    post:
-      tags:
-        - "Dogs"
-      description: Upload dog's profile image
-      requestBody:
-        required: true
-        content:
-          image/gif:
-            schema:
-              type: string
-              format: binary
-          image/jpeg:
-            schema:
-              type: string
-              format: binary
-          image/png:
-            schema:
-              type: string
-              format: binary
-          image/tiff:
-            schema:
-              type: string
-              format: binary
-      responses:
-        201:
-          description: The image has been successfully uploaded
-        400:
-          $ref: "#/components/responses/400"
-        401:
-          $ref: "#/components/responses/401"
-        403:
-          $ref: '#/components/responses/403'
         404:
           $ref: "#/components/responses/404"
   /users/{userId}/conversations:
@@ -906,6 +878,9 @@ components:
           type: string
         color:
           type: string
+        profilePicture:
+          type: string
+          format: binary
       required:
         - name
         - breed

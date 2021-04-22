@@ -47,7 +47,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String profilePictureURL;
 
-    @Column(nullable = true)
+    @Column
     private Date dateOfBirth;
 
     //Get from ExternalLogin = OAuth provider
@@ -58,7 +58,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String providerUid;
 
-    @Column(nullable = true, unique = true)
+    @Column(unique = true)
     private String token;
 
     @Column(nullable = false)

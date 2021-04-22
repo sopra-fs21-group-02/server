@@ -44,6 +44,9 @@ public class DogDto  implements Serializable {
   @JsonProperty("color")
   private String color;
 
+  @JsonProperty("profilePicture")
+  private org.springframework.core.io.Resource profilePicture;
+
   public DogDto id(Long id) {
     this.id = id;
     return this;
@@ -209,6 +212,27 @@ public class DogDto  implements Serializable {
     this.color = color;
   }
 
+  public DogDto profilePicture(org.springframework.core.io.Resource profilePicture) {
+    this.profilePicture = profilePicture;
+    return this;
+  }
+
+  /**
+   * Get profilePicture
+   * @return profilePicture
+  */
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public org.springframework.core.io.Resource getProfilePicture() {
+    return profilePicture;
+  }
+
+  public void setProfilePicture(org.springframework.core.io.Resource profilePicture) {
+    this.profilePicture = profilePicture;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -226,12 +250,13 @@ public class DogDto  implements Serializable {
         Objects.equals(this.dateOfBirth, dog.dateOfBirth) &&
         Objects.equals(this.weight, dog.weight) &&
         Objects.equals(this.description, dog.description) &&
-        Objects.equals(this.color, dog.color);
+        Objects.equals(this.color, dog.color) &&
+        Objects.equals(this.profilePicture, dog.profilePicture);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, breed, sex, dateOfBirth, weight, description, color);
+    return Objects.hash(id, name, breed, sex, dateOfBirth, weight, description, color, profilePicture);
   }
 
   @Override
@@ -247,6 +272,7 @@ public class DogDto  implements Serializable {
     sb.append("    weight: ").append(toIndentedString(weight)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    color: ").append(toIndentedString(color)).append("\n");
+    sb.append("    profilePicture: ").append(toIndentedString(profilePicture)).append("\n");
     sb.append("}");
     return sb.toString();
   }
