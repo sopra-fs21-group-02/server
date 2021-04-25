@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -32,6 +33,9 @@ public class UserOverviewDto  implements Serializable {
 
   @JsonProperty("status")
   private OnlineStatusDto status;
+
+  @JsonProperty("latestLocation")
+  private CoordinateDto latestLocation;
 
   public UserOverviewDto id(Long id) {
     this.id = id;
@@ -134,6 +138,27 @@ public class UserOverviewDto  implements Serializable {
     this.status = status;
   }
 
+  public UserOverviewDto latestLocation(CoordinateDto latestLocation) {
+    this.latestLocation = latestLocation;
+    return this;
+  }
+
+  /**
+   * Get latestLocation
+   * @return latestLocation
+  */
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public CoordinateDto getLatestLocation() {
+    return latestLocation;
+  }
+
+  public void setLatestLocation(CoordinateDto latestLocation) {
+    this.latestLocation = latestLocation;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -148,12 +173,13 @@ public class UserOverviewDto  implements Serializable {
         Objects.equals(this.email, userOverview.email) &&
         Objects.equals(this.name, userOverview.name) &&
         Objects.equals(this.profilePicture, userOverview.profilePicture) &&
-        Objects.equals(this.status, userOverview.status);
+        Objects.equals(this.status, userOverview.status) &&
+        Objects.equals(this.latestLocation, userOverview.latestLocation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, email, name, profilePicture, status);
+    return Objects.hash(id, email, name, profilePicture, status, latestLocation);
   }
 
   @Override
@@ -166,6 +192,7 @@ public class UserOverviewDto  implements Serializable {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    profilePicture: ").append(toIndentedString(profilePicture)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    latestLocation: ").append(toIndentedString(latestLocation)).append("\n");
     sb.append("}");
     return sb.toString();
   }

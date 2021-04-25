@@ -1,13 +1,14 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.3.0"
+  version: "1.5.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
 paths:
   /users:
     get:
+      operationId: getUsers
       tags:
         - "Users"
       summary: "Return all users"
@@ -29,7 +30,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: "#/components/schemas/UserOverview"
           description: A list of Users
         400:
           $ref: '#/components/responses/400'
@@ -879,6 +880,9 @@ components:
         status:
           readOnly: true
           $ref: '#/components/schemas/OnlineStatus'
+        latestLocation:
+          readOnly: true
+          $ref: '#/components/schemas/Coordinate'
     Dog:
       type: object
       properties:

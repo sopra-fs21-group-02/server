@@ -1,10 +1,13 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
+import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -12,8 +15,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import io.jsonwebtoken.Claims;
+import org.locationtech.jts.geom.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +60,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Gets the user with provided id
+     * @param id id of user to be returned
+     * @return user
+     */
     public User getUserById(Long id) {
         return userRepository.getOne(id);
     }
-
 
     /**
      * Helper class to authenticate tokenId passed from client with Google
@@ -132,6 +142,11 @@ public class UserService {
         return isSame;
     }
 
+    /**
+     * Updates the location of the provided user
+     * @param userId the id of the user to be updated
+     * @param newLocation the new location of the user
+     */
     @Transactional
     public void updateUserLocation(Long userId, Point newLocation) {
         this.userRepository.updateUserLocation(userId, newLocation);
@@ -178,5 +193,33 @@ public class UserService {
             user.setStatus(OnlineStatus.OFFLINE);
             userRepository.saveAndFlush(user);
         }
+    }
+
+    /**
+     * Returns a list of Users in the provided area/polygon
+     * @param areaFilterPolygon the area from where users are returned
+     * @return list of Users
+     */
+    public List<User> getAllUsersInArea(Polygon areaFilterPolygon){
+        return this.userRepository.findByArea(areaFilterPolygon);
+    }
+
+    /**
+     * Returns a list of all Users but the authenticated one
+     * @return list of Users without the authenticated user
+     */
+    public List<User> getAllUsers(){
+        UserOverviewDto currentUser = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.userRepository.findAll(currentUser.getId());
+    }
+
+
+    public User getUserDetails(Long userId) {
+        User user = null;
+        Optional<User> optionalUser =  userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            user = optionalUser.get();
+        }
+        return user;
     }
 }

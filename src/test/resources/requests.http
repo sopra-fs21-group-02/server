@@ -21,3 +21,7 @@ Content-Type: application/json
 }
 
 ###
+
+GET http://localhost:8080/v1/users?visibleArea%5B0%5D.longitude=8.4401162&visibleArea%5B0%5D.latitude=47.3784542&visibleArea%5B1%5D.longitude=8.4649656&visibleArea%5B1%5D.latitude=47.3760936&visibleArea%5B2%5D.longitude=8.4779352&visibleArea%5B2%5D.latitude=47.3588282&visibleArea%5B3%5D.longitude=8.4563555&visibleArea%5B3%5D.latitude=47.3451373&visibleArea%5B4%5D.longitude=8.4277460&visibleArea%5B4%5D.latitude=47.3481267&visibleArea%5B5%5D.longitude=8.4258387&visibleArea%5B5%5D.latitude=47.3660966&visibleArea%5B6%5D.longitude=8.4398437&visibleArea%5B6%5D.latitude=47.3785280&visibleArea%5B7%5D.longitude=8.4401162&visibleArea%5B7%5D.latitude=47.3784542
+#visibleArea%5B0%5D.longitude=8.432962&visibleArea%5B0%5D.latitude=47.378622&visibleArea%5B1%5D.longitude=8.432962&visibleArea%5B1%5D.latitude=47.379939&visibleArea%5B2%5D.longitude=8.479604&visibleArea%5B2%5D.latitude=47.379939&visibleArea%5B2%5D.longitude=8.479604&visibleArea%5B2%5D.latitude=47.378622
+Content-Type: application/json
