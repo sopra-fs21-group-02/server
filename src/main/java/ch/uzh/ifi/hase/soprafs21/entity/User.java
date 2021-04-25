@@ -10,6 +10,7 @@ import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class User implements Serializable {
     private String profilePictureURL;
 
     @Column
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     //Get from ExternalLogin = OAuth provider
     @Column(nullable = false)
