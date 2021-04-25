@@ -210,4 +210,14 @@ public class UsersApiController implements UsersApi {
                 .ok()
                 .body(UserDTOMapper.INSTANCE.convertEntityToUserDTO(user));
     }
+
+    @Override
+    public ResponseEntity<Void> usersUserIdDelete(Long userId) throws Exception {
+        if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+            userService.deleteUser(userId);
+        }else{
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to Delete other user");
+        }
+        return ResponseEntity.noContent().build();
+    }
 }
