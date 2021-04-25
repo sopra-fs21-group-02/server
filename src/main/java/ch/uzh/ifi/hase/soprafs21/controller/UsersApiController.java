@@ -8,6 +8,8 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.*;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.ChatMessageDTOMapper;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.ConversationDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.ChatService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import ch.uzh.ifi.hase.soprafs21.service.DogService;
@@ -214,6 +216,16 @@ public class UsersApiController implements UsersApi {
         return ResponseEntity
                 .ok()
                 .body(UserDTOMapper.INSTANCE.convertEntityToUserDTO(user));
+    }
+
+    @Override
+    public ResponseEntity<Void> usersUserIdDelete(Long userId) throws Exception {
+        if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+            userService.deleteUser(userId);
+        }else{
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to Delete other user");
+        }
+        return ResponseEntity.noContent().build();
     }
 
     public ResponseEntity<Void> addDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "dogDto", required = true)  DogDto dogDto,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {

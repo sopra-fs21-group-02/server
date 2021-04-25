@@ -73,11 +73,11 @@ public class User implements Serializable {
     @Column
     private String bio;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     @JoinColumn
     private List<Tag> tags;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     @JoinColumn
     private List<Dog> listOfDogs;
 
