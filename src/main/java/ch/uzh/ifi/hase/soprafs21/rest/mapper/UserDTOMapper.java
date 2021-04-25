@@ -23,8 +23,10 @@ import java.util.List;
  * Additional mappers can be defined for new entities.
  * Always created one mapper for getting information (GET) and one mapper for creating information (POST).
  */
-@Mapper(uses = SpatialDTOMapper.class)
+@Mapper(uses = { SpatialDTOMapper.class, DogDTOMapper.class })
 public interface UserDTOMapper {
+    UserDTOMapper INSTANCE = Mappers.getMapper(UserDTOMapper.class);
+
     @Mapping(source = "name", target = "name")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "email", target = "email")
@@ -49,8 +51,6 @@ public interface UserDTOMapper {
     @Mapping(source = "bio", target = "bio")
     @Mapping(source = "lastUserLocation", target = "latestLocation")
     UserDto convertEntityToUserDTO(User user);
-
-    UserDTOMapper INSTANCE = Mappers.getMapper(UserDTOMapper.class);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
