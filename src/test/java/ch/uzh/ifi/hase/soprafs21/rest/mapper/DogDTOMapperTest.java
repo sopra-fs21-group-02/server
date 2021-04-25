@@ -6,16 +6,13 @@ import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DogDTOMapperTest {
     private Dog dog;
     private DogDto dogDto;
+    private MultipartFile resource;
 
     @BeforeEach
     void initialization() throws IOException {
@@ -31,14 +29,13 @@ class DogDTOMapperTest {
         byte [] fileContent = this.getClass().getClassLoader().getResourceAsStream("test_img.png").readAllBytes();
         dog = Dog.builder().id(1L).name("Belka").breed("Laika").dateOfBirth(birthday).gender(Gender.FEMALE).profilePicture(fileContent).owner(owner).build();
 
-        ByteArrayResource resource = new ByteArrayResource(fileContent);
+        resource = new MockMultipartFile("test.png", fileContent);
         dogDto = new DogDto();
         dogDto.setId(2L);
         dogDto.setName("Strelka");
         dogDto.breed("Laika");
         dogDto.setSex(GenderDto.FEMALE);
         dogDto.setDateOfBirth(birthday);
-        dogDto.setProfilePicture(resource);
     }
 
     @Test
@@ -50,34 +47,24 @@ class DogDTOMapperTest {
         assertEquals(dog.getBreed(), dogDto.getBreed());
         assertEquals(dog.getDateOfBirth(), dogDto.getDateOfBirth());
         assertEquals(dog.getGender().toString(), dogDto.getSex().toString());
-        assertArrayEquals(dog.getProfilePicture(), dogDto.getProfilePicture().getInputStream().readAllBytes());
     }
 
-    @Test
-    void toDTONoPicture() {
-        dog.setProfilePicture(null);
-
-        DogDto dogDto = DogDTOMapper.INSTANCE.toDogDTO(dog);
-        assertNull(dogDto.getProfilePicture());
-    }
 
     @Test
     void toDogEntity() throws IOException {
-        Dog newDog = DogDTOMapper.INSTANCE.toDogEntity(dogDto);
+        Dog newDog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, resource);
 
         assertEquals(dogDto.getId(), newDog.getId());
         assertEquals(dogDto.getName(), newDog.getName());
         assertEquals(dogDto.getBreed(), newDog.getBreed());
         assertEquals(dogDto.getDateOfBirth(), newDog.getDateOfBirth());
         assertEquals(dogDto.getSex().toString(), newDog.getGender().toString());
-        assertArrayEquals(dogDto.getProfilePicture().getInputStream().readAllBytes(), newDog.getProfilePicture());
+        assertArrayEquals(resource.getBytes(), newDog.getProfilePicture());
     }
 
     @Test
     void toDogEntityNoPicture() throws IOException {
-        dogDto.setProfilePicture(null);
-
-        Dog dog = DogDTOMapper.INSTANCE.toDogEntity(dogDto);
+        Dog dog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, null);
         assertNull(dog.getProfilePicture());
     }
 }

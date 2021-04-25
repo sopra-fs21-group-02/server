@@ -28,15 +28,16 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/v1/users/1/dogs/
-Content-Type: multipart/mixed; boundary=WebAppBoundary
+Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
-Content-Disposition: form-data; name="data"; filename="data.json"
+Content-Disposition: form-data; name="dogDto"; filename="data.json"
 Content-Type: application/json
 
 < ./request-form-data.json
 
 --WebAppBoundary
+Content-Disposition: form-data; name="profilePicture"; filename="test.png"
 Content-Type: image/png
 
 < ./test_img.png
