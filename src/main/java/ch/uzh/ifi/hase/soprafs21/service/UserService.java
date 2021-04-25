@@ -221,4 +221,12 @@ public class UserService {
         }
         return user;
     }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            userRepository.delete(optionalUser.get());
+        }
+    }
 }

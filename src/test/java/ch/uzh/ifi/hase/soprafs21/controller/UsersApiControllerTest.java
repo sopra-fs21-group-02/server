@@ -231,4 +231,29 @@ class UsersApiControllerTest {
         assertEquals(2, entity.getBody().size());
     }
 
+    @Test
+    void deleteSuccess () throws Exception{
+        Long mockUserId = 1L;
+        given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.TRUE);
+
+        ResponseEntity<Void> responseEntity = usersApiController.usersUserIdDelete(mockUserId);
+        verify(userServiceMock).deleteUser(eq(mockUserId));
+        assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
+    }
+
+    @Test
+    void deleteForbidden () throws Exception{
+        Long mockUserId = 1L;
+        given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.FALSE);
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            usersApiController.usersUserIdDelete(mockUserId);
+        });
+
+        String expectedMessage = "Do not have permission to Delete other user";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
 }
