@@ -64,13 +64,13 @@ class JwtTokenAuthenticationFilterTest {
         FilterChain mockedFilterChain = Mockito.mock(FilterChain.class);
         Claims mockedClaims = Mockito.mock(Claims.class);
 
-        User mockedUser = User.builder().id(1l).email("email1").name("name1").profilePictureURL("url1").build();
+        User mockedUser = User.builder().id(1L).email("email1").name("name1").profilePictureURL("url1").build();
 
         when(mockedRequest.getHeader(SecurityConstants.HEADER_STRING)).thenReturn("Bearer Test123");
         when(jwtTokenUtil.validateToken("Test123",SecurityConstants.SECRET)).thenReturn(Boolean.TRUE);
         when(jwtTokenUtil.getClaimsFromJWT("Test123",SecurityConstants.SECRET)).thenReturn(mockedClaims);
         when(mockedClaims.getSubject()).thenReturn("email1");
-        when(userServiceMock.getUserByEmail("email1")).thenReturn(Optional.of((User) mockedUser));
+        when(userServiceMock.getUserByEmail("email1")).thenReturn(Optional.of(mockedUser));
 
         jwtFilter.doFilterInternal(mockedRequest,mockedResponse,mockedFilterChain);
         verify(jwtTokenUtil,times(1)).validateToken("Test123",SecurityConstants.SECRET);
