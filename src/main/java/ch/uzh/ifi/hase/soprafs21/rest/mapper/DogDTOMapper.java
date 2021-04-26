@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -19,16 +20,15 @@ public interface DogDTOMapper {
     @Mapping(source = "breed", target = "breed")
     @Mapping(source = "gender", target = "sex")
     @Mapping(source = "dateOfBirth", target = "dateOfBirth")
-    @Mapping(source = "profilePicture", target = "profilePicture")
     DogDto toDogDTO(Dog entity);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "breed", target = "breed")
-    @Mapping(source = "sex", target = "gender")
-    @Mapping(source = "dateOfBirth", target = "dateOfBirth")
-    @Mapping(source = "profilePicture", target = "profilePicture")
-    Dog toDogEntity(DogDto dogDto) throws IOException;
+    @Mapping(expression = "java(dogDto.getId())", target = "id")
+    @Mapping(expression = "java(dogDto.getName())", target = "name")
+    @Mapping(expression = "java(dogDto.getBreed())", target = "breed")
+    @Mapping(expression = "java(Gender.fromValue(dogDto.getSex().toString()))", target = "gender")
+    @Mapping(expression = "java(dogDto.getDateOfBirth())", target = "dateOfBirth")
+    @Mapping(expression = "java(map(profilePicture))", target = "profilePicture")
+    Dog toDogEntity(DogDto dogDto, MultipartFile profilePicture) throws IOException;
 
     default Resource map(byte[] value) {
         if(value == null) {
@@ -37,10 +37,10 @@ public interface DogDTOMapper {
         return new ByteArrayResource(value);
     }
 
-    default byte[] map(Resource value) throws IOException {
+    default byte[] map(MultipartFile value) throws IOException {
         if(value == null) {
             return null;
         }
-        return value.getInputStream().readAllBytes();
+        return value.getResource().getInputStream().readAllBytes();
     }
 }

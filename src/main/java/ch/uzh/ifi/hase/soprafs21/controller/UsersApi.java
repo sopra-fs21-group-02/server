@@ -43,6 +43,99 @@ public interface UsersApi {
     }
 
     /**
+     * POST /users/{userId}/dogs : Add dog to user profile
+     * A user can add dog to his own profile.
+     *
+     * @param userId Numeric ID of the user (required)
+     * @param dogDto  (required)
+     * @param profilePicture  (optional)
+     * @return The dog was susscesfully created (status code 201)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     */
+    @ApiOperation(value = "Add dog to user profile", nickname = "addDog", notes = "A user can add dog to his own profile.", tags={ "Dogs", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 201, message = "The dog was susscesfully created"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted") })
+    @PostMapping(
+        value = "/users/{userId}/dogs",
+        produces = { "application/json" },
+        consumes = { "multipart/form-data" }
+    )
+    default ResponseEntity<Void> addDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "dogDto", required = true)  DogDto dogDto,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * DELETE /users/{userId}/dogs/{dogId} : Delete dog with dogId
+     * A user can delete his own dog.
+     *
+     * @param userId Numeric ID of the user (required)
+     * @param dogId Numeric ID of the dog to delete (required)
+     * @return A dog with dogId was deleted (status code 204)
+     *         or Invalid Request (status code 400)
+     *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Delete dog with dogId", nickname = "deleteDog", notes = "A user can delete his own dog.", tags={ "Dogs", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "A dog with dogId was deleted"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @DeleteMapping(
+        value = "/users/{userId}/dogs/{dogId}",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<Void> deleteDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to delete",required=true) @PathVariable("dogId") Long dogId) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /users/{userId}/dogs/{dogId} : Update an existing dog
+     * A user can edit dog belonging to his profile.
+     *
+     * @param userId Numeric ID of the user (required)
+     * @param dogId Numeric ID of the dog to update (required)
+     * @param name  (required)
+     * @param breed  (required)
+     * @param sex  (required)
+     * @param id  (optional)
+     * @param dateOfBirth  (optional)
+     * @return The dog&#39;s details were susscesfully updated (status code 204)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Update an existing dog", nickname = "editDog", notes = "A user can edit dog belonging to his profile.", tags={ "Dogs", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "The dog's details were susscesfully updated"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @PutMapping(
+        value = "/users/{userId}/dogs/{dogId}",
+        produces = { "application/json" },
+        consumes = { "multipart/mixed" }
+    )
+    default ResponseEntity<Void> editDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "name", required = true)  String name,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "breed", required = true)  String breed,@ApiParam(value = "", required=true, allowableValues="MALE, FEMALE, OTHER") @Valid @RequestPart(value = "sex", required = true)  GenderDto sex,@ApiParam(value = "") @Valid @RequestPart(value = "id", required = false)  Long id,@ApiParam(value = "") @Valid @RequestPart(value = "dateOfBirth", required = false)  LocalDate dateOfBirth) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
      * GET /users/{userId}/conversations : Return all conversations of user by userId
      *
      * @param userId Numeric ID of the user (required)
@@ -106,6 +199,35 @@ public interface UsersApi {
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /users/{userId}/dogs/{dogId}/image
+     * Get dog&#39;s profile image
+     *
+     * @param userId Numeric ID of the user (required)
+     * @param dogId Numeric ID of the dog (required)
+     * @return Returns dog&#39;s profile image (status code 200)
+     *         or Invalid Request (status code 400)
+     *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "", nickname = "getDogsImage", notes = "Get dog's profile image", response = org.springframework.core.io.Resource.class, tags={ "Dogs", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns dog's profile image", response = org.springframework.core.io.Resource.class),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @GetMapping(
+        value = "/users/{userId}/dogs/{dogId}/image",
+        produces = { "image/gif", "image/jpeg", "image/png", "image/tiff", "application/json" }
+    )
+    default ResponseEntity<org.springframework.core.io.Resource> getDogsImage(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog",required=true) @PathVariable("dogId") Long dogId) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -280,35 +402,6 @@ public interface UsersApi {
 
 
     /**
-     * DELETE /users/{userId}/dogs/{dogId} : Delete dog with dogId
-     * A user can delete his own dog.
-     *
-     * @param userId Numeric ID of the user (required)
-     * @param dogId Numeric ID of the dog to delete (required)
-     * @return A dog with dogId was deleted (status code 204)
-     *         or Invalid Request (status code 400)
-     *         or User not permitted (status code 403)
-     *         or User unauthenticated (status code 401)
-     *         or Resource not found (status code 404)
-     */
-    @ApiOperation(value = "Delete dog with dogId", nickname = "usersUserIdDogsDogIdDelete", notes = "A user can delete his own dog.", tags={ "Dogs", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 204, message = "A dog with dogId was deleted"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 403, message = "User not permitted"),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 404, message = "Resource not found") })
-    @DeleteMapping(
-        value = "/users/{userId}/dogs/{dogId}",
-        produces = { "application/json" }
-    )
-    default ResponseEntity<Void> usersUserIdDogsDogIdDelete(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to delete",required=true) @PathVariable("dogId") Long dogId) throws Exception {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
      * GET /users/{userId}/dogs/{dogId} : Return dog of user by dogId
      *
      * @param userId Numeric ID of the user (required)
@@ -332,77 +425,12 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"\", \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * GET /users/{userId}/dogs/{dogId}/image
-     * Get dog&#39;s profile image
-     *
-     * @param userId Numeric ID of the user (required)
-     * @param dogId Numeric ID of the dog (required)
-     * @return Returns dog&#39;s profile image (status code 200)
-     *         or Invalid Request (status code 400)
-     *         or User not permitted (status code 403)
-     *         or User unauthenticated (status code 401)
-     *         or Resource not found (status code 404)
-     */
-    @ApiOperation(value = "", nickname = "usersUserIdDogsDogIdImageGet", notes = "Get dog's profile image", response = org.springframework.core.io.Resource.class, tags={ "Dogs", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Returns dog's profile image", response = org.springframework.core.io.Resource.class),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 403, message = "User not permitted"),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 404, message = "Resource not found") })
-    @GetMapping(
-        value = "/users/{userId}/dogs/{dogId}/image",
-        produces = { "image/gif", "image/jpeg", "image/png", "image/tiff", "application/json" }
-    )
-    default ResponseEntity<org.springframework.core.io.Resource> usersUserIdDogsDogIdImageGet(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog",required=true) @PathVariable("dogId") Long dogId) throws Exception {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * PUT /users/{userId}/dogs/{dogId} : Update an existing dog
-     * A user can edit dog belonging to his profile.
-     *
-     * @param userId Numeric ID of the user (required)
-     * @param dogId Numeric ID of the dog to update (required)
-     * @param name  (required)
-     * @param breed  (required)
-     * @param sex  (required)
-     * @param id  (optional)
-     * @param dateOfBirth  (optional)
-     * @param profilePicture  (optional)
-     * @return The dog&#39;s details were susscesfully updated (status code 204)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     *         or User not permitted (status code 403)
-     *         or Resource not found (status code 404)
-     */
-    @ApiOperation(value = "Update an existing dog", nickname = "usersUserIdDogsDogIdPut", notes = "A user can edit dog belonging to his profile.", tags={ "Dogs", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 204, message = "The dog's details were susscesfully updated"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 403, message = "User not permitted"),
-        @ApiResponse(code = 404, message = "Resource not found") })
-    @PutMapping(
-        value = "/users/{userId}/dogs/{dogId}",
-        produces = { "application/json" },
-        consumes = { "multipart/mixed" }
-    )
-    default ResponseEntity<Void> usersUserIdDogsDogIdPut(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "name", required = true)  String name,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "breed", required = true)  String breed,@ApiParam(value = "", required=true, allowableValues="MALE, FEMALE, OTHER") @Valid @RequestPart(value = "sex", required = true)  GenderDto sex,@ApiParam(value = "") @Valid @RequestPart(value = "id", required = false)  Long id,@ApiParam(value = "") @Valid @RequestPart(value = "dateOfBirth", required = false)  LocalDate dateOfBirth,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -431,45 +459,12 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"\", \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * POST /users/{userId}/dogs : Add dog to user profile
-     * A user can add dog to his own profile.
-     *
-     * @param userId Numeric ID of the user (required)
-     * @param name  (required)
-     * @param breed  (required)
-     * @param sex  (required)
-     * @param id  (optional)
-     * @param dateOfBirth  (optional)
-     * @param profilePicture  (optional)
-     * @return The dog was susscesfully created (status code 201)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     *         or User not permitted (status code 403)
-     */
-    @ApiOperation(value = "Add dog to user profile", nickname = "usersUserIdDogsPost", notes = "A user can add dog to his own profile.", tags={ "Dogs", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "The dog was susscesfully created"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 403, message = "User not permitted") })
-    @PostMapping(
-        value = "/users/{userId}/dogs",
-        produces = { "application/json" },
-        consumes = { "multipart/mixed" }
-    )
-    default ResponseEntity<Void> usersUserIdDogsPost(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "name", required = true)  String name,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "breed", required = true)  String breed,@ApiParam(value = "", required=true, allowableValues="MALE, FEMALE, OTHER") @Valid @RequestPart(value = "sex", required = true)  GenderDto sex,@ApiParam(value = "") @Valid @RequestPart(value = "id", required = false)  Long id,@ApiParam(value = "") @Valid @RequestPart(value = "dateOfBirth", required = false)  LocalDate dateOfBirth,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -498,7 +493,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"profilePicture\" : \"\", \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"profilePicture\" : \"\", \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

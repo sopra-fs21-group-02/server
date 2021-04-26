@@ -256,4 +256,15 @@ class UsersApiControllerTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @Test
+    public void testAddDogWithId() {
+        DogDto dogDto = new DogDto();
+        dogDto.setName("D1");
+        dogDto.setBreed("B1");
+        dogDto.setSex(GenderDto.MALE);
+        dogDto.setId(1L);
+
+        assertThrows(ResponseStatusException.class, () -> usersApiController.addDog(1L, dogDto, null));
+    }
+
 }

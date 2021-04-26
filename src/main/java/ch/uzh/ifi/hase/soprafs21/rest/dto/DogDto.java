@@ -35,9 +35,6 @@ public class DogDto  implements Serializable {
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
   private LocalDate dateOfBirth;
 
-  @JsonProperty("profilePicture")
-  private org.springframework.core.io.Resource profilePicture;
-
   public DogDto id(Long id) {
     this.id = id;
     return this;
@@ -143,27 +140,6 @@ public class DogDto  implements Serializable {
     this.dateOfBirth = dateOfBirth;
   }
 
-  public DogDto profilePicture(org.springframework.core.io.Resource profilePicture) {
-    this.profilePicture = profilePicture;
-    return this;
-  }
-
-  /**
-   * Get profilePicture
-   * @return profilePicture
-  */
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public org.springframework.core.io.Resource getProfilePicture() {
-    return profilePicture;
-  }
-
-  public void setProfilePicture(org.springframework.core.io.Resource profilePicture) {
-    this.profilePicture = profilePicture;
-  }
-
 
   @Override
   public boolean equals(Object o) {
@@ -178,13 +154,12 @@ public class DogDto  implements Serializable {
         Objects.equals(this.name, dog.name) &&
         Objects.equals(this.breed, dog.breed) &&
         Objects.equals(this.sex, dog.sex) &&
-        Objects.equals(this.dateOfBirth, dog.dateOfBirth) &&
-        Objects.equals(this.profilePicture, dog.profilePicture);
+        Objects.equals(this.dateOfBirth, dog.dateOfBirth);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, breed, sex, dateOfBirth, profilePicture);
+    return Objects.hash(id, name, breed, sex, dateOfBirth);
   }
 
   @Override
@@ -197,7 +172,6 @@ public class DogDto  implements Serializable {
     sb.append("    breed: ").append(toIndentedString(breed)).append("\n");
     sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
-    sb.append("    profilePicture: ").append(toIndentedString(profilePicture)).append("\n");
     sb.append("}");
     return sb.toString();
   }

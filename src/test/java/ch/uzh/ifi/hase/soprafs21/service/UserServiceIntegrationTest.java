@@ -95,4 +95,6 @@ public class UserServiceIntegrationTest {
         assertEquals(3, users.size());
         assertFalse(users.stream().anyMatch(user -> user.getId().equals(userOverview.getId())));
     }
+
+
 }

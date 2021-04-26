@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.repository;
 
+import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
@@ -18,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     @Modifying
-    @Query("UPDATE User set lastUserLocation = ?2 where id = ?1")
+    @Query("update User set lastUserLocation = ?2 where id = ?1")
     void updateUserLocation(Long userId, Point newLocation);
 
     @Query("select u from User u where within(u.lastUserLocation, ?1) = true")
@@ -26,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.id <> ?1")
     List<User> findAll(Long userIdToExclude);
+
 }

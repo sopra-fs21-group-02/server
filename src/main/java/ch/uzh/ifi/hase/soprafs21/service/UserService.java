@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
@@ -48,6 +49,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final DogRepository dogRepository;
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -55,8 +58,9 @@ public class UserService {
     private Environment env;
 
     @Autowired
-    public UserService(@Qualifier("userRepository") UserRepository userRepository) {
+    public UserService(@Qualifier("userRepository") UserRepository userRepository, DogRepository dogRepository) {
         this.userRepository = userRepository;
+        this.dogRepository = dogRepository;
     }
 
     /**

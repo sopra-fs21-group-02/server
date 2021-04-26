@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.6.0"
+  version: "1.7.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -232,6 +232,7 @@ paths:
         404:
           $ref: "#/components/responses/404"
     post:
+      operationId: addDog
       tags:
         - "Dogs"
       description: A user can add dog to his own profile.
@@ -245,12 +246,21 @@ paths:
           required: true
           description: Numeric ID of the user
       requestBody:
-        required: true
         content:
-          multipart/mixed:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Dog"
+              type: object
+              properties:
+                dogDto:
+                  $ref: "#/components/schemas/Dog"
+                profilePicture:
+                  type: string
+                  format: binary
+              required:
+                - dogDto
             encoding:
+              dogDto:
+                contentType: application/json
               profilePicture:
                 contentType: image/png, image/jpeg, image/gif, image/tiff
         description: "Dog object that needs to be created"
@@ -297,6 +307,7 @@ paths:
         404:
           $ref: "#/components/responses/404"
     put:
+      operationId: editDog
       tags:
         - "Dogs"
       description: A user can edit dog belonging to his profile.
@@ -338,6 +349,7 @@ paths:
         404:
           $ref: "#/components/responses/404"
     delete:
+      operationId: deleteDog
       tags:
         - "Dogs"
       description: A user can delete his own dog.
@@ -385,6 +397,7 @@ paths:
         required: true
         description: Numeric ID of the dog
     get:
+      operationId: getDogsImage
       tags:
         - "Dogs"
       description: Get dog's profile image
@@ -874,9 +887,6 @@ components:
         dateOfBirth:
           type: string
           format: date
-        profilePicture:
-          type: string
-          format: binary
       required:
         - name
         - breed
