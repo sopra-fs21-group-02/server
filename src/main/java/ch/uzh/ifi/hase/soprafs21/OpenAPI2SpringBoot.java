@@ -57,7 +57,7 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
                 registry.addMapping("/**")
                         .allowedOrigins("*")
                         .allowedMethods("*")
-                        .allowedHeaders("Content-Type");
+                        .allowedHeaders("Content-Type", "Authorization");
             }
         };
     }

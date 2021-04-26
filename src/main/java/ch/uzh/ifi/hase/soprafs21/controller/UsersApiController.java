@@ -2,17 +2,19 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.entity.ChatMessage;
 import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
+import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
-import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
-import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.*;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ChatMessageDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ConversationDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.ChatService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
+import ch.uzh.ifi.hase.soprafs21.service.DogService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.locationtech.jts.geom.Polygon;
 import io.swagger.annotations.ApiParam;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -24,12 +26,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -43,17 +47,20 @@ public class UsersApiController implements UsersApi {
     private GeometryFactory geometryFactory;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil, GeometryFactory geometryFactory) {
+    public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil, GeometryFactory geometryFactory, DogService dogService) {
         this.request = request;
         this.userService = userService;
         this.chatService = chatService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.geometryFactory = geometryFactory;
+        this.dogService = dogService;
     }
 
     private final UserService userService;
     private final ChatService chatService;
     private JwtTokenUtil jwtTokenUtil;
+    private final DogService dogService;
+
     @Override
     public Optional<NativeWebRequest> getRequest() {
         return Optional.ofNullable(request);
@@ -203,5 +210,27 @@ public class UsersApiController implements UsersApi {
         return ResponseEntity
                 .ok()
                 .body(UserDTOMapper.INSTANCE.convertEntityToUserDTO(user));
+    }
+
+    @Override
+    public ResponseEntity<Void> usersUserIdDelete(Long userId) throws Exception {
+        if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+            userService.deleteUser(userId);
+        }else{
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to Delete other user");
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    public ResponseEntity<Void> addDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "dogDto", required = true)  DogDto dogDto,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
+        if(dogDto.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id is not allowed in POST");
+        }
+
+        Dog dogToAdd = DogDTOMapper.INSTANCE.toDogEntity(dogDto, profilePicture);
+        dogToAdd.setOwner(userService.getUserById(userId));
+
+        dogService.addDog(dogToAdd);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

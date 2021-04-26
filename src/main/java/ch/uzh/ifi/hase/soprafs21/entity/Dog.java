@@ -1,15 +1,27 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
 import ch.uzh.ifi.hase.soprafs21.constant.Gender;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
+
+/**
+ * Internal Dog representation
+ */
 @Data
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "DOGS", schema="soprafs21")
 public class Dog implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -22,22 +34,18 @@ public class Dog implements Serializable {
     @Column(nullable = false)
     private String breed;
 
-    /*@OneToOne
-    @JoinColumn(name = "image", nullable = false)
-    private Image image;*/
+    @Column
+    @Lob
+    private byte[] profilePicture;
+
+    @Column
+    private LocalDate dateOfBirth;
 
     @Column(nullable = false)
-    private Date dateOfBirth;
-
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column
-    private String bio;
-
-    @Column
-    private String color;
-
-    @Column
-    private Double weight;
+    @ManyToOne
+    @JoinColumn
+    private User owner;
    }

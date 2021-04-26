@@ -10,6 +10,7 @@ import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -47,8 +48,8 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String profilePictureURL;
 
-    @Column(nullable = true)
-    private Date dateOfBirth;
+    @Column
+    private LocalDate dateOfBirth;
 
     //Get from ExternalLogin = OAuth provider
     @Column(nullable = false)
@@ -58,7 +59,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String providerUid;
 
-    @Column(nullable = true, unique = true)
+    @Column(unique = true)
     private String token;
 
     @Column(nullable = false)
@@ -72,11 +73,11 @@ public class User implements Serializable {
     @Column
     private String bio;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     @JoinColumn
     private List<Tag> tags;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     @JoinColumn
     private List<Dog> listOfDogs;
 

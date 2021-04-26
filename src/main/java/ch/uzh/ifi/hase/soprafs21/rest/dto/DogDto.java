@@ -35,15 +35,6 @@ public class DogDto  implements Serializable {
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
   private LocalDate dateOfBirth;
 
-  @JsonProperty("weight")
-  private Double weight;
-
-  @JsonProperty("description")
-  private String description;
-
-  @JsonProperty("color")
-  private String color;
-
   public DogDto id(Long id) {
     this.id = id;
     return this;
@@ -149,66 +140,6 @@ public class DogDto  implements Serializable {
     this.dateOfBirth = dateOfBirth;
   }
 
-  public DogDto weight(Double weight) {
-    this.weight = weight;
-    return this;
-  }
-
-  /**
-   * Get weight
-   * @return weight
-  */
-  @ApiModelProperty(value = "")
-
-
-  public Double getWeight() {
-    return weight;
-  }
-
-  public void setWeight(Double weight) {
-    this.weight = weight;
-  }
-
-  public DogDto description(String description) {
-    this.description = description;
-    return this;
-  }
-
-  /**
-   * Get description
-   * @return description
-  */
-  @ApiModelProperty(value = "")
-
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public DogDto color(String color) {
-    this.color = color;
-    return this;
-  }
-
-  /**
-   * Get color
-   * @return color
-  */
-  @ApiModelProperty(value = "")
-
-
-  public String getColor() {
-    return color;
-  }
-
-  public void setColor(String color) {
-    this.color = color;
-  }
-
 
   @Override
   public boolean equals(Object o) {
@@ -223,15 +154,12 @@ public class DogDto  implements Serializable {
         Objects.equals(this.name, dog.name) &&
         Objects.equals(this.breed, dog.breed) &&
         Objects.equals(this.sex, dog.sex) &&
-        Objects.equals(this.dateOfBirth, dog.dateOfBirth) &&
-        Objects.equals(this.weight, dog.weight) &&
-        Objects.equals(this.description, dog.description) &&
-        Objects.equals(this.color, dog.color);
+        Objects.equals(this.dateOfBirth, dog.dateOfBirth);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, breed, sex, dateOfBirth, weight, description, color);
+    return Objects.hash(id, name, breed, sex, dateOfBirth);
   }
 
   @Override
@@ -244,9 +172,6 @@ public class DogDto  implements Serializable {
     sb.append("    breed: ").append(toIndentedString(breed)).append("\n");
     sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
-    sb.append("    weight: ").append(toIndentedString(weight)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    color: ").append(toIndentedString(color)).append("\n");
     sb.append("}");
     return sb.toString();
   }
