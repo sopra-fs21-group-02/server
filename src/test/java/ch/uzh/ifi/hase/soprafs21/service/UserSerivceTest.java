@@ -10,11 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class UserSerivceTest {
+class UserSerivceTest {
 
     @Mock
     UserRepository userRepository;
@@ -22,24 +23,25 @@ public class UserSerivceTest {
     @Autowired
     private UserService userService;
 
-//    @Test
-    public void testUpdateUserDetails(){
+    @Test
+    void testUpdateUserDetails(){
         Long mockUserId = 1L;
         UserEditDto mockedEditDto = new UserEditDto();
         mockedEditDto.setBio("Updated Bio");
 
         User mockedUser = User.builder().id(1l).email("email1").name("name1").profilePictureURL("url1").build();
+        User mockedUpdatedUser = User.builder().id(1l).email("email1").name("name1").profilePictureURL("url1").bio("Updated Bio").build();
 
-        given(userRepository.findById(mockUserId)).willReturn(Optional.of(mockedUser));
-        given(userRepository.saveAndFlush(mockedUser)).willReturn(mockedUser);
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.of(mockedUser));
+        when(userRepository.saveAndFlush(mockedUser)).thenAnswer(i -> mockedUpdatedUser);
 
         userService.updateUserDetails(mockUserId,mockedEditDto);
 
-        verify(userRepository,times(1)).saveAndFlush(mockedUser);
+        assertEquals(mockedEditDto.getBio(),mockedUpdatedUser.getBio());
     }
 
     @Test
-    public void testUpdateUserDetailsFailure(){
+    void testUpdateUserDetailsFailure(){
         Long mockUserId = 1L;
         UserEditDto mockedEditDto = new UserEditDto();
         mockedEditDto.setBio("Updated Bio");
