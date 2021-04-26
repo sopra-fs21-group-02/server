@@ -201,7 +201,7 @@ class UsersApiControllerTest {
     void getUsersWithoutParam() throws Exception {
         List<User> listUsers = Arrays.asList(user1, user2);
         when(userServiceMock.getAllUsers()).thenReturn(listUsers);
-        ResponseEntity<List<UserOverviewDto>> entity = usersApiController.getUsers(null, null);
+        ResponseEntity<List<UserOverviewDto>> entity = usersApiController.getAllUsers();
 
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertEquals(2, entity.getBody().size());
