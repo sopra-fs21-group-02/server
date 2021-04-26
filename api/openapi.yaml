@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.7.0"
+  version: "1.8.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -57,8 +57,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
-        description: "User object that needs to be updated"
+              $ref: "#/components/schemas/UserEdit"
+        description: "User Details that needs to be updated"
       responses:
         204:
           description: The user was susscesfully updated
@@ -1073,3 +1073,8 @@ components:
           format: date-time
         isNewUser:
           type: boolean
+    UserEdit:
+      type: object
+      properties:
+        bio:
+          type: string
