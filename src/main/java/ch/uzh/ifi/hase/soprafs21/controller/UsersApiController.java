@@ -188,7 +188,7 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
-        if(areaFilter != null) {
+        if(areaFilter != null && areaFilter.getVisibleArea().size() > 0) {
             areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
             Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
             List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
