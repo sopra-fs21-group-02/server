@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.7.0"
+  version: "1.8.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -11,18 +11,37 @@ paths:
       operationId: getUsers
       tags:
         - "Users"
-      summary: "Return all users"
+      summary: "Return all users in an area"
       parameters:
         - name: 'areaFilter'
           in: query
-          allowEmptyValue: true
           schema:
             $ref: '#/components/schemas/AreaFilter'
         - name: 'radiusFilter'
           in: query
-          allowEmptyValue: true
           schema:
             $ref: '#/components/schemas/RadiusFilter'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserOverview"
+          description: A list of Users
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /users/list:
+    get:
+      operationId: getAllUsers
+      tags:
+        - "Users"
+      summary: "Return all users"
       responses:
         200:
           content:

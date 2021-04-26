@@ -205,6 +205,39 @@ public interface UsersApi {
 
 
     /**
+     * GET /users/list : Return all users
+     *
+     * @return A list of Users (status code 200)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Return all users", nickname = "getAllUsers", notes = "", response = UserOverviewDto.class, responseContainer = "List", tags={ "Users", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "A list of Users", response = UserOverviewDto.class, responseContainer = "List"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @GetMapping(
+        value = "/users/list",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<UserOverviewDto>> getAllUsers() throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
      * GET /users/{userId}/dogs/{dogId}/image
      * Get dog&#39;s profile image
      *
@@ -234,7 +267,7 @@ public interface UsersApi {
 
 
     /**
-     * GET /users : Return all users
+     * GET /users : Return all users in an area
      *
      * @param areaFilter  (optional)
      * @param radiusFilter  (optional)
@@ -243,7 +276,7 @@ public interface UsersApi {
      *         or User unauthenticated (status code 401)
      *         or Resource not found (status code 404)
      */
-    @ApiOperation(value = "Return all users", nickname = "getUsers", notes = "", response = UserOverviewDto.class, responseContainer = "List", tags={ "Users", })
+    @ApiOperation(value = "Return all users in an area", nickname = "getUsers", notes = "", response = UserOverviewDto.class, responseContainer = "List", tags={ "Users", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "A list of Users", response = UserOverviewDto.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),

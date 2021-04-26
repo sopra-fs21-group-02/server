@@ -195,15 +195,16 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
-        if(areaFilter != null) {
-            areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
-            Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
-            List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
-            return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
-        } else {
-            List<User> users = userService.getAllUsers();
-            return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(users));
-        }
+        areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
+        Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
+        List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
+        return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
+    }
+
+    @Override
+    public ResponseEntity<List<UserOverviewDto>> getAllUsers() throws Exception {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(users));
     }
 
     @Override
