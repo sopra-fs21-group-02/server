@@ -4,6 +4,10 @@ import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -207,8 +211,8 @@ public class UserService {
      * @return list of Users without the authenticated user
      */
     public List<User> getAllUsers(){
-        //UserOverviewDto currentUser = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return this.userRepository.findAll(1L);
+        UserOverviewDto currentUser = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.userRepository.findAll(currentUser.getId());
     }
 
 
@@ -226,6 +230,16 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()) {
             userRepository.delete(optionalUser.get());
+        }
+    }
+
+    @Transactional
+    public void updateUserDetails(Long userId, UserEditDto userEditDto) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setBio(userEditDto.getBio());
+            userRepository.saveAndFlush(user);
         }
     }
 }

@@ -272,6 +272,35 @@ class UsersApiControllerTest {
     }
 
     @Test
+    void updateSuccess () throws Exception{
+        Long mockUserId = 1L;
+        UserEditDto mockedEditDto = new UserEditDto();
+        mockedEditDto.setBio("Updated Bio");
+        given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.TRUE);
+
+        ResponseEntity<Void> responseEntity = usersApiController.usersUserIdPut(mockUserId,mockedEditDto);
+        verify(userServiceMock).updateUserDetails(eq(mockUserId),eq(mockedEditDto));
+        assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
+    }
+
+    @Test
+    void updateForbidden () throws Exception{
+        Long mockUserId = 1L;
+        UserEditDto mockedEditDto = new UserEditDto();
+        mockedEditDto.setBio("Updated Bio");
+        given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.FALSE);
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            usersApiController.usersUserIdPut(mockUserId,mockedEditDto);
+        });
+
+        String expectedMessage = "Do not have permission to update other user";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     public void testDeleteDog() throws Exception {
         assertEquals(HttpStatus.NO_CONTENT, usersApiController.deleteDog(1L, 1L).getStatusCode());
         verify(dogServiceMock).deleteDog(eq(1L), eq(1L));
