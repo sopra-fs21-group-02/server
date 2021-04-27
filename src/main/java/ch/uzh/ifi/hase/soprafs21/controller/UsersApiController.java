@@ -76,11 +76,11 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<UserLoginPostDto> usersLoginPost(@RequestBody UserLoginDto userLoginDto) throws GeneralSecurityException, IOException {
 
         boolean isNewUser = true;
-        String accessToken =null;
+        String accessToken = null;
         String refreshToken = null;
         Date accessTokenExpiry = null;
         GoogleIdToken token = userService.authenticateTokenId(userLoginDto.getTokenId());
-        ResponseCookie refreshTokenCookie =null;
+        ResponseCookie refreshTokenCookie = null;
 
         if (null != token) {
             if (userService.verifyEmailIdForToken(token, userLoginDto.getEmailId())) {
@@ -92,18 +92,20 @@ public class UsersApiController implements UsersApi {
                 //generate refresh token
                 refreshToken = jwtTokenUtil.generateRefreshToken(userLoginDto.getEmailId());
                 //call method to save or update user in database
-                isNewUser= userService.loginOrRegisterUser(token.getPayload(), refreshToken);
+                isNewUser = userService.loginOrRegisterUser(token.getPayload(), refreshToken);
                 //create cookie to hold refresh token
-                refreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
+                refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
                         .httpOnly(true)
                         .secure(true)
-                        .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME/1000) //convert expiry time from ms to sec
+                        .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME / 1000) //convert expiry time from ms to sec
                         .build();
 
-            }else{
+            }
+            else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
             }
-        }else {
+        }
+        else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
         //response object
@@ -119,41 +121,44 @@ public class UsersApiController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<ChatMessageDto>> getAllMessages(@ApiParam(value = "Numeric ID of the user1",required=true) @PathVariable("userId1") Long userId1, @ApiParam(value = "Numeric ID of the user2",required=true) @PathVariable("userId2") Long userId2) throws Exception {
+    public ResponseEntity<List<ChatMessageDto>> getAllMessages(@ApiParam(value = "Numeric ID of the user1", required = true) @PathVariable("userId1") Long userId1, @ApiParam(value = "Numeric ID of the user2", required = true) @PathVariable("userId2") Long userId2) throws Exception {
         User receiver = userService.getUserById(userId2);
         User sender = userService.getUserById(userId1);
         try {
             List<ChatMessage> messages = chatService.getAllMessages(sender, receiver);
             return ResponseEntity.ok(ChatMessageDTOMapper.INSTANCE.toDTO(messages));
-        } catch (NoSuchElementException exception){
+        }
+        catch (NoSuchElementException exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @Override
-    public ResponseEntity<List<ConversationDto>> getAllConversations(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId) throws Exception {
+    public ResponseEntity<List<ConversationDto>> getAllConversations(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId) throws Exception {
         User sender = userService.getUserById(userId);
         try {
             List<Conversation> conversations = chatService.getAllConversations(userId);
             return ResponseEntity.ok(ConversationDTOMapper.INSTANCE.toDTO(conversations));
-        } catch (NoSuchElementException exception){
+        }
+        catch (NoSuchElementException exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @Override
-    public ResponseEntity<Void> updateLocation(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Coordinate object that needs to be updated in user with userId" ,required=true )  @Valid @RequestBody CoordinateDto coordinateDto) throws Exception {
+    public ResponseEntity<Void> updateLocation(@ApiParam(value = "Numeric ID of the user to update", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "Coordinate object that needs to be updated in user with userId", required = true) @Valid @RequestBody CoordinateDto coordinateDto) throws Exception {
         Point newLocation = geometryFactory.createPoint(SpatialDTOMapper.INSTANCE.getCoordinate(coordinateDto));
         userService.updateUserLocation(userId, newLocation);
         return ResponseEntity.noContent().build();
     }
+
     @Override
     public ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@NotNull String refreshToken) throws Exception {
 
-        String newAccessToken =null;
+        String newAccessToken = null;
         String newRefreshToken = null;
         Date accessTokenExpiry = null;
-        ResponseCookie newRefreshTokenCookie =null;
+        ResponseCookie newRefreshTokenCookie = null;
         UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
 
         String validatedUserEmailId = userService.refreshToken(refreshToken);
@@ -171,10 +176,10 @@ public class UsersApiController implements UsersApi {
         userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
         userLoginPostDto.setIsNewUser(Boolean.FALSE);
         //create cookie to hold refresh token
-        newRefreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
+        newRefreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME/1000) //convert expiry time from ms to sec
+                .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME / 1000) //convert expiry time from ms to sec
                 .build();
 
         return ResponseEntity
@@ -185,16 +190,17 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> usersUserIdLogoutPut(Long userId) throws Exception {
-        if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+        if (userService.isRequesterAndAuthenticatedUserTheSame(userId)) {
             userService.logoutUser(userId);
-        }else{
+        }
+        else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to logout other user");
         }
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
+    public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter, @ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
         areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
         Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
         List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
@@ -211,7 +217,7 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<UserDto> usersUserIdGet(Long userId) throws Exception {
         User user = userService.getUserDetails(userId);
 
-        if(null == user){
+        if (null == user) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
         return ResponseEntity
@@ -221,16 +227,18 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> usersUserIdDelete(Long userId) throws Exception {
-        if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+        if (userService.isRequesterAndAuthenticatedUserTheSame(userId)) {
             userService.deleteUser(userId);
-        }else{
+        }
+        else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to Delete other user");
         }
         return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity<Void> addDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "dogDto", required = true)  DogDto dogDto,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
-        if(dogDto.getId() != null) {
+    @Override
+    public ResponseEntity<Void> addDog(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "", required = true) @Valid @RequestPart(value = "dogDto", required = true) DogDto dogDto, @ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
+        if (dogDto.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id is not allowed in POST");
         }
 
@@ -239,5 +247,11 @@ public class UsersApiController implements UsersApi {
 
         dogService.addDog(dogToAdd);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteDog(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "Numeric ID of the dog to delete", required = true) @PathVariable("dogId") Long dogId) throws Exception {
+        dogService.deleteDog(userId, dogId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

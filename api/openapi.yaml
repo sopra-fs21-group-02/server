@@ -6,7 +6,7 @@ info:
 servers:
   - url: https://api.server.test/v1
 paths:
-  /users:
+  /users/area:
     get:
       operationId: getUsers
       tags:

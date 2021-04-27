@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
+import ch.uzh.ifi.hase.soprafs21.service.DogService;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -44,6 +45,9 @@ class UsersApiControllerTest {
 
     @Mock
     private UserService userServiceMock;
+
+    @Mock
+    private DogService dogServiceMock;
 
     @Mock
     private GeometryFactory geometryFactoryMock;
@@ -265,6 +269,12 @@ class UsersApiControllerTest {
         dogDto.setId(1L);
 
         assertThrows(ResponseStatusException.class, () -> usersApiController.addDog(1L, dogDto, null));
+    }
+
+    @Test
+    public void testDeleteDog() throws Exception {
+        assertEquals(HttpStatus.NO_CONTENT, usersApiController.deleteDog(1L, 1L).getStatusCode());
+        verify(dogServiceMock).deleteDog(eq(1L), eq(1L));
     }
 
 }
