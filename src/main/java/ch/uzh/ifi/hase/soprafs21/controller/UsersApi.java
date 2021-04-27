@@ -206,7 +206,7 @@ public interface UsersApi {
 
 
     /**
-     * GET /users/list : Return all users
+     * GET /users : Return all users
      *
      * @return A list of Users (status code 200)
      *         or Invalid Request (status code 400)
@@ -220,7 +220,7 @@ public interface UsersApi {
         @ApiResponse(code = 401, message = "User unauthenticated"),
         @ApiResponse(code = 404, message = "Resource not found") })
     @GetMapping(
-        value = "/users/list",
+        value = "/users",
         produces = { "application/json" }
     )
     default ResponseEntity<List<UserOverviewDto>> getAllUsers() throws Exception {
@@ -268,7 +268,7 @@ public interface UsersApi {
 
 
     /**
-     * GET /users : Return all users in an area
+     * GET /users/area : Return all users in an area
      *
      * @param areaFilter  (optional)
      * @param radiusFilter  (optional)
@@ -284,7 +284,7 @@ public interface UsersApi {
         @ApiResponse(code = 401, message = "User unauthenticated"),
         @ApiResponse(code = 404, message = "Resource not found") })
     @GetMapping(
-        value = "/users",
+        value = "/users/area",
         produces = { "application/json" }
     )
     default ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
