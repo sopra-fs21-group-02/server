@@ -15,7 +15,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class UserSerivceTest {
+class UserServiceTest {
 
     @Mock
     UserRepository userRepository;
