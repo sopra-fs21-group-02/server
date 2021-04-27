@@ -76,8 +76,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
-        description: "User object that needs to be updated"
+              $ref: "#/components/schemas/UserEdit"
+        description: "User Details that needs to be updated"
       responses:
         204:
           description: The user was susscesfully updated
@@ -1092,3 +1092,8 @@ components:
           format: date-time
         isNewUser:
           type: boolean
+    UserEdit:
+      type: object
+      properties:
+        bio:
+          type: string

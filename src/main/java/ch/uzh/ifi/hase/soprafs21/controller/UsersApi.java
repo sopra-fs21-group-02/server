@@ -15,6 +15,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
 import java.time.LocalDate;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
@@ -568,7 +569,7 @@ public interface UsersApi {
      * A user can update only his own profile.
      *
      * @param userId Numeric ID of the user to update (required)
-     * @param userDto User object that needs to be updated (required)
+     * @param userEditDto User Details that needs to be updated (required)
      * @return The user was susscesfully updated (status code 204)
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
@@ -587,7 +588,7 @@ public interface UsersApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Void> usersUserIdPut(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "User object that needs to be updated" ,required=true )  @Valid @RequestBody UserDto userDto) throws Exception {
+    default ResponseEntity<Void> usersUserIdPut(@ApiParam(value = "Numeric ID of the user to update",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "User Details that needs to be updated" ,required=true )  @Valid @RequestBody UserEditDto userEditDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

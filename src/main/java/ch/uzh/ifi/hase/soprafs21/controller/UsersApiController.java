@@ -240,4 +240,14 @@ public class UsersApiController implements UsersApi {
         dogService.addDog(dogToAdd);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @Override
+    public ResponseEntity<Void> usersUserIdPut(Long userId, @Valid UserEditDto userEditDto) throws Exception {
+        if(userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+            userService.updateUserDetails(userId, userEditDto);
+        }else{
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to update other user");
+        }
+        return ResponseEntity.noContent().build();
+    }
 }
