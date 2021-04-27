@@ -267,7 +267,7 @@ public interface UsersApi {
 
 
     /**
-     * GET /users : Return all users in an area
+     * GET /users/area : Return all users in an area
      *
      * @param areaFilter  (optional)
      * @param radiusFilter  (optional)
@@ -283,7 +283,7 @@ public interface UsersApi {
         @ApiResponse(code = 401, message = "User unauthenticated"),
         @ApiResponse(code = 404, message = "Resource not found") })
     @GetMapping(
-        value = "/users",
+        value = "/users/area",
         produces = { "application/json" }
     )
     default ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
