@@ -1,9 +1,12 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
+import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
+import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -24,6 +27,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for the UserResource REST resource.
@@ -50,6 +54,9 @@ public class UserServiceIntegrationTest {
     @Mock
     private SecurityContext securityContextMock;
 
+    @Mock
+    private JwtTokenUtil jwtTokenUtilMock;
+
     @BeforeEach
     void setUp() {
         UserOverviewDto userOverviewDto = new UserOverviewDto();
@@ -57,8 +64,8 @@ public class UserServiceIntegrationTest {
         userOverviewDto.setId(1L);
         userOverviewDto.setName("mark");
         userOverviewDto.setStatus(OnlineStatusDto.ONLINE);
-        Mockito.when(authenticationMock.getPrincipal()).thenReturn(userOverviewDto);
-        Mockito.when(securityContextMock.getAuthentication()).thenReturn(authenticationMock);
+        when(authenticationMock.getPrincipal()).thenReturn(userOverviewDto);
+        when(securityContextMock.getAuthentication()).thenReturn(authenticationMock);
         SecurityContextHolder.setContext(securityContextMock);
     }
 
@@ -96,5 +103,23 @@ public class UserServiceIntegrationTest {
         assertFalse(users.stream().anyMatch(user -> user.getId().equals(userOverview.getId())));
     }
 
+    @Test
+    public void testLogoutUser(){
+        this.userService.logoutUser(1L);
+        assertNull(userRepository.findById(1L).get().getToken());
+        assertEquals(OnlineStatus.OFFLINE, userRepository.findById(1L).get().getStatus());
+    }
+
+    @Test
+    public void testUpdateRefreshTokenForUser(){
+        this.userService.updateRefreshTokenForUser("DUMMYTOKEN","mark@twen.de");
+        assertEquals("DUMMYTOKEN", userRepository.findById(1L).get().getToken());
+    }
+
+    @Test
+    public void testGetUserDetails(){
+        this.userService.getUserDetails(1L);
+        assertEquals("Mark", userRepository.findById(1L).get().getName());
+    }
 
 }
