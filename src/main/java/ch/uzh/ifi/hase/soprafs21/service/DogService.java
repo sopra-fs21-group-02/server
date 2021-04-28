@@ -34,7 +34,7 @@ public class DogService {
     @Transactional
     public Dog addDog(Dog dogToAdd){
         if (!userService.isRequesterAndAuthenticatedUserTheSame(dogToAdd.getOwner().getId())){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to manipulate this dog");
         }
         return this.dogRepository.saveAndFlush(dogToAdd);
     }
@@ -51,12 +51,40 @@ public class DogService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No User with provided id exists");
         }
         if (!userService.isRequesterAndAuthenticatedUserTheSame(ownerId)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,  "User is not permitted to delete another user dogs");
         }
         Optional<Dog> optionalDog = this.dogRepository.findById(dogId);
         if(optionalDog.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Dog with provided id exists");
         }
         this.dogRepository.delete(optionalDog.get());
+    }
+
+    /**
+     * Updates the dog
+     * @param dog dog object with modified fields
+     * @return updated dog object
+     */
+    @Transactional
+    public Dog editDog(Dog dog) {
+        Optional<User> optionalUser = this.userRepository.findById(dog.getOwner().getId());
+        if(optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No User with provided id exists");
+        }
+        Optional<Dog> optionalDog = dogRepository.findById(dog.getId());
+        if(optionalDog.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Dog with provided id exists");
+        }
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(dog.getOwner().getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to edit another user dogs");
+        }
+        Dog dogToEdit = optionalDog.get();
+        dogToEdit.setBreed(dog.getBreed());
+        dogToEdit.setName(dog.getName());
+        dogToEdit.setDateOfBirth(dog.getDateOfBirth());
+        dogToEdit.setGender(dog.getGender());
+        dogToEdit.setProfilePicture(dog.getProfilePicture());
+
+        return this.dogRepository.saveAndFlush(dogToEdit);
     }
 }
