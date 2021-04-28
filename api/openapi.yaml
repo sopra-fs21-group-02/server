@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.9.0"
+  version: "1.10.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -347,12 +347,21 @@ paths:
           required: true
           description: Numeric ID of the dog to update
       requestBody:
-        required: true
         content:
-          multipart/mixed:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Dog"
+              type: object
+              properties:
+                dogDto:
+                  $ref: "#/components/schemas/Dog"
+                profilePicture:
+                  type: string
+                  format: binary
+              required:
+                - dogDto
             encoding:
+              dogDto:
+                contentType: application/json
               profilePicture:
                 contentType: image/png, image/jpeg, image/gif, image/tiff
         description: "Dog object that needs to be updated"

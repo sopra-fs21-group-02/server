@@ -3,14 +3,12 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
-import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.DogService;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import org.junit.jupiter.api.BeforeEach;
-
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -19,17 +17,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -261,7 +256,7 @@ class UsersApiControllerTest {
     }
 
     @Test
-    public void testAddDogWithId() {
+    void testAddDogWithId() {
         DogDto dogDto = new DogDto();
         dogDto.setName("D1");
         dogDto.setBreed("B1");
@@ -301,7 +296,7 @@ class UsersApiControllerTest {
     }
 
     @Test
-    public void testDeleteDog() throws Exception {
+    void testDeleteDog() throws Exception {
         assertEquals(HttpStatus.NO_CONTENT, usersApiController.deleteDog(1L, 1L).getStatusCode());
         verify(dogServiceMock).deleteDog(eq(1L), eq(1L));
     }
