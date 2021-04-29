@@ -4,7 +4,6 @@ import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import io.jsonwebtoken.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
