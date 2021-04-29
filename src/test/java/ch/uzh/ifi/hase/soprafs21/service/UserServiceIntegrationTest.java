@@ -66,7 +66,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testUpdateUserLocation() {
+    void testUpdateUserLocation() {
         assertNull(userRepository.findById(4L).get().getLastUserLocation());
         Point newLocation = geometryFactory.createPoint(new Coordinate(47.35997146785179, 8.461859195948641));
         this.userService.updateUserLocation(1L, newLocation);
@@ -76,7 +76,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testGetUsersInArea() {
+    void testGetUsersInArea() {
         Coordinate [] coordinates = new Coordinate[5];
         coordinates[0] = new Coordinate(8.432962, 47.378622);
         coordinates[1] = new Coordinate(8.474358, 47.373311);
@@ -92,7 +92,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testGetUsers() {
+    void testGetUsers() {
         List<User> users = userService.getAllUsers();
         UserOverviewDto userOverview = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         assertEquals(3, users.size());

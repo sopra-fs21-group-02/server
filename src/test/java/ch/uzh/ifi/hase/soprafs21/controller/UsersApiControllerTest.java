@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
+import ch.uzh.ifi.hase.soprafs21.service.DogService;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -39,6 +40,9 @@ class UsersApiControllerTest {
 
     @Mock
     private UserService userServiceMock;
+
+    @Mock
+    private DogService dogServiceMock;
 
     @Mock
     private GeometryFactory geometryFactoryMock;
@@ -195,7 +199,7 @@ class UsersApiControllerTest {
     void getUsersWithoutParam() throws Exception {
         List<User> listUsers = Arrays.asList(user1, user2);
         when(userServiceMock.getAllUsers()).thenReturn(listUsers);
-        ResponseEntity<List<UserOverviewDto>> entity = usersApiController.getUsers(null, null);
+        ResponseEntity<List<UserOverviewDto>> entity = usersApiController.getAllUsers();
 
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertEquals(2, entity.getBody().size());
@@ -251,7 +255,7 @@ class UsersApiControllerTest {
     }
 
     @Test
-    public void testAddDogWithId() {
+    void testAddDogWithId() {
         DogDto dogDto = new DogDto();
         dogDto.setName("D1");
         dogDto.setBreed("B1");
@@ -288,6 +292,12 @@ class UsersApiControllerTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void testDeleteDog() throws Exception {
+        assertEquals(HttpStatus.NO_CONTENT, usersApiController.deleteDog(1L, 1L).getStatusCode());
+        verify(dogServiceMock).deleteDog(eq(1L), eq(1L));
     }
 
 }

@@ -8,10 +8,8 @@ import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +19,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
@@ -33,12 +32,6 @@ class ChatServiceIntegrationTest {
 
     @Autowired
     private ChatService chatService;
-
-    @Autowired
-    private ChatMessageRepository chatMessageRepository;
-
-    @Autowired
-    private ConversationRepository conversationRepository;
 
     private User sender,receiver;
 
@@ -67,7 +60,7 @@ class ChatServiceIntegrationTest {
 
     @Test
     void getAllConversations() {
-        List<Conversation> conversations = chatService.getAllConversations(1l);
+        List<Conversation> conversations = chatService.getAllConversations(1L);
         assertEquals(2, conversations.size());
         assertEquals(5, conversations.get(0).getMessages().size());
         LocalDateTime currentDateTime = LocalDateTime.now();

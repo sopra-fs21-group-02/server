@@ -8,7 +8,6 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +38,7 @@ class DogDTOMapperTest {
     }
 
     @Test
-    void toDogDTO() throws IOException {
+    void toDogDTO() {
         DogDto dogDto = DogDTOMapper.INSTANCE.toDogDTO(dog);
 
         assertEquals(dog.getId(), dogDto.getId());
