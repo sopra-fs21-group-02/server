@@ -62,7 +62,6 @@ class UsersApiControllerTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        //jwtTokenUtil = new JwtTokenUtil();
     }
 
     @Test
