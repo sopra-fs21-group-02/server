@@ -28,6 +28,9 @@ public class UserLoginPostDto  implements Serializable {
   @JsonProperty("isNewUser")
   private Boolean isNewUser;
 
+  @JsonProperty("userId")
+  private Long userId = null;
+
   public UserLoginPostDto accessToken(String accessToken) {
     this.accessToken = accessToken;
     return this;
@@ -89,6 +92,26 @@ public class UserLoginPostDto  implements Serializable {
     this.isNewUser = isNewUser;
   }
 
+  public UserLoginPostDto userId(Long userId) {
+    this.userId = userId;
+    return this;
+  }
+
+  /**
+   * Get userId
+   * @return userId
+  */
+  @ApiModelProperty(value = "")
+
+
+  public Long getUserId() {
+    return userId;
+  }
+
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -101,12 +124,13 @@ public class UserLoginPostDto  implements Serializable {
     UserLoginPostDto userLoginPost = (UserLoginPostDto) o;
     return Objects.equals(this.accessToken, userLoginPost.accessToken) &&
         Objects.equals(this.accessTokenExpiry, userLoginPost.accessTokenExpiry) &&
-        Objects.equals(this.isNewUser, userLoginPost.isNewUser);
+        Objects.equals(this.isNewUser, userLoginPost.isNewUser) &&
+        Objects.equals(this.userId, userLoginPost.userId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(accessToken, accessTokenExpiry, isNewUser);
+    return Objects.hash(accessToken, accessTokenExpiry, isNewUser, userId);
   }
 
   @Override
@@ -117,6 +141,7 @@ public class UserLoginPostDto  implements Serializable {
     sb.append("    accessToken: ").append(toIndentedString(accessToken)).append("\n");
     sb.append("    accessTokenExpiry: ").append(toIndentedString(accessTokenExpiry)).append("\n");
     sb.append("    isNewUser: ").append(toIndentedString(isNewUser)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.10.0"
+  version: "1.11.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -36,7 +36,7 @@ paths:
           $ref: "#/components/responses/401"
         404:
           $ref: "#/components/responses/404"
-  /users/list:
+  /users:
     get:
       operationId: getAllUsers
       tags:
@@ -1101,6 +1101,8 @@ components:
           format: date-time
         isNewUser:
           type: boolean
+        userId:
+          type: long
     UserEdit:
       type: object
       properties:

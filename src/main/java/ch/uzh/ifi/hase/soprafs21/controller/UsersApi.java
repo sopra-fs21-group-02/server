@@ -201,7 +201,7 @@ public interface UsersApi {
 
 
     /**
-     * GET /users/list : Return all users
+     * GET /users : Return all users
      *
      * @return A list of Users (status code 200)
      *         or Invalid Request (status code 400)
@@ -215,7 +215,7 @@ public interface UsersApi {
         @ApiResponse(code = 401, message = "User unauthenticated"),
         @ApiResponse(code = 404, message = "Resource not found") })
     @GetMapping(
-        value = "/users/list",
+        value = "/users",
         produces = { "application/json" }
     )
     default ResponseEntity<List<UserOverviewDto>> getAllUsers() throws Exception {
@@ -354,7 +354,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"accessTokenExpiry\" : \"2000-01-23T04:56:07.000+00:00\", \"accessToken\" : \"accessToken\", \"isNewUser\" : true }";
+                    String exampleString = "{ \"accessTokenExpiry\" : \"2000-01-23T04:56:07.000+00:00\", \"accessToken\" : \"accessToken\", \"isNewUser\" : true, \"userId\" : \"\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -391,7 +391,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"accessTokenExpiry\" : \"2000-01-23T04:56:07.000+00:00\", \"accessToken\" : \"accessToken\", \"isNewUser\" : true }";
+                    String exampleString = "{ \"accessTokenExpiry\" : \"2000-01-23T04:56:07.000+00:00\", \"accessToken\" : \"accessToken\", \"isNewUser\" : true, \"userId\" : \"\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

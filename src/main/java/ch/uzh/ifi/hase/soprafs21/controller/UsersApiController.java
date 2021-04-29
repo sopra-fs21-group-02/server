@@ -7,41 +7,37 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.*;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
-import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
-import ch.uzh.ifi.hase.soprafs21.rest.mapper.ChatMessageDTOMapper;
-import ch.uzh.ifi.hase.soprafs21.rest.mapper.ConversationDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.ChatService;
-import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import ch.uzh.ifi.hase.soprafs21.service.DogService;
+import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
+import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import net.bytebuddy.implementation.bytecode.Throw;
-import org.locationtech.jts.geom.Polygon;
-import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.ApiParam;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Controller
@@ -75,12 +71,12 @@ public class UsersApiController implements UsersApi {
     @Override
     public ResponseEntity<UserLoginPostDto> usersLoginPost(@RequestBody UserLoginDto userLoginDto) throws GeneralSecurityException, IOException {
 
-        boolean isNewUser = true;
         String accessToken =null;
         String refreshToken = null;
         Date accessTokenExpiry = null;
         GoogleIdToken token = userService.authenticateTokenId(userLoginDto.getTokenId());
         ResponseCookie refreshTokenCookie =null;
+        UserLoginPostDto userLoginPostDto = null;
 
         if (null != token) {
             if (userService.verifyEmailIdForToken(token, userLoginDto.getEmailId())) {
@@ -92,7 +88,7 @@ public class UsersApiController implements UsersApi {
                 //generate refresh token
                 refreshToken = jwtTokenUtil.generateRefreshToken(userLoginDto.getEmailId());
                 //call method to save or update user in database
-                isNewUser= userService.loginOrRegisterUser(token.getPayload(), refreshToken);
+                userLoginPostDto= userService.loginOrRegisterUser(token.getPayload(), refreshToken);
                 //create cookie to hold refresh token
                 refreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
                         .httpOnly(true)
@@ -107,8 +103,6 @@ public class UsersApiController implements UsersApi {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
         //response object
-        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
-        userLoginPostDto.setIsNewUser(isNewUser);
         userLoginPostDto.setAccessToken(accessToken);
         userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
 
@@ -154,7 +148,7 @@ public class UsersApiController implements UsersApi {
         String newRefreshToken = null;
         Date accessTokenExpiry = null;
         ResponseCookie newRefreshTokenCookie =null;
-        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
+        UserLoginPostDto userLoginPostDto = null;
 
         String validatedUserEmailId = userService.refreshToken(refreshToken);
 
@@ -165,7 +159,7 @@ public class UsersApiController implements UsersApi {
         //generate refresh token
         newRefreshToken = jwtTokenUtil.generateRefreshToken(validatedUserEmailId);
 
-        userService.updateRefreshTokenForUser(newRefreshToken, validatedUserEmailId);
+        userLoginPostDto = userService.updateRefreshTokenForUser(newRefreshToken, validatedUserEmailId);
 
         userLoginPostDto.setAccessToken(newAccessToken);
         userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
