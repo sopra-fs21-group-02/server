@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.Gender;
-import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
@@ -13,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,11 +19,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.server.ResponseStatusException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
@@ -73,7 +71,7 @@ public class DogServiceIntegrationTest {
     }
 
     @Test
-    public void testAddDog() {
+    void testAddDog() {
         Dog persistedDog = dogService.addDog(dog);
 
         assertEquals(dog.getName(), persistedDog.getName());
@@ -85,26 +83,97 @@ public class DogServiceIntegrationTest {
     }
 
     @Test
-    public void testAddDogUnauthorizedUser() {
+    void testAddDogUnauthorizedUser() {
         dog.setOwner(userRepository.getOne(2L));
 
-        assertThrows(ResponseStatusException.class, () -> dogService.addDog(dog));
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.addDog(dog));
+
+        String expectedMessage = "User is not permitted to manipulate this dog";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
-    public void testDeleteDogSuccess() {
+    void testDeleteDogSuccess() {
         dogService.deleteDog(dog.getOwner().getId(), dog.getId());
         Optional<Dog> notExistingDog = dogRepository.findById(dog.getId());
         assertTrue(notExistingDog.isEmpty());
     }
 
     @Test
-    public void testDeleteNotExistingDog() {
-        assertThrows(ResponseStatusException.class, () -> dogService.deleteDog(1L, 3L));
+    void testDeleteNotExistingDog() {
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.deleteDog(1L, 3L));
+
+        String expectedMessage = "No Dog with provided id exists";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
-    public void testDeleteDogUnauthorizedUser() {
-        assertThrows(ResponseStatusException.class, () -> dogService.deleteDog(3L , dog.getId()));
+    void testDeleteDogUnauthorizedUser() {
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.deleteDog(3L , dog.getId()));
+
+        String expectedMessage = "User is not permitted to delete another user dogs";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void testEditDogSuccess() {
+        Dog dogWithUpdatedFields = Dog.builder()
+                .id(dog.getId())
+                .name("Strelka")
+                .gender(dog.getGender())
+                .breed(dog.getBreed())
+                .dateOfBirth(LocalDate.of(2020, 10, 4))
+                .profilePicture(null)
+                .owner(dog.getOwner())
+                .build();
+        Dog updatedDog = dogService.editDog(dogWithUpdatedFields);
+
+        assertEquals(dogWithUpdatedFields.getName(), updatedDog.getName());
+        assertEquals(dogWithUpdatedFields.getBreed(), updatedDog.getBreed());
+        assertEquals(dogWithUpdatedFields.getGender().toString(), updatedDog.getGender().toString());
+        assertEquals(dogWithUpdatedFields.getDateOfBirth(), updatedDog.getDateOfBirth());
+        assertEquals(dogWithUpdatedFields.getOwner().getId(), updatedDog.getOwner().getId());
+        assertEquals(dogWithUpdatedFields.getProfilePicture(), updatedDog.getProfilePicture());
+    }
+    
+    @Test
+    void testEditNotExistingDog() {
+        dog.setId(77L);
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.editDog(dog));
+
+        String expectedMessage = "No Dog with provided id exists";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void testEditDogUnauthorizedUser() {
+        dog.setOwner(userRepository.getOne(2L));
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.editDog(dog));
+
+        String expectedMessage = "User is not permitted to edit another user dogs";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void testEditDogNotExistingUser() {
+        User newUser = User.builder().id(66L).build();
+        dog.setOwner(newUser);
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.editDog(dog));
+
+        String expectedMessage = "No User with provided id exists";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
     }
 }

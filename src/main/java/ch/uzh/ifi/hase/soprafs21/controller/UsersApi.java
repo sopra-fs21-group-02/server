@@ -11,8 +11,6 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.ConversationDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.GenderDto;
-import java.time.LocalDate;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
@@ -107,11 +105,8 @@ public interface UsersApi {
      *
      * @param userId Numeric ID of the user (required)
      * @param dogId Numeric ID of the dog to update (required)
-     * @param name  (required)
-     * @param breed  (required)
-     * @param sex  (required)
-     * @param id  (optional)
-     * @param dateOfBirth  (optional)
+     * @param dogDto  (required)
+     * @param profilePicture  (optional)
      * @return The dog&#39;s details were susscesfully updated (status code 204)
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
@@ -128,9 +123,9 @@ public interface UsersApi {
     @PutMapping(
         value = "/users/{userId}/dogs/{dogId}",
         produces = { "application/json" },
-        consumes = { "multipart/mixed" }
+        consumes = { "multipart/form-data" }
     )
-    default ResponseEntity<Void> editDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "name", required = true)  String name,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "breed", required = true)  String breed,@ApiParam(value = "", required=true, allowableValues="MALE, FEMALE, OTHER") @Valid @RequestPart(value = "sex", required = true)  GenderDto sex,@ApiParam(value = "") @Valid @RequestPart(value = "id", required = false)  Long id,@ApiParam(value = "") @Valid @RequestPart(value = "dateOfBirth", required = false)  LocalDate dateOfBirth) throws Exception {
+    default ResponseEntity<Void> editDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "dogDto", required = true)  DogDto dogDto,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
