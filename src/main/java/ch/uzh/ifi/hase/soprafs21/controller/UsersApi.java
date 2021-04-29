@@ -201,7 +201,7 @@ public interface UsersApi {
 
 
     /**
-     * GET /users/list : Return all users
+     * GET /users : Return all users
      *
      * @return A list of Users (status code 200)
      *         or Invalid Request (status code 400)
@@ -215,7 +215,7 @@ public interface UsersApi {
         @ApiResponse(code = 401, message = "User unauthenticated"),
         @ApiResponse(code = 404, message = "Resource not found") })
     @GetMapping(
-        value = "/users/list",
+        value = "/users",
         produces = { "application/json" }
     )
     default ResponseEntity<List<UserOverviewDto>> getAllUsers() throws Exception {
