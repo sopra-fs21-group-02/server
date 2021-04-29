@@ -190,16 +190,17 @@ public class UsersApiController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
-        if(areaFilter != null) {
-            areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
-            Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
-            List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
-            return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
-        } else {
-            List<User> users = userService.getAllUsers();
-            return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(users));
-        }
+    public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter, @ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
+        areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
+        Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
+        List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
+        return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
+    }
+
+    @Override
+    public ResponseEntity<List<UserOverviewDto>> getAllUsers() throws Exception {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(users));
     }
 
     @Override
@@ -228,7 +229,6 @@ public class UsersApiController implements UsersApi {
         if(dogDto.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id is not allowed in POST");
         }
-
         Dog dogToAdd = DogDTOMapper.INSTANCE.toDogEntity(dogDto, profilePicture);
         dogToAdd.setOwner(userService.getUserById(userId));
 
@@ -245,4 +245,20 @@ public class UsersApiController implements UsersApi {
         }
         return ResponseEntity.noContent().build();
     }
+
+    @Override
+    public ResponseEntity<Void> deleteDog(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "Numeric ID of the dog to delete", required = true) @PathVariable("dogId") Long dogId) throws Exception {
+        dogService.deleteDog(userId, dogId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
+    public ResponseEntity<Void> editDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to update",required=true) @PathVariable("dogId") Long dogId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "dogDto", required = true)  DogDto dogDto,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
+        Dog dog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, profilePicture);
+        dog.setOwner(userService.getUserById(userId));
+
+        dogService.editDog(dog);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
