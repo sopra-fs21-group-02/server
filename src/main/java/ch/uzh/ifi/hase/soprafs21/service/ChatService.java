@@ -8,6 +8,7 @@ import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,15 +23,21 @@ import java.util.Optional;
 @Service
 public class ChatService {
 
-    @Autowired
-    private ChatMessageRepository chatMessageRepository;
-    @Autowired
-    private ConversationRepository conversationRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserService userService;
+    private final ChatMessageRepository chatMessageRepository;
 
+    private final ConversationRepository conversationRepository;
+
+    private final UserRepository userRepository;
+
+    private final UserService userService;
+
+    @Autowired
+    public ChatService(ChatMessageRepository chatMessageRepository, ConversationRepository conversationRepository, UserRepository userRepository, UserService userService) {
+        this.userRepository = userRepository;
+        this.chatMessageRepository = chatMessageRepository;
+        this.conversationRepository = conversationRepository;
+        this.userService = userService;
+    }
     /**
      * Returns a list of all conversations by user
      * @param senderId id of user to get all conversation

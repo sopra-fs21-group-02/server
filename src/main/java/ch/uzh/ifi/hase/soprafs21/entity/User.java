@@ -11,7 +11,6 @@ import org.locationtech.jts.geom.Point;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 
@@ -72,10 +71,6 @@ public class User implements Serializable {
 
     @Column
     private String bio;
-
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn
-    private List<Tag> tags;
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn
