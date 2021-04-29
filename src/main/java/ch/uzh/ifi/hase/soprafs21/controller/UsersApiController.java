@@ -194,16 +194,17 @@ public class UsersApiController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter,@ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
-        if(areaFilter != null) {
-            areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
-            Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
-            List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
-            return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
-        } else {
-            List<User> users = userService.getAllUsers();
-            return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(users));
-        }
+    public ResponseEntity<List<UserOverviewDto>> getUsers(@ApiParam(value = "") @Valid AreaFilterDto areaFilter, @ApiParam(value = "") @Valid RadiusFilterDto radiusFilter) throws Exception {
+        areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0)); //the first coordinate is added to have a closed polygon
+        Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
+        List<User> usersInPolygon = userService.getAllUsersInArea(areaFilterPolygon);
+        return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(usersInPolygon));
+    }
+
+    @Override
+    public ResponseEntity<List<UserOverviewDto>> getAllUsers() throws Exception {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(UserDTOMapper.INSTANCE.toOverviewDTOList(users));
     }
 
     @Override
@@ -248,5 +249,12 @@ public class UsersApiController implements UsersApi {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have permission to update other user");
         }
         return ResponseEntity.noContent().build();
+    }
+
+
+    @Override
+    public ResponseEntity<Void> deleteDog(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "Numeric ID of the dog to delete", required = true) @PathVariable("dogId") Long dogId) throws Exception {
+        dogService.deleteDog(userId, dogId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

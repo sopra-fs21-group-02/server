@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs21.constant.Gender;
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
@@ -32,6 +34,9 @@ public class DogServiceIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private DogRepository dogRepository;
 
     @Autowired
     private DogService dogService;
@@ -64,6 +69,7 @@ public class DogServiceIntegrationTest {
                 .gender(Gender.FEMALE)
                 .profilePicture(fileContent)
                 .owner(userRepository.getOne(1L)).build();
+        dogRepository.saveAndFlush(dog);
     }
 
     @Test
@@ -83,5 +89,22 @@ public class DogServiceIntegrationTest {
         dog.setOwner(userRepository.getOne(2L));
 
         assertThrows(ResponseStatusException.class, () -> dogService.addDog(dog));
+    }
+
+    @Test
+    public void testDeleteDogSuccess() {
+        dogService.deleteDog(dog.getOwner().getId(), dog.getId());
+        Optional<Dog> notExistingDog = dogRepository.findById(dog.getId());
+        assertTrue(notExistingDog.isEmpty());
+    }
+
+    @Test
+    public void testDeleteNotExistingDog() {
+        assertThrows(ResponseStatusException.class, () -> dogService.deleteDog(1L, 3L));
+    }
+
+    @Test
+    public void testDeleteDogUnauthorizedUser() {
+        assertThrows(ResponseStatusException.class, () -> dogService.deleteDog(3L , dog.getId()));
     }
 }
