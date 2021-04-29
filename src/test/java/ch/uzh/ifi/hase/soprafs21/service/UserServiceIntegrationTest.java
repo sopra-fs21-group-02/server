@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -100,22 +101,40 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testLogoutUser(){
+    void testLogoutUser(){
         this.userService.logoutUser(1L);
         assertNull(userRepository.findById(1L).get().getToken());
         assertEquals(OnlineStatus.OFFLINE, userRepository.findById(1L).get().getStatus());
     }
 
     @Test
-    public void testUpdateRefreshTokenForUser(){
+    void testUpdateRefreshTokenForUser(){
         this.userService.updateRefreshTokenForUser("DUMMYTOKEN","mark@twen.de");
         assertEquals("DUMMYTOKEN", userRepository.findById(1L).get().getToken());
     }
 
     @Test
-    public void testGetUserDetails(){
+    void testGetUserDetails(){
         this.userService.getUserDetails(1L);
         assertEquals("Mark", userRepository.findById(1L).get().getName());
     }
+
+    @Test
+    void testGetUserById(){
+        this.userService.getUserById(1L);
+        assertEquals("Mark", userRepository.findById(1L).get().getName());
+    }
+
+    @Test
+    void testLoginOrRegisterUser(){
+        GoogleIdToken.Payload payload = new GoogleIdToken.Payload();
+        payload.setEmail("mark@twen.de");
+        String refreshToken = "DUMMYTOKEN";
+
+        this.userService.loginOrRegisterUser(payload, refreshToken);
+        assertNotNull(userRepository.findByEmail(payload.getEmail()));
+
+    }
+
 
 }

@@ -3,13 +3,18 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -27,6 +32,12 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Mock
+    private Authentication authenticationMock;
+
+    @Mock
+    private SecurityContext securityContextMock;
 
     @Test
     void testUpdateUserDetails(){
@@ -99,6 +110,20 @@ class UserServiceTest {
         when(userRepository.saveAndFlush(mockedUser)).thenAnswer(i -> mockedUser);
 
         assertEquals(Boolean.TRUE,userService.loginOrRegisterUser(payload,refreshToken));
+    }
+
+    @Test
+    void testIsRequesterAndAuthenticatedUserTheSame(){
+        UserOverviewDto userOverviewDto = new UserOverviewDto();
+        userOverviewDto.setEmail("mark@twen.de");
+        userOverviewDto.setId(1L);
+        userOverviewDto.setName("mark");
+        userOverviewDto.setStatus(OnlineStatusDto.ONLINE);
+        when(authenticationMock.getPrincipal()).thenReturn(userOverviewDto);
+        when(securityContextMock.getAuthentication()).thenReturn(authenticationMock);
+        SecurityContextHolder.setContext(securityContextMock);
+
+        assertEquals(Boolean.TRUE, userService.isRequesterAndAuthenticatedUserTheSame(1L));
     }
 
 
