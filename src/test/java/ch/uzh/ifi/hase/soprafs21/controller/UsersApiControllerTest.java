@@ -78,11 +78,16 @@ class UsersApiControllerTest {
         String mockAccessToken = "mockAccessToken";
         String mockRefreshToken = "mockRefreshToken";
 
+        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
+        userLoginPostDto.setUserId(1L);
+        userLoginPostDto.setIsNewUser(Boolean.TRUE);
+
         given(userServiceMock.authenticateTokenId(userLoginDto.getTokenId())).willReturn(mockGoogleIdToken);
         given(userServiceMock.verifyEmailIdForToken(Mockito.any(), Mockito.any())).willReturn(Boolean.TRUE);
         given(jwtTokenUtil.generateToken(Mockito.any())).willReturn(mockAccessToken);
         given(jwtTokenUtil.getExpirationTimeForAccessToken(Mockito.any())).willReturn(new Date());
         given(jwtTokenUtil.generateRefreshToken(Mockito.any())).willReturn(mockRefreshToken);
+        given(userServiceMock.loginOrRegisterUser(payload,mockRefreshToken)).willReturn(userLoginPostDto);
 
         ResponseEntity<UserLoginPostDto> responseEntity = usersApiController.usersLoginPost(userLoginDto);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -96,10 +101,15 @@ class UsersApiControllerTest {
         String mockRefreshToken = "mockRefreshToken";
         String mockEmailId = "mock@gmail.com";
 
+        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
+        userLoginPostDto.setUserId(1L);
+        userLoginPostDto.setIsNewUser(Boolean.TRUE);
+
         given(userServiceMock.refreshToken(mockRefreshToken)).willReturn(mockEmailId);
         given(jwtTokenUtil.generateToken(Mockito.any())).willReturn(mockAccessToken);
         given(jwtTokenUtil.getExpirationTimeForAccessToken(Mockito.any())).willReturn(new Date());
         given(jwtTokenUtil.generateRefreshToken(Mockito.any())).willReturn(mockRefreshToken);
+        given(userServiceMock.updateRefreshTokenForUser(mockRefreshToken,mockEmailId)).willReturn(userLoginPostDto);
 
         ResponseEntity<UserLoginPostDto> responseEntity = usersApiController.usersRefreshTokenPut(mockRefreshToken);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

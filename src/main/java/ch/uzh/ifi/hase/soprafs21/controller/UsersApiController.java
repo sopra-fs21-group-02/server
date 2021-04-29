@@ -71,12 +71,12 @@ public class UsersApiController implements UsersApi {
     @Override
     public ResponseEntity<UserLoginPostDto> usersLoginPost(@RequestBody UserLoginDto userLoginDto) throws GeneralSecurityException, IOException {
 
-        boolean isNewUser = true;
         String accessToken =null;
         String refreshToken = null;
         Date accessTokenExpiry = null;
         GoogleIdToken token = userService.authenticateTokenId(userLoginDto.getTokenId());
         ResponseCookie refreshTokenCookie =null;
+        UserLoginPostDto userLoginPostDto = null;
 
         if (null != token) {
             if (userService.verifyEmailIdForToken(token, userLoginDto.getEmailId())) {
@@ -88,7 +88,7 @@ public class UsersApiController implements UsersApi {
                 //generate refresh token
                 refreshToken = jwtTokenUtil.generateRefreshToken(userLoginDto.getEmailId());
                 //call method to save or update user in database
-                isNewUser= userService.loginOrRegisterUser(token.getPayload(), refreshToken);
+                userLoginPostDto= userService.loginOrRegisterUser(token.getPayload(), refreshToken);
                 //create cookie to hold refresh token
                 refreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
                         .httpOnly(true)
@@ -103,8 +103,6 @@ public class UsersApiController implements UsersApi {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
         //response object
-        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
-        userLoginPostDto.setIsNewUser(isNewUser);
         userLoginPostDto.setAccessToken(accessToken);
         userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
 
@@ -150,7 +148,7 @@ public class UsersApiController implements UsersApi {
         String newRefreshToken = null;
         Date accessTokenExpiry = null;
         ResponseCookie newRefreshTokenCookie =null;
-        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
+        UserLoginPostDto userLoginPostDto = null;
 
         String validatedUserEmailId = userService.refreshToken(refreshToken);
 
@@ -161,7 +159,7 @@ public class UsersApiController implements UsersApi {
         //generate refresh token
         newRefreshToken = jwtTokenUtil.generateRefreshToken(validatedUserEmailId);
 
-        userService.updateRefreshTokenForUser(newRefreshToken, validatedUserEmailId);
+        userLoginPostDto = userService.updateRefreshTokenForUser(newRefreshToken, validatedUserEmailId);
 
         userLoginPostDto.setAccessToken(newAccessToken);
         userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));

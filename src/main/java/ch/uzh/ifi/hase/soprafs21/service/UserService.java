@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -98,8 +99,9 @@ public class UserService {
         return Boolean.FALSE;
     }
 
-    public boolean loginOrRegisterUser(GoogleIdToken.Payload payload, String refreshToken){
+    public UserLoginPostDto loginOrRegisterUser(GoogleIdToken.Payload payload, String refreshToken){
         boolean isNewUser = false;
+        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
         Optional<User> optionalUser = userRepository.findByEmail(payload.getEmail());
 
         if(optionalUser.isEmpty()){
@@ -113,12 +115,15 @@ public class UserService {
             .token(refreshToken).build();
             isNewUser = true;
             userRepository.saveAndFlush(user);
+            userLoginPostDto.setUserId(user.getId());
         }else{
             optionalUser.get().setStatus(OnlineStatus.ONLINE);
             userRepository.flush();
+            userLoginPostDto.setUserId(optionalUser.get().getId());
         }
 
-        return isNewUser;
+        userLoginPostDto.setIsNewUser(isNewUser);
+        return userLoginPostDto;
     }
 
     public Optional<User> getUserByEmail(String email) {
@@ -167,13 +172,16 @@ public class UserService {
     }
 
     @Transactional
-    public void updateRefreshTokenForUser(String newRefreshToken, String emailId) {
+    public UserLoginPostDto updateRefreshTokenForUser(String newRefreshToken, String emailId) {
+        UserLoginPostDto userLoginPostDto = new UserLoginPostDto();
         Optional<User> optionalUser = userRepository.findByEmail(emailId);
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setToken(newRefreshToken);
             userRepository.saveAndFlush(user);
+            userLoginPostDto.setUserId(user.getId());
         }
+        return userLoginPostDto;
     }
 
     @Transactional
