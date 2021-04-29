@@ -119,7 +119,7 @@ class UsersApiControllerTest {
     }
 
     @Test
-    void logoutForbidden () throws Exception{
+    void logoutForbidden () {
         Long mockUserId = 1L;
         given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.FALSE);
 
@@ -150,7 +150,7 @@ class UsersApiControllerTest {
     }
 
     @Test
-    void getUserNotFound() throws Exception {
+    void getUserNotFound() {
         UserDto mockedUserDto = getMockedUserDto();
 
         given(userServiceMock.getUserDetails(Mockito.any())).willReturn(null);
@@ -241,7 +241,7 @@ class UsersApiControllerTest {
     }
 
     @Test
-    void deleteForbidden () throws Exception{
+    void deleteForbidden () {
         Long mockUserId = 1L;
         given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.FALSE);
 
@@ -279,7 +279,7 @@ class UsersApiControllerTest {
     }
 
     @Test
-    void updateForbidden () throws Exception{
+    void updateForbidden () {
         Long mockUserId = 1L;
         UserEditDto mockedEditDto = new UserEditDto();
         mockedEditDto.setBio("Updated Bio");

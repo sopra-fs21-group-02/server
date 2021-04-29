@@ -24,7 +24,7 @@ import java.util.List;
  * Always created one mapper for getting information (GET) and one mapper for creating information (POST).
  */
 @Mapper(uses = { SpatialDTOMapper.class, DogDTOMapper.class })
-public interface UserDTOMapper {
+public interface  UserDTOMapper {
     UserDTOMapper INSTANCE = Mappers.getMapper(UserDTOMapper.class);
 
     @Mapping(source = "name", target = "name")
