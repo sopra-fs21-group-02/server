@@ -29,7 +29,7 @@ public class UserLoginPostDto  implements Serializable {
   private Boolean isNewUser;
 
   @JsonProperty("userId")
-  private Long userId = null;
+  private Long userId;
 
   public UserLoginPostDto accessToken(String accessToken) {
     this.accessToken = accessToken;

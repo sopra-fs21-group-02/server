@@ -22,6 +22,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -53,6 +54,9 @@ public class UserServiceIntegrationTest {
 
     @Mock
     private JwtTokenUtil jwtTokenUtilMock;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @BeforeEach
     void setUp() {
@@ -133,8 +137,24 @@ public class UserServiceIntegrationTest {
 
         this.userService.loginOrRegisterUser(payload, refreshToken);
         assertNotNull(userRepository.findByEmail(payload.getEmail()));
-
     }
+
+    @Test
+    void testRefreshToken(){
+        String email = "mark5@twen.de";
+        String token = jwtTokenUtil.generateRefreshToken(email);
+        User mockedUser = User.builder().id(5L).email(email).name("Mark5").profilePictureURL("SomeURL").
+                provider("SomeProvider").providerUid("SomeGoogleId").token(token).status(OnlineStatus.ONLINE).build();
+        userRepository.saveAndFlush(mockedUser);
+        this.userService.refreshToken(token);
+    }
+
+    @Test
+    void testDeleteUser(){
+        this.userService.deleteUser(4L);
+        assertEquals(Optional.empty(),userRepository.findById(4L));
+    }
+
 
 
 }
