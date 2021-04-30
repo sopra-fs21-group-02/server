@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.11.0"
+  version: "1.12.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -363,7 +363,7 @@ paths:
               dogDto:
                 contentType: application/json
               profilePicture:
-                contentType: image/png, image/jpeg, image/gif, image/tiff
+                contentType:  image/jpeg, image/png, image/gif, image/tiff
         description: "Dog object that needs to be updated"
       responses:
         204:
@@ -433,10 +433,6 @@ paths:
         200:
           description: Returns dog's profile image
           content:
-            image/gif:
-              schema:
-                type: string
-                format: binary
             image/jpeg:
               schema:
                 type: string
@@ -446,6 +442,10 @@ paths:
                 type: string
                 format: binary
             image/tiff:
+              schema:
+                type: string
+                format: binary
+            image/gif:
               schema:
                 type: string
                 format: binary
