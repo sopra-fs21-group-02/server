@@ -254,7 +254,7 @@ public interface UsersApi {
         @ApiResponse(code = 404, message = "Resource not found") })
     @GetMapping(
         value = "/users/{userId}/dogs/{dogId}/image",
-        produces = { "image/gif", "image/jpeg", "image/png", "image/tiff", "application/json" }
+        produces = { "image/jpeg", "image/png", "image/tiff", "image/gif", "application/json" }
     )
     default ResponseEntity<org.springframework.core.io.Resource> getDogsImage(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog",required=true) @PathVariable("dogId") Long dogId) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
