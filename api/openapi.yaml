@@ -1102,7 +1102,8 @@ components:
         isNewUser:
           type: boolean
         userId:
-          type: long
+          type: integer
+          format: int64
     UserEdit:
       type: object
       properties:

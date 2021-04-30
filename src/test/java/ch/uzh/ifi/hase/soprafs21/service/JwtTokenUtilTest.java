@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,5 +38,13 @@ class JwtTokenUtilTest {
             this.jwtTokenUtil.validateToken(token, SecurityConstants.SECRET);
         });
         assertEquals("401 UNAUTHORIZED \"Invalid JWT token\"",exception.getMessage());
+    }
+
+    @Test
+    void testGetExpirationTimeForAccessToken(){
+        String email = "mock@gmail.com";
+        String token = this.jwtTokenUtil.generateToken(email);
+        this.jwtTokenUtil.getExpirationTimeForAccessToken(token);
+        assertNotNull(this.jwtTokenUtil.getClaimsFromJWT(token,SecurityConstants.SECRET).getExpiration());
     }
 }
