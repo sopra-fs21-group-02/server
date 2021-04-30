@@ -2,6 +2,8 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.repository.ChatMessageRepository;
+import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +19,18 @@ import java.util.Optional;
 @Transactional
 public class DogService {
 
-    @Autowired
-    private DogRepository dogRepository;
+    private final DogRepository dogRepository;
+
+    private final UserRepository userRepository;
+
+    private final UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserService userService;
+    public DogService(DogRepository dogRepository, UserRepository userRepository, UserService userService) {
+        this.userRepository = userRepository;
+        this.dogRepository = dogRepository;
+        this.userService = userService;
+    }
 
     /**
      * Adds dog to owner's profile

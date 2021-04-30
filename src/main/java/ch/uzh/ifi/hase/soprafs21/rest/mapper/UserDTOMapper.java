@@ -1,14 +1,8 @@
 package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs21.entity.ChatMessage;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ChatMessageDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
-import org.locationtech.jts.geom.Point;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -24,14 +18,13 @@ import java.util.List;
  * Always created one mapper for getting information (GET) and one mapper for creating information (POST).
  */
 @Mapper(uses = { SpatialDTOMapper.class, DogDTOMapper.class })
-public interface UserDTOMapper {
+public interface  UserDTOMapper {
     UserDTOMapper INSTANCE = Mappers.getMapper(UserDTOMapper.class);
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "email", target = "email")
     @Mapping(source = "profilePicture", target = "profilePictureURL")
-    @Mapping(source = "tags", target = "tags")
     @Mapping(source = "dogs", target = "listOfDogs")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "gender", target = "gender")
@@ -43,7 +36,6 @@ public interface UserDTOMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "email", target = "email")
     @Mapping(source = "profilePictureURL", target = "profilePicture")
-    @Mapping(source = "tags", target = "tags")
     @Mapping(source = "listOfDogs", target = "dogs")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "gender", target = "gender")

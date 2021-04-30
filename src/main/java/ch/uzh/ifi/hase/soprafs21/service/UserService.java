@@ -16,8 +16,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import io.jsonwebtoken.Claims;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
@@ -42,22 +40,17 @@ import java.util.Optional;
 @Transactional
 public class UserService {
 
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
-
     private final UserRepository userRepository;
 
-    private final DogRepository dogRepository;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final Environment env;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    public UserService(@Qualifier("userRepository") UserRepository userRepository, DogRepository dogRepository) {
+    public UserService(UserRepository userRepository, JwtTokenUtil jwtTokenUtil, Environment env) {
         this.userRepository = userRepository;
-        this.dogRepository = dogRepository;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.env = env;
     }
 
     /**

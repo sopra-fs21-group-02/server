@@ -68,8 +68,4 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
         return new JsonNullableModule();
     }
 
-//    @Bean
-//    public NativeWebRequest webRequest(HttpServletRequest request, @Nullable HttpServletResponse response) {
-//        return new ServletWebRequest(request, response);
-//    }
 }
