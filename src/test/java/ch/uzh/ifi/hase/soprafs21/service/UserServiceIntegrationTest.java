@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -21,6 +22,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -52,6 +54,9 @@ public class UserServiceIntegrationTest {
 
     @Mock
     private JwtTokenUtil jwtTokenUtilMock;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @BeforeEach
     void setUp() {
@@ -100,22 +105,56 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testLogoutUser(){
+    void testLogoutUser(){
         this.userService.logoutUser(1L);
         assertNull(userRepository.findById(1L).get().getToken());
         assertEquals(OnlineStatus.OFFLINE, userRepository.findById(1L).get().getStatus());
     }
 
     @Test
-    public void testUpdateRefreshTokenForUser(){
+    void testUpdateRefreshTokenForUser(){
         this.userService.updateRefreshTokenForUser("DUMMYTOKEN","mark@twen.de");
         assertEquals("DUMMYTOKEN", userRepository.findById(1L).get().getToken());
     }
 
     @Test
-    public void testGetUserDetails(){
+    void testGetUserDetails(){
         this.userService.getUserDetails(1L);
         assertEquals("Mark", userRepository.findById(1L).get().getName());
     }
+
+    @Test
+    void testGetUserById(){
+        this.userService.getUserById(1L);
+        assertEquals("Mark", userRepository.findById(1L).get().getName());
+    }
+
+    @Test
+    void testLoginOrRegisterUser(){
+        GoogleIdToken.Payload payload = new GoogleIdToken.Payload();
+        payload.setEmail("mark@twen.de");
+        String refreshToken = "DUMMYTOKEN";
+
+        this.userService.loginOrRegisterUser(payload, refreshToken);
+        assertNotNull(userRepository.findByEmail(payload.getEmail()));
+    }
+
+    @Test
+    void testRefreshToken(){
+        String email = "mark5@twen.de";
+        String token = jwtTokenUtil.generateRefreshToken(email);
+        User mockedUser = User.builder().id(5L).email(email).name("Mark5").profilePictureURL("SomeURL").
+                provider("SomeProvider").providerUid("SomeGoogleId").token(token).status(OnlineStatus.ONLINE).build();
+        userRepository.saveAndFlush(mockedUser);
+        this.userService.refreshToken(token);
+    }
+
+    @Test
+    void testDeleteUser(){
+        this.userService.deleteUser(4L);
+        assertEquals(Optional.empty(),userRepository.findById(4L));
+    }
+
+
 
 }

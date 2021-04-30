@@ -40,4 +40,12 @@ class JwtTokenUtilTest {
         });
         assertEquals("401 UNAUTHORIZED \"Invalid JWT token\"",exception.getMessage());
     }
+
+    @Test
+    void testGetExpirationTimeForAccessToken(){
+        String email = "mock@gmail.com";
+        String token = this.jwtTokenUtil.generateToken(email);
+        this.jwtTokenUtil.getExpirationTimeForAccessToken(token);
+        assertNotNull(this.jwtTokenUtil.getClaimsFromJWT(token,SecurityConstants.SECRET).getExpiration());
+    }
 }
