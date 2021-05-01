@@ -149,7 +149,7 @@ public class UserService {
         this.userRepository.updateUserLocation(userId, newLocation);
     }
 
-    public String refreshToken(String refreshToken) {
+    public String validateAndGetUserEmailFromRefreshToken(String refreshToken) {
         if (jwtTokenUtil.validateToken(refreshToken, SecurityConstants.REFRESH_SECRET)) {
             Claims claims = jwtTokenUtil.getClaimsFromJWT(refreshToken, SecurityConstants.REFRESH_SECRET);
             String emailId = claims.getSubject();
@@ -157,26 +157,16 @@ public class UserService {
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
 
-                System.out.println("---------------------------");
-                System.out.println("User Token from DB:");
-                System.out.println(user.getToken());
-                System.out.println("Token from Request:");
-                System.out.println(refreshToken);
-                System.out.println("---------------------------");
-
                 if (user.getToken().equals(refreshToken)) {
                     return emailId;
-                }
-                else {
-                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
                 }
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
             }
         }
-       return null;
 
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
     }
 
     @Transactional

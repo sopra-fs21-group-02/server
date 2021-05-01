@@ -141,6 +141,7 @@ public class UsersApiController implements UsersApi {
         userService.updateUserLocation(userId, newLocation);
         return ResponseEntity.noContent().build();
     }
+
     @Override
     public ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@CookieValue("refresh_token") String refreshToken) throws Exception {
 
@@ -150,7 +151,7 @@ public class UsersApiController implements UsersApi {
         ResponseCookie newRefreshTokenCookie =null;
         UserLoginPostDto userLoginPostDto = null;
 
-        String validatedUserEmailId = userService.refreshToken(refreshToken);
+        String validatedUserEmailId = userService.validateAndGetUserEmailFromRefreshToken(refreshToken);
 
         //generation of access token
         newAccessToken = jwtTokenUtil.generateToken(validatedUserEmailId);
