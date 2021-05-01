@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -92,7 +93,6 @@ public class UsersApiController implements UsersApi {
                 //create cookie to hold refresh token
                 refreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
                         .httpOnly(true)
-                        .secure(true)
                         .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME/1000) //convert expiry time from ms to sec
                         .build();
 
@@ -142,7 +142,7 @@ public class UsersApiController implements UsersApi {
         return ResponseEntity.noContent().build();
     }
     @Override
-    public ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@NotNull String refreshToken) throws Exception {
+    public ResponseEntity<UserLoginPostDto> usersRefreshTokenPut(@CookieValue("refresh_token") String refreshToken) throws Exception {
 
         String newAccessToken =null;
         String newRefreshToken = null;
@@ -165,9 +165,8 @@ public class UsersApiController implements UsersApi {
         userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
         userLoginPostDto.setIsNewUser(Boolean.FALSE);
         //create cookie to hold refresh token
-        newRefreshTokenCookie = ResponseCookie.from("refresh_token",refreshToken)
+        newRefreshTokenCookie = ResponseCookie.from("refresh_token",newRefreshToken)
                 .httpOnly(true)
-                .secure(true)
                 .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME/1000) //convert expiry time from ms to sec
                 .build();
 

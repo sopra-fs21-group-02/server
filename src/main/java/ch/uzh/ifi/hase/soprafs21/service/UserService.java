@@ -156,6 +156,14 @@ public class UserService {
             Optional<User> optionalUser = userRepository.findByEmail(emailId);
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
+
+                System.out.println("---------------------------");
+                System.out.println("User Token from DB:");
+                System.out.println(user.getToken());
+                System.out.println("Token from Request:");
+                System.out.println(refreshToken);
+                System.out.println("---------------------------");
+
                 if (user.getToken().equals(refreshToken)) {
                     return emailId;
                 }
