@@ -117,9 +117,12 @@ public class UserService {
             userRepository.saveAndFlush(user);
             userLoginPostDto.setUserId(user.getId());
         }else{
-            optionalUser.get().setStatus(OnlineStatus.ONLINE);
-            userRepository.flush();
-            userLoginPostDto.setUserId(optionalUser.get().getId());
+            User user = optionalUser.get();
+
+            user.setStatus(OnlineStatus.ONLINE);
+            user.setToken(refreshToken);
+            userRepository.saveAndFlush(user);
+            userLoginPostDto.setUserId(user.getId());
         }
 
         userLoginPostDto.setIsNewUser(isNewUser);
