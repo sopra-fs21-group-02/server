@@ -45,6 +45,10 @@ public class DogService {
         return this.dogRepository.saveAndFlush(dogToAdd);
     }
 
+    public Dog getDogById(Long id) {
+        return dogRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     /**
      * Deletes a dog with provided id
      * @param ownerId the id of the user that deletes the dog

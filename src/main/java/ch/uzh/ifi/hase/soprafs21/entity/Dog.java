@@ -38,6 +38,9 @@ public class Dog implements Serializable {
     private byte[] profilePicture;
 
     @Column
+    private String profilePictureContentType;
+
+    @Column
     private LocalDate dateOfBirth;
 
     @Column(nullable = false)
