@@ -215,12 +215,7 @@ public class UserService {
 
 
     public User getUserDetails(Long userId) {
-        User user = null;
-        Optional<User> optionalUser =  userRepository.findById(userId);
-        if(optionalUser.isPresent()) {
-            user = optionalUser.get();
-        }
-        return user;
+        return userRepository.findById(userId).orElse(null);
     }
 
     @Transactional

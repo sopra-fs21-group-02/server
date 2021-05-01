@@ -72,8 +72,7 @@ public class User implements Serializable {
     @Column
     private String bio;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn
+    @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private List<Dog> listOfDogs;
 
     @Column
