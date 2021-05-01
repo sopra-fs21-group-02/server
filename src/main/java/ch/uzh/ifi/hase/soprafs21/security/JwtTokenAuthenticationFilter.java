@@ -42,7 +42,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader(SecurityConstants.HEADER_STRING);
 
-        if(header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+        if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -59,7 +59,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        if(jwtTokenUtil.validateToken(token, SecurityConstants.SECRET)) {
+        if (jwtTokenUtil.validateToken(token, SecurityConstants.SECRET)) {
             Claims claims = jwtTokenUtil.getClaimsFromJWT(token, SecurityConstants.SECRET);
             String emailId = claims.getSubject();
 
@@ -67,7 +67,8 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                     getUsernamePasswordAuthenticationToken(request, emailId);
 
             SecurityContextHolder.getContext().setAuthentication(auth);
-        } else {
+        }
+        else {
             SecurityContextHolder.clearContext();
         }
 
@@ -89,10 +90,12 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-
         // Exclude the login URL from the filter.
-        return "/v1/users/login".equals(path);
+        return Arrays.asList("/v1/users/login",
+                "/v1/users/\\d+/dogs/\\d+/image")
+                .stream()
+                .anyMatch(pattern -> path.matches(pattern));
     }
 }

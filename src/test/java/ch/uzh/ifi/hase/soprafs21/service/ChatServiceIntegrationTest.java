@@ -31,7 +31,7 @@ class ChatServiceIntegrationTest {
     @Autowired
     private ChatService chatService;
 
-    private User sender,receiver;
+    private User sender, receiver;
 
     @Mock
     private Authentication authenticationMock;

@@ -28,6 +28,7 @@ public interface DogDTOMapper {
     @Mapping(expression = "java(Gender.fromValue(dogDto.getSex().toString()))", target = "gender")
     @Mapping(expression = "java(dogDto.getDateOfBirth())", target = "dateOfBirth")
     @Mapping(expression = "java(map(profilePicture))", target = "profilePicture")
+    @Mapping(expression = "java(profilePicture!=null?profilePicture.getContentType():null)", target = "profilePictureContentType")
     Dog toDogEntity(DogDto dogDto, MultipartFile profilePicture) throws IOException;
 
     default Resource map(byte[] value) {
