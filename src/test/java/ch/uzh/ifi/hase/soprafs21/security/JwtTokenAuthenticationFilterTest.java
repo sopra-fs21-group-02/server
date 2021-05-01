@@ -14,6 +14,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,9 +29,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 class JwtTokenAuthenticationFilterTest {
 
 
@@ -46,9 +47,6 @@ class JwtTokenAuthenticationFilterTest {
     @Mock
     private SecurityContext securityContextMock;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtilWired;
-
     HttpServletRequest  mockedRequest;
     HttpServletResponse mockedResponse;
     FilterChain mockedFilterChain;
@@ -62,13 +60,13 @@ class JwtTokenAuthenticationFilterTest {
         userOverviewDto.setName("mark");
         userOverviewDto.setStatus(OnlineStatusDto.ONLINE);
         Mockito.when(authenticationMock.getPrincipal()).thenReturn(userOverviewDto);
-        jwtFilter=new JwtTokenAuthenticationFilter(jwtTokenUtil, userServiceMock);
         Mockito.when(securityContextMock.getAuthentication()).thenReturn(authenticationMock);
         SecurityContextHolder.setContext(securityContextMock);
 
         mockedRequest = Mockito.mock(HttpServletRequest.class);
         mockedResponse = Mockito.mock(HttpServletResponse.class);
         mockedFilterChain = Mockito.mock(FilterChain.class);
+        jwtFilter = new JwtTokenAuthenticationFilter(jwtTokenUtil, userServiceMock, new MockEnvironment());
     }
 
     @Test
@@ -122,19 +120,6 @@ class JwtTokenAuthenticationFilterTest {
         verify(jwtTokenUtil,times(1)).validateToken("Test123",SecurityConstants.SECRET);
         verify(jwtTokenUtil,times(0)).getClaimsFromJWT("Test123",SecurityConstants.SECRET);
         verify(userServiceMock,times(0)).getUserByEmail("email1");
-
-    }
-
-    @Test
-    void testDoFilterInternalIntegration() throws ServletException, IOException {
-        String email = "mock@gmail.com";
-        String token = this.jwtTokenUtilWired.generateToken(email);
-
-        when(mockedRequest.getHeader(SecurityConstants.HEADER_STRING)).thenReturn("Bearer "+token);
-        User mockedUser = User.builder().id(1L).email("email1").name("name1").profilePictureURL("url1").build();
-        when(userServiceMock.getUserByEmail("email1")).thenReturn(Optional.of(mockedUser));
-        this.jwtFilter.doFilterInternal(mockedRequest, mockedResponse, mockedFilterChain);
-        assertEquals(email, this.jwtTokenUtilWired.getClaimsFromJWT(token, SecurityConstants.SECRET).getSubject());
 
     }
 }
