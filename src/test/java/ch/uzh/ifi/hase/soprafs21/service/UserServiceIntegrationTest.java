@@ -146,7 +146,7 @@ public class UserServiceIntegrationTest {
         User mockedUser = User.builder().id(5L).email(email).name("Mark5").profilePictureURL("SomeURL").
                 provider("SomeProvider").providerUid("SomeGoogleId").token(token).status(OnlineStatus.ONLINE).build();
         userRepository.saveAndFlush(mockedUser);
-        this.userService.refreshToken(token);
+        this.userService.validateAndGetUserEmailFromRefreshToken(token);
     }
 
     @Test

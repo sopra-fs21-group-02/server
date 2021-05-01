@@ -105,7 +105,7 @@ class UsersApiControllerTest {
         userLoginPostDto.setUserId(1L);
         userLoginPostDto.setIsNewUser(Boolean.TRUE);
 
-        given(userServiceMock.refreshToken(mockRefreshToken)).willReturn(mockEmailId);
+        given(userServiceMock.validateAndGetUserEmailFromRefreshToken(mockRefreshToken)).willReturn(mockEmailId);
         given(jwtTokenUtil.generateToken(Mockito.any())).willReturn(mockAccessToken);
         given(jwtTokenUtil.getExpirationTimeForAccessToken(Mockito.any())).willReturn(new Date());
         given(jwtTokenUtil.generateRefreshToken(Mockito.any())).willReturn(mockRefreshToken);
