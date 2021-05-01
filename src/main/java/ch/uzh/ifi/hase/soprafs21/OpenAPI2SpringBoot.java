@@ -55,8 +55,9 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
+                        .allowedOrigins("http://localhost:3000", "https://sopra-fs21-group-02-client.herokuapp.com")
                         .allowedMethods("*")
+                        .allowCredentials(true)
                         .allowedHeaders("Content-Type", "Authorization");
             }
         };

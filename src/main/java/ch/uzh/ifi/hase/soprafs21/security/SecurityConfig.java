@@ -28,13 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().exceptionHandling();
-//                .authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-//                .and()
-//                .addFilterBefore(jwtTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//                .authorizeRequests()
-//                .antMatchers("/h2-console/**").permitAll()
-//                .antMatchers("/v1/**").permitAll()
-//                .anyRequest().authenticated();
     }
 
     @Override
@@ -51,5 +44,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         registrationBean.addUrlPatterns("/v1/*");
         return registrationBean;
     }
-
 }

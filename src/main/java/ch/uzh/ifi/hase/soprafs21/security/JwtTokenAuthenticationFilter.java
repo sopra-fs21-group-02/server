@@ -88,5 +88,11 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                 .orElse(null);
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
 
+        // Exclude the login URL from the filter.
+        return "/v1/users/login".equals(path);
+    }
 }
