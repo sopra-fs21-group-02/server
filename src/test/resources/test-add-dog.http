@@ -1,5 +1,5 @@
 ###
-# Check the current dogs list size
+# Checks the current dogs list size
 GET {{backend-url}}/v1/users/1
 Authorization: Bearer {{email}}
 
@@ -7,9 +7,9 @@ Authorization: Bearer {{email}}
     client.log("Current list of dogs: " + response.body.dogs);
     client.global.set("dogsListSize", response.body.dogs.length );
  %}
-###
-# Let's create a dog
 
+###
+# Creates a dog
 POST {{backend-url}}/v1/users/1/dogs/
 Authorization: Bearer {{email}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
@@ -29,17 +29,18 @@ Content-Type: image/png
 --WebAppBoundary--
 
 > {%
-client.test("Request executed successfully", function() {
-  client.assert(response.status === 201, "Response status is not 201");
+    client.test("Request executed successfully", function() {
+    client.assert(response.status === 201, "Response status is not 201");
 });
 %}
 
 ###
+# Checks the current dogs list size
 GET {{backend-url}}/v1/users/1
 Authorization: Bearer {{email}}
 
 > {%
- client.test("Check if the new dog is included", function (){
+     client.test("Check if the new dog is included", function (){
      client.assert(response.body.dogs.length === parseInt(client.global.get("dogsListSize")) + 1 );
  });
  %}
