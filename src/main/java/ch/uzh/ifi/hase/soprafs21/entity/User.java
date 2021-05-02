@@ -31,7 +31,6 @@ import java.util.List;
         attributeNodes = @NamedAttributeNode(value = "listOfDogs", subgraph = "dogs_without_picture_and_owner")
 )
 @Table(name = "USERS", schema="soprafs21")
-@EntityListeners(UserEntityListener.class)
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

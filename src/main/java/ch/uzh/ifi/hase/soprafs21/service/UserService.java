@@ -232,7 +232,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()) {
             User userToDelete = optionalUser.get();
-            List<Conversation> conversatiosToUpdate = conversationRepository
+            List<Conversation> conversationsToUpdate = conversationRepository
                     .findByUser(userToDelete)
                     .stream()
                     .peek(conversation -> {
@@ -242,7 +242,7 @@ public class UserService {
                             conversation.setParticipant2(null);
                         }
                     }).collect(Collectors.toList());
-            conversationRepository.saveAll(conversatiosToUpdate);
+            conversationRepository.saveAll(conversationsToUpdate);
             conversationRepository.flush();
             userRepository.delete(userToDelete);
         }
