@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.repository.ChatMessageRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
@@ -51,15 +52,19 @@ public class UserService {
 
     private final ConversationRepository conversationRepository;
 
+    private final ChatMessageRepository messageRepository;
+
     @Autowired
     public UserService(UserRepository userRepository,
                        JwtTokenUtil jwtTokenUtil,
                        Environment env,
-                       ConversationRepository conversationRepository) {
+                       ConversationRepository conversationRepository,
+                       ChatMessageRepository messageRepository) {
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
         this.env = env;
         this.conversationRepository = conversationRepository;
+        this.messageRepository = messageRepository;
     }
 
     /**
@@ -232,18 +237,8 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()) {
             User userToDelete = optionalUser.get();
-            List<Conversation> conversationsToUpdate = conversationRepository
-                    .findByUser(userToDelete)
-                    .stream()
-                    .peek(conversation -> {
-                        if (conversation.getParticipant1().equals(userToDelete)) {
-                            conversation.setParticipant1(null);
-                        } else {
-                            conversation.setParticipant2(null);
-                        }
-                    }).collect(Collectors.toList());
-            conversationRepository.saveAll(conversationsToUpdate);
-            conversationRepository.flush();
+            conversationRepository.removeUserFromConversations(userToDelete);
+            messageRepository.removeUserFromMessages(userToDelete);
             userRepository.delete(userToDelete);
         }
     }
