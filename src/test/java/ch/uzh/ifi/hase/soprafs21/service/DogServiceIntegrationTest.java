@@ -139,7 +139,7 @@ public class DogServiceIntegrationTest {
         assertEquals(dogWithUpdatedFields.getGender().toString(), updatedDog.getGender().toString());
         assertEquals(dogWithUpdatedFields.getDateOfBirth(), updatedDog.getDateOfBirth());
         assertEquals(dogWithUpdatedFields.getOwner().getId(), updatedDog.getOwner().getId());
-        assertEquals(dogWithUpdatedFields.getProfilePicture(), updatedDog.getProfilePicture());
+        assertArrayEquals(dog.getProfilePicture(), updatedDog.getProfilePicture());
     }
     
     @Test
