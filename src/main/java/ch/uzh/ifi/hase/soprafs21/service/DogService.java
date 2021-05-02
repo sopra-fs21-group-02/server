@@ -93,9 +93,10 @@ public class DogService {
         dogToEdit.setName(dog.getName());
         dogToEdit.setDateOfBirth(dog.getDateOfBirth());
         dogToEdit.setGender(dog.getGender());
-        if(null != dog.getProfilePicture() && dog.getProfilePicture().length!=0)
+        if(null != dog.getProfilePicture() && dog.getProfilePicture().length!=0){
             dogToEdit.setProfilePicture(dog.getProfilePicture());
-
+            dogToEdit.setProfilePictureContentType(dog.getProfilePictureContentType());
+        }
         return this.dogRepository.saveAndFlush(dogToEdit);
     }
 }
