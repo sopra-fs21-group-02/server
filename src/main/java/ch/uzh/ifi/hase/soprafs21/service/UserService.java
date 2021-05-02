@@ -214,7 +214,7 @@ public class UserService {
         return this.userRepository.findAll(currentUser.getId());
     }
 
-//    @Transactional
+    @Transactional
     public User getUserDetails(Long userId) {
         return userRepository.findById(userId).orElse(null);
     }

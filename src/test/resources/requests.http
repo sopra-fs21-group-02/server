@@ -8,7 +8,8 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/v1/users/1
+GET {{backend-url}}/v1/users/1
+Authorization: Bearer {{email}}
 Content-Type: application/json
 
 ###
@@ -33,7 +34,7 @@ Content-Type: application/json
 ###
 
 POST {{backend-url}}/v1/users/1/dogs/
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJiZWxvdHVya2luYWtsQGdtYWlsLmNvbSIsImlhdCI6MTYxOTk1NzkwOSwiZXhwIjoxNjE5OTU4ODA5fQ.3Q7pMXo9UYNWUGp2L4WLxyhn79P2gDRwz3wxAHuR5vY2wuaSYp6-uZ0mw4EECe9zB8_MpVu_TuUIB1YkchhY2A
+Authorization: Bearer {{email}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
