@@ -21,11 +21,11 @@ public class Conversation {
     private Long id;
 
     @JoinColumn
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private User participant1;
 
     @JoinColumn
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private User participant2;
 
     @OneToMany(mappedBy = "conversation", fetch = FetchType.EAGER)
