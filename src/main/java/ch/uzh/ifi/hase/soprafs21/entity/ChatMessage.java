@@ -26,6 +26,7 @@ public class ChatMessage {
     private User receiver;
 
     @Column(nullable = false)
+    @Lob
     private String message;
 
     @Column(nullable = false)
