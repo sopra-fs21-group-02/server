@@ -18,6 +18,17 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(name = "dogs_without_picture_and_owner",
+        includeAllAttributes = true,
+        attributeNodes = {
+            @NamedAttributeNode("id"),
+            @NamedAttributeNode("name"),
+            @NamedAttributeNode("breed"),
+            @NamedAttributeNode("dateOfBirth"),
+            @NamedAttributeNode("gender")
+
+        }
+)
 @Table(name = "DOGS", schema="soprafs21")
 public class Dog implements Serializable {
 
