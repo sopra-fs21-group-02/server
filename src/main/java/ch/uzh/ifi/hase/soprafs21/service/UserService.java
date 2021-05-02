@@ -1,7 +1,10 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
+import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.repository.ChatMessageRepository;
+import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
@@ -30,6 +33,7 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * User Service
@@ -46,11 +50,21 @@ public class UserService {
 
     private final Environment env;
 
+    private final ConversationRepository conversationRepository;
+
+    private final ChatMessageRepository messageRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository, JwtTokenUtil jwtTokenUtil, Environment env) {
+    public UserService(UserRepository userRepository,
+                       JwtTokenUtil jwtTokenUtil,
+                       Environment env,
+                       ConversationRepository conversationRepository,
+                       ChatMessageRepository messageRepository) {
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
         this.env = env;
+        this.conversationRepository = conversationRepository;
+        this.messageRepository = messageRepository;
     }
 
     /**
@@ -222,7 +236,10 @@ public class UserService {
     public void deleteUser(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()) {
-            userRepository.delete(optionalUser.get());
+            User userToDelete = optionalUser.get();
+            conversationRepository.removeUserFromConversations(userToDelete);
+            messageRepository.removeUserFromMessages(userToDelete);
+            userRepository.delete(userToDelete);
         }
     }
 
