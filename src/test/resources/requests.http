@@ -59,3 +59,9 @@ client.test("Response content-type is json", function() {
   client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
 });
 %}
+
+###
+
+GET {{backend-url}}/v1/users/1/conversations
+Content-Type: application/json
+Authorization: Bearer mark@twen.de
