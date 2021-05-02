@@ -32,7 +32,8 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/v1/users/1/dogs/
+POST {{backend-url}}/v1/users/1/dogs/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJiZWxvdHVya2luYWtsQGdtYWlsLmNvbSIsImlhdCI6MTYxOTk1NzkwOSwiZXhwIjoxNjE5OTU4ODA5fQ.3Q7pMXo9UYNWUGp2L4WLxyhn79P2gDRwz3wxAHuR5vY2wuaSYp6-uZ0mw4EECe9zB8_MpVu_TuUIB1YkchhY2A
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
@@ -65,3 +66,15 @@ client.test("Response content-type is json", function() {
 GET {{backend-url}}/v1/users/1/conversations
 Content-Type: application/json
 Authorization: Bearer mark@twen.de
+
+###
+POST {{backend-url}}/v1/message
+Content-Type: application/json
+Authorization: Bearer mark@twen.de
+
+{
+    "senderId": 1,
+    "receiverId": 3,
+    "message": "bangbang"
+}
+###

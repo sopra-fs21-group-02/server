@@ -59,7 +59,7 @@ class ChatServiceIntegrationTest {
     @Test
     void getAllConversations() {
         List<Conversation> conversations = chatService.getAllConversations(1L);
-        assertEquals(2, conversations.size());
+        assertEquals(1, conversations.size());
         assertEquals(5, conversations.get(0).getMessages().size());
         LocalDateTime currentDateTime = LocalDateTime.now();
 
