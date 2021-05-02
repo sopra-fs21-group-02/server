@@ -33,7 +33,7 @@ public class Dog implements Serializable {
     @Column(nullable = false)
     private String breed;
 
-    @Column
+    @Basic(fetch = FetchType.LAZY)
     @Lob
     private byte[] profilePicture;
 
