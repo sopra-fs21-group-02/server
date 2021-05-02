@@ -21,14 +21,14 @@ public class Conversation {
     private Long id;
 
     @JoinColumn
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.DETACH)
     private User participant1;
 
     @JoinColumn
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.DETACH)
     private User participant2;
 
-    @OneToMany(mappedBy = "conversation", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "conversation", fetch = FetchType.EAGER, orphanRemoval = true)
     @OrderBy("timeStamp DESC")
     private List<ChatMessage> messages;
 }

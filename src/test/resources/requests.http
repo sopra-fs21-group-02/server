@@ -79,3 +79,8 @@ Authorization: Bearer mark@twen.de
     "message": "bangbang"
 }
 ###
+DELETE {{backend-url}}/v1/users/1
+Authorization: Bearer {{email}}
+Content-Type: application/json
+
+###
