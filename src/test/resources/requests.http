@@ -8,7 +8,8 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/v1/users/1
+GET {{backend-url}}/v1/users/1
+Authorization: Bearer {{email}}
 Content-Type: application/json
 
 ###
@@ -32,7 +33,8 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/v1/users/1/dogs/
+POST {{backend-url}}/v1/users/1/dogs/
+Authorization: Bearer {{email}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
@@ -59,3 +61,21 @@ client.test("Response content-type is json", function() {
   client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
 });
 %}
+
+###
+
+GET {{backend-url}}/v1/users/1/conversations
+Content-Type: application/json
+Authorization: Bearer mark@twen.de
+
+###
+POST {{backend-url}}/v1/message
+Content-Type: application/json
+Authorization: Bearer mark@twen.de
+
+{
+    "senderId": 1,
+    "receiverId": 3,
+    "message": "bangbang"
+}
+###

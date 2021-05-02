@@ -18,13 +18,24 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(name = "dogs_without_picture_and_owner",
+        includeAllAttributes = true,
+        attributeNodes = {
+            @NamedAttributeNode("id"),
+            @NamedAttributeNode("name"),
+            @NamedAttributeNode("breed"),
+            @NamedAttributeNode("dateOfBirth"),
+            @NamedAttributeNode("gender")
+
+        }
+)
 @Table(name = "DOGS", schema="soprafs21")
 public class Dog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -33,7 +44,7 @@ public class Dog implements Serializable {
     @Column(nullable = false)
     private String breed;
 
-    @Column
+    @Basic(fetch = FetchType.LAZY)
     @Lob
     private byte[] profilePicture;
 

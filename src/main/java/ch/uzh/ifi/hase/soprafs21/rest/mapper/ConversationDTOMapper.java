@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {UserDTOMapper.class})
 public interface ConversationDTOMapper {
     ConversationDTOMapper INSTANCE = Mappers.getMapper(ConversationDTOMapper.class);
 

@@ -26,6 +26,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@NamedEntityGraph(name = "users_and_dogs_without_picture",
+        includeAllAttributes = true,
+        attributeNodes = @NamedAttributeNode(value = "listOfDogs", subgraph = "dogs_without_picture_and_owner")
+)
 @Table(name = "USERS", schema="soprafs21")
 public class User implements Serializable {
 
