@@ -93,7 +93,8 @@ public class DogService {
         dogToEdit.setName(dog.getName());
         dogToEdit.setDateOfBirth(dog.getDateOfBirth());
         dogToEdit.setGender(dog.getGender());
-        dogToEdit.setProfilePicture(dog.getProfilePicture());
+        if(null != dog.getProfilePicture() && dog.getProfilePicture().length!=0)
+            dogToEdit.setProfilePicture(dog.getProfilePicture());
 
         return this.dogRepository.saveAndFlush(dogToEdit);
     }
