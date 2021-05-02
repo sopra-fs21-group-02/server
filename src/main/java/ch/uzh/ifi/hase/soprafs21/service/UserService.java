@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
+import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
@@ -30,6 +32,7 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * User Service
@@ -46,11 +49,17 @@ public class UserService {
 
     private final Environment env;
 
+    private final ConversationRepository conversationRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository, JwtTokenUtil jwtTokenUtil, Environment env) {
+    public UserService(UserRepository userRepository,
+                       JwtTokenUtil jwtTokenUtil,
+                       Environment env,
+                       ConversationRepository conversationRepository) {
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
         this.env = env;
+        this.conversationRepository = conversationRepository;
     }
 
     /**
@@ -222,7 +231,20 @@ public class UserService {
     public void deleteUser(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()) {
-            userRepository.delete(optionalUser.get());
+            User userToDelete = optionalUser.get();
+            List<Conversation> conversatiosToUpdate = conversationRepository
+                    .findByUser(userToDelete)
+                    .stream()
+                    .peek(conversation -> {
+                        if (conversation.getParticipant1().equals(userToDelete)) {
+                            conversation.setParticipant1(null);
+                        } else {
+                            conversation.setParticipant2(null);
+                        }
+                    }).collect(Collectors.toList());
+            conversationRepository.saveAll(conversatiosToUpdate);
+            conversationRepository.flush();
+            userRepository.delete(userToDelete);
         }
     }
 
