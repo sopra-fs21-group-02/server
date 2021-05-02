@@ -17,11 +17,11 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn
     @ManyToOne
     private User sender;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn
     @ManyToOne
     private User receiver;
 
