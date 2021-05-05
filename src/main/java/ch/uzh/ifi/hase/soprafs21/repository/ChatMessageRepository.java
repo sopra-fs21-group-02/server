@@ -18,17 +18,6 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
 
     @Transactional
     @Modifying
-    @Query("UPDATE ChatMessage c SET c.sender = null WHERE c.sender =?1")
-    void removeUserAsSender(User userToRemove);
-
-    @Transactional
-    @Modifying
-    @Query("UPDATE ChatMessage c SET c.receiver = null WHERE c.receiver =?1")
-    void removeUserAsReceiver(User userToRemove);
-
-    @Transactional
-    default void removeUserFromMessages(User userToRemove) {
-        removeUserAsSender(userToRemove);
-        removeUserAsReceiver(userToRemove);
-    }
+    @Query("Delete from ChatMessage c WHERE c.sender =?1 or c.receiver =?1")
+    void removeUserFromMessages(User userToRemove);
 }

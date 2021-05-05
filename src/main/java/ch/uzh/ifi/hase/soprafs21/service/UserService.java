@@ -237,8 +237,8 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()) {
             User userToDelete = optionalUser.get();
-            conversationRepository.removeUserFromConversations(userToDelete);
             messageRepository.removeUserFromMessages(userToDelete);
+            conversationRepository.removeUserFromConversations(userToDelete);
             userRepository.delete(userToDelete);
         }
     }

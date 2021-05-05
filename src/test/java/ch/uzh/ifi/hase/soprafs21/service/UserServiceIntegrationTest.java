@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
+import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
@@ -39,6 +41,9 @@ public class UserServiceIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ConversationRepository conversationRepository;
 
     @Autowired
     private UserService userService;
@@ -152,9 +157,13 @@ public class UserServiceIntegrationTest {
     @Test
     void testDeleteUser(){
         this.userService.deleteUser(4L);
-        assertEquals(Optional.empty(),userRepository.findById(4L));
+        assertEquals(Optional.empty(), userRepository.findById(4L));
     }
 
-
-
+    @Test
+    void testDeleteUserWithConversation(){
+        assertNotNull(this.conversationRepository.findByUser(userRepository.findById(2L).get()));
+        this.userService.deleteUser(2L);
+        assertEquals(0, conversationRepository.findByUser(userRepository.findById(1L).get()).size());
+    }
 }
