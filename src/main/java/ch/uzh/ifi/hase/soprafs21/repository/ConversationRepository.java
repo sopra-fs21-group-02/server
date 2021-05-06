@@ -20,16 +20,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
 
     @Transactional
     @Modifying
-    @Query("UPDATE Conversation conv SET conv.participant1 = null WHERE conv.participant1 = ?1")
-    void removeUserAsParticipant1(User userToRemove);
+    @Query("DELETE from Conversation conv WHERE conv.participant1 = ?1 or conv.participant2 = ?1")
+    void removeUserFromConversations(User userToRemove);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE Conversation conv SET conv.participant2 = null WHERE conv.participant2 = ?1")
-    void removeUserAsParticipant2(User userToRemove);
-
-    default void removeUserFromConversations(User userToRemove) {
-        removeUserAsParticipant1(userToRemove);
-        removeUserAsParticipant2(userToRemove);
-    }
 }
