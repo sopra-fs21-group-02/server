@@ -79,6 +79,9 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private List<Dog> listOfDogs;
 
+    @OneToMany(mappedBy = "owner", orphanRemoval = true)
+    private List<Tag> tags;
+
     @Column
     private Point lastUserLocation;
 }
