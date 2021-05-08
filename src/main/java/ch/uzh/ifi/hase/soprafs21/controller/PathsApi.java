@@ -35,6 +35,33 @@ public interface PathsApi {
     }
 
     /**
+     * POST /paths : Create path
+     * A path object that should be created
+     *
+     * @param walkingRouteDto  (required)
+     * @return The path was succesfully created (status code 201)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     */
+    @ApiOperation(value = "Create path", nickname = "addPath", notes = "A path object that should be created", tags={ "Paths", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 201, message = "The path was succesfully created"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted") })
+    @PostMapping(
+        value = "/paths",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    default ResponseEntity<Void> addPath(@ApiParam(value = "" ,required=true )  @Valid @RequestBody WalkingRouteDto walkingRouteDto) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
      * GET /paths : Return all paths
      *
      * @param filter Filter to specify the visual area on the map (required)
@@ -151,31 +178,6 @@ public interface PathsApi {
         consumes = { "application/json" }
     )
     default ResponseEntity<Void> pathsPathIdReviewsPost(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId,@ApiParam(value = "Review object that needs to be created" ,required=true )  @Valid @RequestBody ReviewDto reviewDto) throws Exception {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * POST /paths : Create path
-     * A path object that should be created
-     *
-     * @param walkingRouteDto  (required)
-     * @return The path was succesfully created (status code 201)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     */
-    @ApiOperation(value = "Create path", nickname = "pathsPost", notes = "A path object that should be created", tags={ "Paths", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "The path was succesfully created"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated") })
-    @PostMapping(
-        value = "/paths",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    default ResponseEntity<Void> pathsPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody WalkingRouteDto walkingRouteDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.12.0"
+  version: "1.13.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -725,6 +725,7 @@ paths:
         404:
           $ref: "#/components/responses/404"
     post:
+      operationId: addPath
       tags:
         - "Paths"
       summary: "Create path"
@@ -742,6 +743,8 @@ paths:
           $ref: "#/components/responses/400"
         401:
           $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
   /paths/{pathId}:
     delete:
       tags:
@@ -946,18 +949,14 @@ components:
           readOnly: true
         creator:
           readOnly: true
-          $ref: '#/components/schemas/User'
+          $ref: '#/components/schemas/UserOverview'
         listOfCoordinates:
           type: array
           items:
             $ref: '#/components/schemas/Coordinate'
         distance:
-          type: integer
-          format: int32
-        reviews:
-          type: array
-          items:
-            $ref: '#/components/schemas/Review'
+          type: number
+          format: double
       required:
         - listOfCoordinates
     Review:
