@@ -54,4 +54,14 @@ public class PathsApiController implements PathsApi {
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
+
+    @Override
+    public ResponseEntity<Void> deletePath(Long userId, Long pathId) throws Exception {
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(userId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to delete this Route");
+        }
+        pathService.deletePath(userId,pathId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
