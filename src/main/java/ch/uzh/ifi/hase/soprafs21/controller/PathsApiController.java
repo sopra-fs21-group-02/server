@@ -25,15 +25,13 @@ public class PathsApiController implements PathsApi {
 
     private final UserService userService;
     private final PathService pathService;
-    private GeometryFactory geometryFactory;
 
 
     @org.springframework.beans.factory.annotation.Autowired
-    public PathsApiController(NativeWebRequest request, UserService userService, PathService pathService, GeometryFactory geometryFactory) {
+    public PathsApiController(NativeWebRequest request, UserService userService, PathService pathService) {
         this.request = request;
         this.userService = userService;
         this.pathService = pathService;
-        this.geometryFactory =geometryFactory;
     }
 
     @Override
@@ -52,7 +50,6 @@ public class PathsApiController implements PathsApi {
 
         Path path = PathDTOMapper.INSTANCE.toPathEntity(walkingRouteDto);
         path.setCreator(userService.getUserById(walkingRouteDto.getCreator().getId()));
-        path.setRoute(geometryFactory.createLineString(SpatialDTOMapper.INSTANCE.getCoordinates(walkingRouteDto.getListOfCoordinates())));
         pathService.savePath(path);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
