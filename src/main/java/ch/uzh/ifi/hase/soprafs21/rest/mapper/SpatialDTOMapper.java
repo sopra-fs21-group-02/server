@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -26,4 +27,8 @@ public interface SpatialDTOMapper {
     }
 
     Coordinate[] getCoordinates(List<CoordinateDto> coordinateDtoList);
+
+    default Point getPoint(CoordinateDto coordinateDto, GeometryFactory geometryFactory) {
+        return geometryFactory.createPoint(new Coordinate(coordinateDto.getLongitude(), coordinateDto.getLatitude()));
+    }
 }
