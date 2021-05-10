@@ -34,6 +34,33 @@ public interface PathsApi {
     }
 
     /**
+     * POST /paths : Create path
+     * A path object that should be created
+     *
+     * @param walkingRouteDto  (required)
+     * @return The path was succesfully created (status code 201)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     */
+    @ApiOperation(value = "Create path", nickname = "addPath", notes = "A path object that should be created", tags={ "Paths", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 201, message = "The path was succesfully created"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted") })
+    @PostMapping(
+        value = "/paths",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    default ResponseEntity<Void> addPath(@ApiParam(value = "" ,required=true )  @Valid @RequestBody WalkingRouteDto walkingRouteDto) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
      * GET /paths : Return all paths
      *
      * @param filter Filter to specify the visual area on the map (required)
@@ -56,7 +83,7 @@ public interface PathsApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }, \"distance\" : 6, \"reviews\" : [ { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }, \"rating\" : 3, \"id\" : 0, \"text\" : \"text\" }, { \"timeStamp\" : \"2000-01-23T04:56:07.000+00:00\", \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }, \"rating\" : 3, \"id\" : 0, \"text\" : \"text\" } ], \"listOfCoordinates\" : [ { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 } ], \"id\" : 0 }";
+                    String exampleString = "{ \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"distance\" : 6.027456183070403, \"listOfCoordinates\" : [ { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 } ], \"id\" : 0 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -150,31 +177,6 @@ public interface PathsApi {
         consumes = { "application/json" }
     )
     default ResponseEntity<Void> pathsPathIdReviewsPost(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId,@ApiParam(value = "Review object that needs to be created" ,required=true )  @Valid @RequestBody ReviewDto reviewDto) throws Exception {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * POST /paths : Create path
-     * A path object that should be created
-     *
-     * @param walkingRouteDto  (required)
-     * @return The path was succesfully created (status code 201)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     */
-    @ApiOperation(value = "Create path", nickname = "pathsPost", notes = "A path object that should be created", tags={ "Paths", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "The path was succesfully created"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated") })
-    @PostMapping(
-        value = "/paths",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    default ResponseEntity<Void> pathsPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody WalkingRouteDto walkingRouteDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
