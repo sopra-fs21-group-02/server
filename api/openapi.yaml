@@ -730,6 +730,7 @@ paths:
         404:
           $ref: "#/components/responses/404"
     post:
+      operationId: addPath
       tags:
         - "Paths"
       summary: "Create path"
@@ -747,6 +748,8 @@ paths:
           $ref: "#/components/responses/400"
         401:
           $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
   /paths/{pathId}:
     delete:
       tags:
@@ -949,18 +952,14 @@ components:
           readOnly: true
         creator:
           readOnly: true
-          $ref: '#/components/schemas/User'
+          $ref: '#/components/schemas/UserOverview'
         listOfCoordinates:
           type: array
           items:
             $ref: '#/components/schemas/Coordinate'
         distance:
-          type: integer
-          format: int32
-        reviews:
-          type: array
-          items:
-            $ref: '#/components/schemas/Review'
+          type: number
+          format: double
       required:
         - listOfCoordinates
     Review:

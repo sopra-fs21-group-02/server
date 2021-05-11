@@ -2,8 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ReviewDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
@@ -14,6 +13,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+
 
 /**
  * WalkingRouteDto
@@ -26,18 +26,14 @@ public class WalkingRouteDto  implements Serializable {
   private Long id;
 
   @JsonProperty("creator")
-  private UserDto creator;
+  private UserOverviewDto creator;
 
   @JsonProperty("listOfCoordinates")
   @Valid
   private List<CoordinateDto> listOfCoordinates = new ArrayList<>();
 
   @JsonProperty("distance")
-  private Integer distance;
-
-  @JsonProperty("reviews")
-  @Valid
-  private List<ReviewDto> reviews = null;
+  private Double distance;
 
   public WalkingRouteDto id(Long id) {
     this.id = id;
@@ -59,7 +55,7 @@ public class WalkingRouteDto  implements Serializable {
     this.id = id;
   }
 
-  public WalkingRouteDto creator(UserDto creator) {
+  public WalkingRouteDto creator(UserOverviewDto creator) {
     this.creator = creator;
     return this;
   }
@@ -72,11 +68,11 @@ public class WalkingRouteDto  implements Serializable {
 
   @Valid
 
-  public UserDto getCreator() {
+  public UserOverviewDto getCreator() {
     return creator;
   }
 
-  public void setCreator(UserDto creator) {
+  public void setCreator(UserOverviewDto creator) {
     this.creator = creator;
   }
 
@@ -107,7 +103,7 @@ public class WalkingRouteDto  implements Serializable {
     this.listOfCoordinates = listOfCoordinates;
   }
 
-  public WalkingRouteDto distance(Integer distance) {
+  public WalkingRouteDto distance(Double distance) {
     this.distance = distance;
     return this;
   }
@@ -119,41 +115,12 @@ public class WalkingRouteDto  implements Serializable {
   @ApiModelProperty(value = "")
 
 
-  public Integer getDistance() {
+  public Double getDistance() {
     return distance;
   }
 
-  public void setDistance(Integer distance) {
+  public void setDistance(Double distance) {
     this.distance = distance;
-  }
-
-  public WalkingRouteDto reviews(List<ReviewDto> reviews) {
-    this.reviews = reviews;
-    return this;
-  }
-
-  public WalkingRouteDto addReviewsItem(ReviewDto reviewsItem) {
-    if (this.reviews == null) {
-      this.reviews = new ArrayList<>();
-    }
-    this.reviews.add(reviewsItem);
-    return this;
-  }
-
-  /**
-   * Get reviews
-   * @return reviews
-  */
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public List<ReviewDto> getReviews() {
-    return reviews;
-  }
-
-  public void setReviews(List<ReviewDto> reviews) {
-    this.reviews = reviews;
   }
 
 
@@ -169,13 +136,12 @@ public class WalkingRouteDto  implements Serializable {
     return Objects.equals(this.id, walkingRoute.id) &&
         Objects.equals(this.creator, walkingRoute.creator) &&
         Objects.equals(this.listOfCoordinates, walkingRoute.listOfCoordinates) &&
-        Objects.equals(this.distance, walkingRoute.distance) &&
-        Objects.equals(this.reviews, walkingRoute.reviews);
+        Objects.equals(this.distance, walkingRoute.distance);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, creator, listOfCoordinates, distance, reviews);
+    return Objects.hash(id, creator, listOfCoordinates, distance);
   }
 
   @Override
@@ -187,7 +153,6 @@ public class WalkingRouteDto  implements Serializable {
     sb.append("    creator: ").append(toIndentedString(creator)).append("\n");
     sb.append("    listOfCoordinates: ").append(toIndentedString(listOfCoordinates)).append("\n");
     sb.append("    distance: ").append(toIndentedString(distance)).append("\n");
-    sb.append("    reviews: ").append(toIndentedString(reviews)).append("\n");
     sb.append("}");
     return sb.toString();
   }
