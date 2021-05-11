@@ -16,6 +16,8 @@ import io.swagger.annotations.ApiParam;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +48,7 @@ public class UsersApiController implements UsersApi {
 
     private GeometryFactory geometryFactory;
 
-    @org.springframework.beans.factory.annotation.Autowired
+    @Autowired
     public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil, GeometryFactory geometryFactory, DogService dogService) {
         this.request = request;
         this.userService = userService;
@@ -230,8 +232,8 @@ public class UsersApiController implements UsersApi {
         if (dogDto.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id is not allowed in POST");
         }
-        Dog dogToAdd = DogDTOMapper.INSTANCE.toDogEntity(dogDto, profilePicture);
-        dogToAdd.setOwner(userService.getUserById(userId));
+        User owner = userService.getUserById(userId);
+        Dog dogToAdd = DogDTOMapper.INSTANCE.toDogEntity(dogDto, profilePicture, owner);
 
         dogService.addDog(dogToAdd);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -256,15 +258,15 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> editDog(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "Numeric ID of the dog to update", required = true) @PathVariable("dogId") Long dogId, @ApiParam(value = "", required = true) @Valid @RequestPart(value = "dogDto", required = true) DogDto dogDto, @ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
-        Dog dog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, profilePicture);
-        dog.setOwner(userService.getUserById(userId));
+        User owner = userService.getUserById(userId);
+        Dog dog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, profilePicture, owner);
 
         dogService.editDog(dog);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override
-    public ResponseEntity<org.springframework.core.io.Resource> getDogsImage(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "Numeric ID of the dog", required = true) @PathVariable("dogId") Long dogId) throws Exception {
+    public ResponseEntity<Resource> getDogsImage(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "Numeric ID of the dog", required = true) @PathVariable("dogId") Long dogId) throws Exception {
         Dog dogEntity = this.dogService.getDogById(dogId);
         if (dogEntity.getProfilePicture() != null) {
             return ResponseEntity

@@ -47,7 +47,6 @@ public class DogServiceIntegrationTest {
 
     private Dog dog;
 
-
     @BeforeEach
     void setUp() throws IOException {
         UserOverviewDto userOverviewDto = new UserOverviewDto();

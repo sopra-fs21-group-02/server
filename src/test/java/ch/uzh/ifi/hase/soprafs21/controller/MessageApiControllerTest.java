@@ -41,6 +41,7 @@ class MessageApiControllerTest {
     private SecurityContext securityContextMock;
 
     private User authenticatedUser;
+
     @Mock
     private User senderMock;
 
