@@ -84,3 +84,19 @@ Authorization: Bearer {{email}}
 Content-Type: application/json
 
 ###
+POST {{backend-url}}/v1/parks
+Authorization: Bearer {{email}}
+Content-Type: application/json
+
+{
+    "creatorId": 1,
+    "coordinate": {"longitude": 47.35997146785179, "latitude": 8.461859195948641}
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 201, "Response status is not 201");
+});
+%}
+
+###

@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Dog;
+import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,8 +29,9 @@ public interface DogDTOMapper {
     @Mapping(expression = "java(Gender.fromValue(dogDto.getSex().toString()))", target = "gender")
     @Mapping(expression = "java(dogDto.getDateOfBirth())", target = "dateOfBirth")
     @Mapping(expression = "java(map(profilePicture))", target = "profilePicture")
+    @Mapping(expression = "java(owner)", target = "owner")
     @Mapping(expression = "java(profilePicture!=null?profilePicture.getContentType():null)", target = "profilePictureContentType")
-    Dog toDogEntity(DogDto dogDto, MultipartFile profilePicture) throws IOException;
+    Dog toDogEntity(DogDto dogDto, MultipartFile profilePicture, User owner) throws IOException;
 
     default Resource map(byte[] value) {
         if(value == null) {
