@@ -2,14 +2,10 @@ package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 import java.util.Objects;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ReviewDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import javax.validation.Valid;
@@ -25,15 +21,11 @@ public class ParkDto  implements Serializable {
   @JsonProperty("id")
   private Long id;
 
-  @JsonProperty("creator")
-  private UserDto creator;
+  @JsonProperty("creatorId")
+  private Long creatorId;
 
   @JsonProperty("coordinate")
   private CoordinateDto coordinate;
-
-  @JsonProperty("reviews")
-  @Valid
-  private List<ReviewDto> reviews = null;
 
   public ParkDto id(Long id) {
     this.id = id;
@@ -55,25 +47,25 @@ public class ParkDto  implements Serializable {
     this.id = id;
   }
 
-  public ParkDto creator(UserDto creator) {
-    this.creator = creator;
+  public ParkDto creatorId(Long creatorId) {
+    this.creatorId = creatorId;
     return this;
   }
 
   /**
-   * Get creator
-   * @return creator
+   * Get creatorId
+   * @return creatorId
   */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, readOnly = true, value = "")
+  @NotNull
 
-  @Valid
 
-  public UserDto getCreator() {
-    return creator;
+  public Long getCreatorId() {
+    return creatorId;
   }
 
-  public void setCreator(UserDto creator) {
-    this.creator = creator;
+  public void setCreatorId(Long creatorId) {
+    this.creatorId = creatorId;
   }
 
   public ParkDto coordinate(CoordinateDto coordinate) {
@@ -98,35 +90,6 @@ public class ParkDto  implements Serializable {
     this.coordinate = coordinate;
   }
 
-  public ParkDto reviews(List<ReviewDto> reviews) {
-    this.reviews = reviews;
-    return this;
-  }
-
-  public ParkDto addReviewsItem(ReviewDto reviewsItem) {
-    if (this.reviews == null) {
-      this.reviews = new ArrayList<>();
-    }
-    this.reviews.add(reviewsItem);
-    return this;
-  }
-
-  /**
-   * Get reviews
-   * @return reviews
-  */
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public List<ReviewDto> getReviews() {
-    return reviews;
-  }
-
-  public void setReviews(List<ReviewDto> reviews) {
-    this.reviews = reviews;
-  }
-
 
   @Override
   public boolean equals(Object o) {
@@ -138,14 +101,13 @@ public class ParkDto  implements Serializable {
     }
     ParkDto park = (ParkDto) o;
     return Objects.equals(this.id, park.id) &&
-        Objects.equals(this.creator, park.creator) &&
-        Objects.equals(this.coordinate, park.coordinate) &&
-        Objects.equals(this.reviews, park.reviews);
+        Objects.equals(this.creatorId, park.creatorId) &&
+        Objects.equals(this.coordinate, park.coordinate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, creator, coordinate, reviews);
+    return Objects.hash(id, creatorId, coordinate);
   }
 
   @Override
@@ -154,9 +116,8 @@ public class ParkDto  implements Serializable {
     sb.append("class ParkDto {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    creator: ").append(toIndentedString(creator)).append("\n");
+    sb.append("    creatorId: ").append(toIndentedString(creatorId)).append("\n");
     sb.append("    coordinate: ").append(toIndentedString(coordinate)).append("\n");
-    sb.append("    reviews: ").append(toIndentedString(reviews)).append("\n");
     sb.append("}");
     return sb.toString();
   }
