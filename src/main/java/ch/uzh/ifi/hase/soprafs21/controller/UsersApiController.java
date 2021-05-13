@@ -275,6 +275,9 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> addTag(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "", required = true) @Valid @RequestBody(required = true) TagDto tagDto) throws Exception {
+        if (tagDto.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id is not allowed in POST");
+        }
         Tag tagToAdd = TagDTOMapper.INSTANCE.toTagEntity(tagDto);
         tagToAdd.setOwner(userService.getUserById(userId));
 

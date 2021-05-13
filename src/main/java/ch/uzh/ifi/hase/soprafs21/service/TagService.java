@@ -36,17 +36,23 @@ public class TagService {
      * @param tagToAdd tag object to add
      */
     @Transactional
-    public void addTag(Tag tagToAdd){
-        Set<Tag> tags = tagToAdd.getOwner().getTags();
-        for (Tag tag : tags) {
-            if (tag.getName().equals(tagToAdd.getName()) && tag.getTagType() == tagToAdd.getTagType()){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "tag is already added");
-            }
-        }
+    public Tag addTag(Tag tagToAdd){
         if (!userService.isRequesterAndAuthenticatedUserTheSame(tagToAdd.getOwner().getId())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to manipulate this tag");
         }
-        this.tagRepository.saveAndFlush(tagToAdd);
+        Long userId = tagToAdd.getOwner().getId();
+        Optional<User> optionalUser = Optional.of(userRepository.findById(userId).get());
+        if (optionalUser.isPresent()){
+            Set<Tag> tags = optionalUser.get().getTags();
+            if (tags != null){
+                for (Tag tag : tags) {
+                    if (tag.getName().equals(tagToAdd.getName()) && tag.getTagType() == tagToAdd.getTagType()){
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag is already added");
+                    }
+                }
+            }
+        }
+        return this.tagRepository.saveAndFlush(tagToAdd);
     }
 
     /**
@@ -64,13 +70,12 @@ public class TagService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,  "User is not permitted to delete another user tags");
         }
         Optional<Tag> optionalTag = this.tagRepository.findById(tagId);
-        if(optionalTag.isPresent()){
-            if(optionalTag.get().getOwner().getId().equals(userId)){
-                tagRepository.delete(optionalTag.get());
-                return;
-            }
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not permitted to delete another user tags");
+        if(!optionalTag.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Tag with provided id exists");
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no Tag with provided id exists");
+        if(!optionalTag.get().getOwner().getId().equals(userId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to delete another user tags");
+        }
+        tagRepository.delete(optionalTag.get());
     }
 }
