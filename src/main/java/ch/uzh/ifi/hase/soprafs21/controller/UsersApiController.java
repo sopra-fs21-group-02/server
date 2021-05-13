@@ -282,9 +282,4 @@ public class UsersApiController implements UsersApi {
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
-    @Override
-    public ResponseEntity<List<TagDto>> usersUserIdTagsGet(Long userId) throws Exception {
-        return null;
-    }
 }
