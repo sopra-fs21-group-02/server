@@ -37,7 +37,6 @@ public class UsersApiController implements UsersApi {
 
     private GeometryFactory geometryFactory;
 
-    @org.springframework.beans.factory.annotation.Autowired
     @Autowired
     public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil, GeometryFactory geometryFactory, DogService dogService, TagService tagService) {
         this.request = request;
