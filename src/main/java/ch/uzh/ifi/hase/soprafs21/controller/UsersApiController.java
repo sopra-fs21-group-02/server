@@ -1,16 +1,10 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
-import ch.uzh.ifi.hase.soprafs21.entity.ChatMessage;
-import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
-import ch.uzh.ifi.hase.soprafs21.entity.Dog;
-import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.entity.*;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.*;
 import ch.uzh.ifi.hase.soprafs21.security.config.SecurityConstants;
-import ch.uzh.ifi.hase.soprafs21.service.ChatService;
-import ch.uzh.ifi.hase.soprafs21.service.DogService;
-import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
-import ch.uzh.ifi.hase.soprafs21.service.UserService;
+import ch.uzh.ifi.hase.soprafs21.service.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import io.swagger.annotations.ApiParam;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -18,17 +12,12 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.ZoneOffset;
@@ -47,19 +36,21 @@ public class UsersApiController implements UsersApi {
     private GeometryFactory geometryFactory;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil, GeometryFactory geometryFactory, DogService dogService) {
+    public UsersApiController(NativeWebRequest request, UserService userService, ChatService chatService, JwtTokenUtil jwtTokenUtil, GeometryFactory geometryFactory, DogService dogService, TagService tagService) {
         this.request = request;
         this.userService = userService;
         this.chatService = chatService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.geometryFactory = geometryFactory;
         this.dogService = dogService;
+        this.tagService = tagService;
     }
 
     private final UserService userService;
     private final ChatService chatService;
     private JwtTokenUtil jwtTokenUtil;
     private final DogService dogService;
+    private final TagService tagService;
 
     @Override
     public Optional<NativeWebRequest> getRequest() {
@@ -276,4 +267,24 @@ public class UsersApiController implements UsersApi {
         return ResponseEntity.notFound().build();
     }
 
+    @Override
+    public ResponseEntity<Void> deleteTag(Long userId, Long tagId) throws Exception {
+        tagService.deleteTag(tagId, userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
+    public ResponseEntity<Void> addTag(@ApiParam(value = "Numeric ID of the user", required = true) @PathVariable("userId") Long userId, @ApiParam(value = "", required = true) @Valid @RequestBody(required = true) TagDto tagDto) throws Exception {
+        Tag tagToAdd = TagDTOMapper.INSTANCE.toTagEntity(tagDto);
+        tagToAdd.setOwner(userService.getUserById(userId));
+
+        tagService.addTag(tagToAdd);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Override
+    public ResponseEntity<List<TagDto>> usersUserIdTagsGet(Long userId) throws Exception {
+        return null;
+    }
 }
