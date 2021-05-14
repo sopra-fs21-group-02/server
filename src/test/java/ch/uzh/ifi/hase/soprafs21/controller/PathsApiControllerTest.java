@@ -113,25 +113,4 @@ public class PathsApiControllerTest {
         given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(userId)).willReturn(Boolean.FALSE);
         assertThrows(ResponseStatusException.class, () -> pathsApiController.deletePath(userId,pathId));
     }
-
-    /*@Test
-    void deletePathFailed() {
-        long userId =1L;
-        long pathId =1L;
-        given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(userId)).willReturn(Boolean.TRUE);
-        given(pathServiceMock.deletePath(userId,pathId)).willReturn(Boolean.FALSE);
-
-        assertThrows(ResponseStatusException.class, () -> pathsApiController.deletePath(userId,pathId));
-    }
-
-    @Test
-    void deletePathSuccess() throws Exception {
-        long userId =1L;
-        long pathId =1L;
-        given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(userId)).willReturn(Boolean.TRUE);
-        given(pathServiceMock.deletePath(userId,pathId)).willReturn(Boolean.TRUE);
-
-        ResponseEntity<Void> responseEntity = pathsApiController.deletePath(userId,pathId);
-        assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
-    }*/
 }
