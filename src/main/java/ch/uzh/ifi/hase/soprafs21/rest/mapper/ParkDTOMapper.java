@@ -7,6 +7,9 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 @Mapper(uses = {UserDTOMapper.class, SpatialDTOMapper.class})
 public interface ParkDTOMapper {
@@ -23,4 +26,6 @@ public interface ParkDTOMapper {
     @Mapping(expression = "java(creator)", target = "creator")
     @Mapping(expression = "java(SPATIAL_MAPPER.getPoint(parkDto.getCoordinate(), geometryFactory))", target = "coordinate")
     Park toParkEntity(ParkDto parkDto, User creator, GeometryFactory geometryFactory);
+
+    List<ParkDto> toParkDTOList(List<Park> entities);
 }
