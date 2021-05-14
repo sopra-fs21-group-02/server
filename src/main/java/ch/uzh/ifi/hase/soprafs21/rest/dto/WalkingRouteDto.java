@@ -14,7 +14,6 @@ import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
-
 /**
  * WalkingRouteDto
  */

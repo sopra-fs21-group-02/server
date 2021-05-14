@@ -81,13 +81,15 @@ public interface UsersApi {
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
      *         or User not permitted (status code 403)
+     *         or Resource not found (status code 404)
      */
     @ApiOperation(value = "Add tag to user profile", nickname = "addTag", notes = "A user can add tag to his own profile.", tags={ "Tags", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "The tag was succesfully created"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
         @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 403, message = "User not permitted") })
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 404, message = "Resource not found") })
     @PostMapping(
         value = "/users/{userId}/tags",
         produces = { "application/json" },
