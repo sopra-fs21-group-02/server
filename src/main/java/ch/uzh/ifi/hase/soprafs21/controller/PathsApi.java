@@ -69,7 +69,7 @@ public interface PathsApi {
      *         or User unauthenticated (status code 401)
      *         or Resource not found (status code 404)
      */
-    @ApiOperation(value = "Return all paths", nickname = "pathsGet", notes = "", response = WalkingRouteDto.class, responseContainer = "List", tags={ "Paths", })
+    @ApiOperation(value = "Return all paths", nickname = "getPaths", notes = "", response = WalkingRouteDto.class, responseContainer = "List", tags={ "Paths", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "A list of paths", response = WalkingRouteDto.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
@@ -79,7 +79,7 @@ public interface PathsApi {
         value = "/paths",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<WalkingRouteDto>> pathsGet(@NotNull @ApiParam(value = "Filter to specify the visual area on the map", required = true) @Valid AreaFilterDto filter) throws Exception {
+    default ResponseEntity<List<WalkingRouteDto>> getPaths(@NotNull @ApiParam(value = "Filter to specify the visual area on the map", required = true) @Valid AreaFilterDto filter) throws Exception {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {

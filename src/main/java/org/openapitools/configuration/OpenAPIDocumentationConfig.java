@@ -29,7 +29,7 @@ public class OpenAPIDocumentationConfig {
             .license("")
             .licenseUrl("http://unlicense.org")
             .termsOfServiceUrl("")
-            .version("1.14.0")
+            .version("1.15.0")
             .contact(new Contact("","", ""))
             .build();
     }

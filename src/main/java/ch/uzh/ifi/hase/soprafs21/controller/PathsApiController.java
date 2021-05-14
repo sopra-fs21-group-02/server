@@ -1,11 +1,16 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Path;
+import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.AreaFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.WalkingRouteDto;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.PathDTOMapper;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.PathService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +19,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Optional;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Controller
@@ -53,5 +60,13 @@ public class PathsApiController implements PathsApi {
         pathService.savePath(path);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
+    }
+
+    @Override
+    public ResponseEntity<List<WalkingRouteDto>> getPaths(@NotNull @Valid AreaFilterDto areaFilter) throws Exception {
+        areaFilter.addVisibleAreaItem(areaFilter.getVisibleArea().get(0));
+        Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea()));
+        List<Path> pathInPolygon = pathService.getAllPathsInArea(areaFilterPolygon);
+        return ResponseEntity.ok(PathDTOMapper.INSTANCE.toWalkingRouteDtoList(pathInPolygon));
     }
 }
