@@ -2,12 +2,9 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.repository.ChatMessageRepository;
-import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +64,7 @@ public class DogService {
         if(optionalDog.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Dog with provided id exists");
         }
+        //TODO check if the dogs owner matches the requester
         this.dogRepository.delete(optionalDog.get());
     }
 

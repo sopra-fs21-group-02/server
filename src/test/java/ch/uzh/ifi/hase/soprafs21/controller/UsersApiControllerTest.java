@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.DogService;
 import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
+import ch.uzh.ifi.hase.soprafs21.service.TagService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.json.webtoken.JsonWebSignature;
@@ -43,6 +44,9 @@ class UsersApiControllerTest {
 
     @Mock
     private DogService dogServiceMock;
+
+    @Mock
+    private TagService tagServiceMock;
 
     @Mock
     private GeometryFactory geometryFactoryMock;
@@ -310,4 +314,19 @@ class UsersApiControllerTest {
         verify(dogServiceMock).deleteDog(eq(1L), eq(1L));
     }
 
+    @Test
+    void testAddTagWithId() {
+        TagDto tagDto = new TagDto();
+        tagDto.setId(1L);
+        tagDto.setName("Chat");
+        tagDto.setTagType(TagDto.TagTypeEnum.OFFERING);
+
+        assertThrows(ResponseStatusException.class, () -> usersApiController.addTag(1L, tagDto));
+    }
+
+    @Test
+    void testDeleteTag() throws Exception {
+        assertEquals(HttpStatus.NO_CONTENT, usersApiController.deleteTag(1L, 1L).getStatusCode());
+        verify(tagServiceMock).deleteTag(eq(1L), eq(1L));
+    }
 }

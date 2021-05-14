@@ -20,10 +20,11 @@ class DogDTOMapperTest {
     private Dog dog;
     private DogDto dogDto;
     private MultipartFile resource;
+    private User owner;
 
     @BeforeEach
     void initialization() throws IOException {
-        User owner = User.builder().id(1L).email("henry@dogs.de").status(OnlineStatus.ONLINE).name("Henry").profilePictureURL("Some picture").build();
+        owner = User.builder().id(1L).email("henry@dogs.de").status(OnlineStatus.ONLINE).name("Henry").profilePictureURL("Some picture").build();
         LocalDate birthday = LocalDate.of(2019, 10, 4);
         byte [] fileContent = this.getClass().getClassLoader().getResourceAsStream("test_img.png").readAllBytes();
         dog = Dog.builder().id(1L).name("Belka").breed("Laika").dateOfBirth(birthday).gender(Gender.FEMALE).profilePicture(fileContent).owner(owner).build();
@@ -51,9 +52,10 @@ class DogDTOMapperTest {
 
     @Test
     void toDogEntity() throws IOException {
-        Dog newDog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, resource);
+        Dog newDog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, resource, owner);
 
         assertEquals(dogDto.getId(), newDog.getId());
+        assertEquals(owner, newDog.getOwner());
         assertEquals(dogDto.getName(), newDog.getName());
         assertEquals(dogDto.getBreed(), newDog.getBreed());
         assertEquals(dogDto.getDateOfBirth(), newDog.getDateOfBirth());
@@ -63,7 +65,7 @@ class DogDTOMapperTest {
 
     @Test
     void toDogEntityNoPicture() throws IOException {
-        Dog dog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, null);
+        Dog dog = DogDTOMapper.INSTANCE.toDogEntity(dogDto, null, owner);
         assertNull(dog.getProfilePicture());
     }
 }
