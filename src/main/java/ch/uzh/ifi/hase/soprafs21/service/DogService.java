@@ -64,7 +64,6 @@ public class DogService {
         if(optionalDog.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Dog with provided id exists");
         }
-        //TODO check if the dogs owner matches the requester
         this.dogRepository.delete(optionalDog.get());
     }
 

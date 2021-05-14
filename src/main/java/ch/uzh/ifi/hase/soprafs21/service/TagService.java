@@ -46,7 +46,7 @@ public class TagService {
             Set<Tag> tags = optionalUser.get().getTags();
             if (tags != null){
                 for (Tag tag : tags) {
-                    if (tag.getName().equals(tagToAdd.getName()) && tag.getTagType() == tagToAdd.getTagType()){
+                    if (tag.getName().equalsIgnoreCase(tagToAdd.getName()) && tag.getTagType() == tagToAdd.getTagType()){
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag is already added");
                     }
                 }
