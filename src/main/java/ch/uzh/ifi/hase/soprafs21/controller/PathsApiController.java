@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.entity.Path;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.WalkingRouteDto;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.PathDTOMapper;
-import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.PathService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -25,13 +24,15 @@ public class PathsApiController implements PathsApi {
 
     private final UserService userService;
     private final PathService pathService;
+    private final GeometryFactory geometryFactory;
 
 
     @org.springframework.beans.factory.annotation.Autowired
-    public PathsApiController(NativeWebRequest request, UserService userService, PathService pathService) {
+    public PathsApiController(NativeWebRequest request, UserService userService, PathService pathService, GeometryFactory geometryFactory) {
         this.request = request;
         this.userService = userService;
         this.pathService = pathService;
+        this.geometryFactory = geometryFactory;
     }
 
     @Override
@@ -48,8 +49,7 @@ public class PathsApiController implements PathsApi {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to add this Route");
         }
 
-        Path path = PathDTOMapper.INSTANCE.toPathEntity(walkingRouteDto);
-        path.setCreator(userService.getUserById(walkingRouteDto.getCreator().getId()));
+        Path path = PathDTOMapper.INSTANCE.toPathEntity(walkingRouteDto, geometryFactory,userService.getUserById(walkingRouteDto.getCreator().getId()));
         pathService.savePath(path);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
