@@ -41,14 +41,15 @@ public class TagService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to manipulate this tag");
         }
         Long userId = tagToAdd.getOwner().getId();
-        Optional<User> optionalUser = Optional.of(userRepository.findById(userId).get());
-        if (optionalUser.isPresent()){
-            Set<Tag> tags = optionalUser.get().getTags();
-            if (tags != null){
-                for (Tag tag : tags) {
-                    if (tag.getName().equalsIgnoreCase(tagToAdd.getName()) && tag.getTagType() == tagToAdd.getTagType()){
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag is already added");
-                    }
+        Optional<User> optionalUser = this.userRepository.findById(userId);
+        if(optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No User with provided id exists");
+        }
+        Set<Tag> tags = optionalUser.get().getTags();
+        if (tags != null){
+            for (Tag tag : tags) {
+                if (tag.getName().equalsIgnoreCase(tagToAdd.getName()) && tag.getTagType() == tagToAdd.getTagType()){
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag is already added");
                 }
             }
         }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
@@ -29,9 +30,7 @@ import java.util.Set;
 @Entity
 @NamedEntityGraph(name = "users_and_dogs_without_picture",
         includeAllAttributes = true,
-        attributeNodes = {@NamedAttributeNode(value = "listOfDogs", subgraph = "dogs_without_picture_and_owner"),
-                @NamedAttributeNode(value = "tags", subgraph = "tags_without_owner")
-        }
+        attributeNodes = @NamedAttributeNode(value = "listOfDogs", subgraph = "dogs_without_picture_and_owner")
 )
 
 @Table(name = "USERS", schema="soprafs21")
@@ -83,7 +82,8 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private List<Dog> listOfDogs;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private Set<Tag> tags;
 
     @Column
