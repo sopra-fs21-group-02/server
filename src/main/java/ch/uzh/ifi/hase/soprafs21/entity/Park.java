@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 
@@ -26,5 +27,6 @@ public class Park {
 
     @JoinColumn(nullable = false)
     @ManyToOne
+    @JsonIgnore
     private User creator;
 }
