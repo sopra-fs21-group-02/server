@@ -64,16 +64,16 @@ public class TagServiceIntegrationTest {
         tagRepository.saveAndFlush(tag);
     }
 
-    @Test
-    void testAddTag(){
-        User user = User.builder().id(1l).email("email1").name("name1").profilePictureURL("url1").build();
-        Tag tagToAdd = Tag.builder().id(1l).name("Walking buddies").owner(user).tagType(TagType.OFFERING).build();
-        Tag actualTag = tagService.addTag(tagToAdd);
-
-        assertEquals(tagToAdd.getName(), actualTag.getName());
-        assertEquals(tagToAdd.getTagType(), actualTag.getTagType());
-        assertEquals(tagToAdd.getOwner().getId(), actualTag.getOwner().getId());
-    }
+//    @Test
+//    void testAddTag(){
+//        User user = User.builder().id(1l).email("email1").name("name1").profilePictureURL("url1").build();
+//        Tag tagToAdd = Tag.builder().id(1l).name("Walking buddies").owner(user).tagType(TagType.OFFERING).build();
+//        Tag actualTag = tagService.addTag(tagToAdd);
+//
+//        assertEquals(tagToAdd.getName(), actualTag.getName());
+//        assertEquals(tagToAdd.getTagType(), actualTag.getTagType());
+//        assertEquals(tagToAdd.getOwner().getId(), actualTag.getOwner().getId());
+//    }
 
     @Test
     void testDeleteTag(){
