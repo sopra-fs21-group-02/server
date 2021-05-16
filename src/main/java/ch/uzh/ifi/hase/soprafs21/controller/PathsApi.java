@@ -61,10 +61,9 @@ public interface PathsApi {
 
 
     /**
-     * DELETE /paths/{userId}/{pathId} : Delete path with pathId
+     * DELETE /paths/{pathId} : Delete path with pathId
      * A user can delete a path created by him.
      *
-     * @param userId Numeric ID of the user (required)
      * @param pathId Numeric ID of the path (required)
      * @return A path with pathId was deleted (status code 204)
      *         or Invalid Request (status code 400)
@@ -80,10 +79,10 @@ public interface PathsApi {
         @ApiResponse(code = 404, message = "Resource not found"),
         @ApiResponse(code = 403, message = "User not permitted") })
     @DeleteMapping(
-        value = "/paths/{userId}/{pathId}",
+        value = "/paths/{pathId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<Void> deletePath(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId) throws Exception {
+    default ResponseEntity<Void> deletePath(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

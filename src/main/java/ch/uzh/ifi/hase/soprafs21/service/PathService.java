@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PathService {
@@ -23,8 +21,8 @@ public class PathService {
     }
 
     @Transactional
-    public void savePath(Path path) {
-        pathRepository.saveAndFlush(path);
+    public Path savePath(Path path) {
+        return this.pathRepository.saveAndFlush(path);
     }
 
     @Transactional

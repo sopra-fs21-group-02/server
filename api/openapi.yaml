@@ -822,7 +822,7 @@ paths:
           $ref: "#/components/responses/401"
         403:
           $ref: "#/components/responses/403"
-  /paths/{userId}/{pathId}:
+  /paths/{pathId}:
     delete:
       operationId: deletePath
       tags:
@@ -830,13 +830,6 @@ paths:
       description: A user can delete a path created by him.
       summary: "Delete path with pathId"
       parameters:
-        - in: path
-          name: userId
-          schema:
-            type: integer
-            format: int64
-          required: true
-          description: Numeric ID of the user
         - in: path
           name: pathId
           schema:
