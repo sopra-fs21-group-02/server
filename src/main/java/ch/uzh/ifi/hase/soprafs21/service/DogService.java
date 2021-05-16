@@ -36,12 +36,21 @@ public class DogService {
      */
     @Transactional
     public Dog addDog(Dog dogToAdd){
+        Optional<User> optionalUser = this.userRepository.findById(dogToAdd.getOwner().getId());
+        if(optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No User with provided id exists");
+        }
         if (!userService.isRequesterAndAuthenticatedUserTheSame(dogToAdd.getOwner().getId())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to manipulate this dog");
         }
         return this.dogRepository.saveAndFlush(dogToAdd);
     }
 
+    /**
+     * Returns a dog with provided id
+     * @param id of dog to be returned
+     * @return dog object
+     */
     public Dog getDogById(Long id) {
         return dogRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
@@ -57,7 +66,8 @@ public class DogService {
         if(optionalUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No User with provided id exists");
         }
-        if (!userService.isRequesterAndAuthenticatedUserTheSame(ownerId)){
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(ownerId) ||
+                !optionalUser.get().getId().equals(ownerId)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,  "User is not permitted to delete another user dogs");
         }
         Optional<Dog> optionalDog = this.dogRepository.findById(dogId);
@@ -82,7 +92,7 @@ public class DogService {
         if(optionalDog.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Dog with provided id exists");
         }
-        if (!userService.isRequesterAndAuthenticatedUserTheSame(dog.getOwner().getId())){
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(dog.getOwner().getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to edit another user dogs");
         }
         Dog dogToEdit = optionalDog.get();
