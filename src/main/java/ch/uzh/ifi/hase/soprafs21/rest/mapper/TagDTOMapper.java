@@ -15,7 +15,7 @@ public interface TagDTOMapper {
     @Mapping(source = "tagType", target = "tagType")
     TagDto toTagDto(Tag entity);
 
-    @Mapping(source = "id", target = "id")
+    @Mapping(target = "id", ignore = true)
     @Mapping(source = "name", target = "name")
     @Mapping(source = "tagType", target = "tagType")
     Tag toTagEntity(TagDto tagDto);

@@ -86,7 +86,7 @@ public class ParkServiceIntegrationTest {
 
         Exception ex = assertThrows(ResponseStatusException.class, () -> parkService.addPark(park));
 
-        String expectedMessage = "User is not permitted to delete another user parks";
+        String expectedMessage = "User is not permitted to add another user parks";
         String actualMessage = ex.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));

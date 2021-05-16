@@ -32,7 +32,7 @@ public class ParkService {
     @Transactional
     public Park addPark(Park parkToAdd){
         if (!userService.isRequesterAndAuthenticatedUserTheSame(parkToAdd.getCreator().getId())){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to delete another user parks");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to add another user parks");
         }
         return this.parkRepository.saveAndFlush(parkToAdd);
     }
