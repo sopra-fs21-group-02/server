@@ -15,9 +15,12 @@ public class PathService {
 
     private final PathRepository pathRepository;
 
+    private final UserService userService;
+
     @Autowired
-    public PathService(PathRepository pathRepository) {
+    public PathService(PathRepository pathRepository, UserService userService) {
         this.pathRepository = pathRepository;
+        this.userService = userService;
     }
 
     @Transactional
@@ -26,19 +29,15 @@ public class PathService {
     }
 
     @Transactional
-    public void deletePath(Long userId, Long pathId) {
+    public void deletePath(Long pathId) {
 
-        Optional<Path> optionalPath = pathRepository.findById(pathId);
-        if(optionalPath.isPresent()){
-            Path path = optionalPath.get();
-            if(userId.equals(path.getCreator().getId())){
-                pathRepository.delete(path);
-                pathRepository.flush();
-            }else{
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to delete this Route");
-            }
-        } else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid Path id");
+        Optional<Path> optionalPath = this.pathRepository.findById(pathId);
+        if(optionalPath.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Path with provided id exists");
         }
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(optionalPath.get().getCreator().getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,  "User is not permitted to delete another user paths");
+        }
+        this.pathRepository.delete(optionalPath.get());
     }
 }

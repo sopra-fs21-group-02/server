@@ -59,9 +59,7 @@ public class PathsApiController implements PathsApi {
 
     @Override
     public ResponseEntity<Void> deletePath(Long pathId) throws Exception {
-        UserOverviewDto authenticatedUser = (UserOverviewDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        pathService.deletePath(authenticatedUser.getId(), pathId);
-
+        pathService.deletePath(pathId);
         return ResponseEntity.noContent().build();
     }
 }

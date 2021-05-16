@@ -47,6 +47,8 @@ public class PathServiceIntegrationTest {
 
     private Path path;
 
+    private Path path_1;
+
     @BeforeEach
     void setUp() {
         UserOverviewDto userOverviewDto = new UserOverviewDto();
@@ -65,6 +67,7 @@ public class PathServiceIntegrationTest {
         coordinates[4] = new Coordinate(8.432962, 47.378622);
         LineString routeCoordinates = geometryFactory.createLineString(coordinates);
         path = Path.builder().route(routeCoordinates).creator(userRepository.getOne(1L)).distance(2.0).build();
+        path_1 = Path.builder().route(routeCoordinates).creator(userRepository.getOne(2L)).distance(2.0).build();
     }
 
     @Test
@@ -77,18 +80,19 @@ public class PathServiceIntegrationTest {
     @Test
     void testDeletePath(){
         Path persistedPath = pathService.savePath(path);
-        this.pathService.deletePath(1L, persistedPath.getId());
+        this.pathService.deletePath(persistedPath.getId());
         assertEquals(Optional.empty(), pathRepository.findById(persistedPath.getId()));
     }
 
     @Test
     void testDeletePath_withUnauthenticateUser(){
-        Path persistedPath = pathService.savePath(path);
+
+        Path persistedPath = pathService.savePath(path_1);
         Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            pathService.deletePath(2L, persistedPath.getId());
+            pathService.deletePath(persistedPath.getId());
         });
 
-        String expectedMessage = "User is not permitted to delete this Route";
+        String expectedMessage = "User is not permitted to delete another user paths";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
@@ -97,9 +101,9 @@ public class PathServiceIntegrationTest {
     @Test
     void testDeletePath_withInvalidPathId(){
         Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            pathService.deletePath(2L, 5L);
+            pathService.deletePath(5L);
         });
-        String expectedMessage = "Invalid Path id";
+        String expectedMessage = "No Path with provided id exists";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
