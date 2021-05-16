@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
@@ -82,7 +81,6 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private List<Dog> listOfDogs;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private Set<Tag> tags;
 
