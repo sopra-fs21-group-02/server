@@ -27,6 +27,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,11 +82,11 @@ public class ParkServiceIntegrationTest {
 
     @Test
     void testAddParkUnauthorizedUser() {
-        park.setCreator(userRepository.getOne(2L));
+        park.setCreator(userRepository.getOne(3L));
 
         Exception ex = assertThrows(ResponseStatusException.class, () -> parkService.addPark(park));
 
-        String expectedMessage = "User is not permitted to manipulate this park";
+        String expectedMessage = "User is not permitted to delete another user parks";
         String actualMessage = ex.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
@@ -115,5 +116,34 @@ public class ParkServiceIntegrationTest {
         assertEquals(2, parksInArea.size());
         assertEquals(1, parksInArea.get(0).getCreator().getId());
         assertEquals(3, parksInArea.get(1).getCreator().getId());
+    }
+
+    @Test
+    void testDeleteParkSuccess() {
+        Park persistedPark = parkService.addPark(park);
+
+        parkService.deletePark(persistedPark.getId());
+        Optional<Park> notExistingPark = parkRepository.findById(persistedPark.getId());
+        assertTrue(notExistingPark.isEmpty());
+    }
+
+    @Test
+    void testDeleteNotExistingPark() {
+        Exception ex = assertThrows(ResponseStatusException.class, () -> parkService.deletePark(66L));
+
+        String expectedMessage = "No Park with provided id exists";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void testDeleteParkOfAnotherUser() {
+        Exception ex = assertThrows(ResponseStatusException.class, () -> parkService.deletePark(1L));
+
+        String expectedMessage = "User is not permitted to delete another user parks";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }
