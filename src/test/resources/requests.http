@@ -1,4 +1,5 @@
 PUT http://localhost:8080/v1/users/1/location
+Authorization: Bearer {{email}}
 Content-Type: application/json
 
 {
@@ -83,4 +84,33 @@ DELETE {{backend-url}}/v1/users/1
 Authorization: Bearer {{email}}
 Content-Type: application/json
 
+###
+POST {{backend-url}}/v1/parks
+Authorization: Bearer {{email}}
+Content-Type: application/json
+
+{
+    "creatorId": 1,
+    "coordinate": {"longitude": 8.461859195948641, "latitude": 47.35997146785179}
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 201, "Response status is not 201");
+});
+%}
+
+###
+GET http://localhost:8080/v1/parks?visibleArea%5B0%5D.longitude=21.250008151313587&visibleArea%5B0%5D.latitude=44.454432889526544&visibleArea%5B1%5D.longitude=19.878364541371496&visibleArea%5B1%5D.latitude=50.821909691742334&visibleArea%5B2%5D.longitude=6.817267806429448&visibleArea%5B2%5D.latitude=52.54943251691744&visibleArea%5B3%5D.longitude=2.234321572621498&visibleArea%5B3%5D.latitude=44.420452461356874
+Authorization: Bearer {{email}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Check if the new park is included", function (){
+    client.assert(response.body.length === 1 );
+});
+%}
 ###

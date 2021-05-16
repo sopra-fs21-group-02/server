@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -30,6 +31,7 @@ import java.util.List;
         includeAllAttributes = true,
         attributeNodes = @NamedAttributeNode(value = "listOfDogs", subgraph = "dogs_without_picture_and_owner")
 )
+
 @Table(name = "USERS", schema="soprafs21")
 public class User implements Serializable {
 
@@ -78,6 +80,9 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private List<Dog> listOfDogs;
+
+    @OneToMany(mappedBy = "owner", orphanRemoval = true)
+    private Set<Tag> tags;
 
     @Column
     private Point lastUserLocation;

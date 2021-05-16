@@ -12,6 +12,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.DogDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ErrorResponseDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.RadiusFilterDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.TagDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginDto;
@@ -52,19 +53,51 @@ public interface UsersApi {
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
      *         or User not permitted (status code 403)
+     *         or Resource not found (status code 404)
      */
     @ApiOperation(value = "Add dog to user profile", nickname = "addDog", notes = "A user can add dog to his own profile.", tags={ "Dogs", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "The dog was susscesfully created"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
         @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 403, message = "User not permitted") })
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 404, message = "Resource not found") })
     @PostMapping(
         value = "/users/{userId}/dogs",
         produces = { "application/json" },
         consumes = { "multipart/form-data" }
     )
     default ResponseEntity<Void> addDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "", required=true) @Valid @RequestPart(value = "dogDto", required = true)  DogDto dogDto,@ApiParam(value = "") @Valid @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /users/{userId}/tags : Add tag to user profile
+     * A user can add tag to his own profile.
+     *
+     * @param userId Numeric ID of the user (required)
+     * @param tagDto Tag object that needs to be created (required)
+     * @return The tag was succesfully created (status code 201)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or User not permitted (status code 403)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Add tag to user profile", nickname = "addTag", notes = "A user can add tag to his own profile.", tags={ "Tags", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 201, message = "The tag was succesfully created"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @PostMapping(
+        value = "/users/{userId}/tags",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    default ResponseEntity<Void> addTag(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Tag object that needs to be created" ,required=true )  @Valid @RequestBody TagDto tagDto) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -94,6 +127,35 @@ public interface UsersApi {
         produces = { "application/json" }
     )
     default ResponseEntity<Void> deleteDog(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the dog to delete",required=true) @PathVariable("dogId") Long dogId) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * DELETE /users/{userId}/tags/{tagId} : Delete tag
+     * A user can delete his own tag.
+     *
+     * @param userId Numeric ID of the user (required)
+     * @param tagId Numeric ID of the tag to delete (required)
+     * @return A tag with tagId which was deleted (status code 204)
+     *         or Invalid Request (status code 400)
+     *         or User not permitted (status code 403)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Delete tag", nickname = "deleteTag", notes = "A user can delete his own tag.", tags={ "Tags", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "A tag with tagId which was deleted"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @DeleteMapping(
+        value = "/users/{userId}/tags/{tagId}",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<Void> deleteTag(@ApiParam(value = "Numeric ID of the user",required=true) @PathVariable("userId") Long userId,@ApiParam(value = "Numeric ID of the tag to delete",required=true) @PathVariable("tagId") Long tagId) throws Exception {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -454,7 +516,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 1, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -488,7 +550,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }";
+                    String exampleString = "{ \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 1, \"breed\" : \"breed\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -522,7 +584,7 @@ public interface UsersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" }, { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 6, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\" }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\" } ] }";
+                    String exampleString = "{ \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"dogs\" : [ { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 1, \"breed\" : \"breed\" }, { \"name\" : \"name\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 1, \"breed\" : \"breed\" } ], \"bio\" : \"bio\", \"dateOfBirth\" : \"2000-01-23\", \"id\" : 0, \"email\" : \"email\", \"tags\" : [ { \"name\" : \"name\", \"tagType\" : \"OFFERING\", \"id\" : 6 }, { \"name\" : \"name\", \"tagType\" : \"OFFERING\", \"id\" : 6 } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

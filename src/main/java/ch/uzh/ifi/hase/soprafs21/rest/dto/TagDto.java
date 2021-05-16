@@ -18,6 +18,9 @@ import javax.validation.constraints.*;
 public class TagDto  implements Serializable {
   private static final long serialVersionUID = 1L;
 
+  @JsonProperty("id")
+  private Long id;
+
   @JsonProperty("name")
   private String name;
 
@@ -58,6 +61,26 @@ public class TagDto  implements Serializable {
 
   @JsonProperty("tagType")
   private TagTypeEnum tagType;
+
+  public TagDto id(Long id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Get id
+   * @return id
+  */
+  @ApiModelProperty(value = "")
+
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public TagDto name(String name) {
     this.name = name;
@@ -109,13 +132,14 @@ public class TagDto  implements Serializable {
       return false;
     }
     TagDto tag = (TagDto) o;
-    return Objects.equals(this.name, tag.name) &&
+    return Objects.equals(this.id, tag.id) &&
+        Objects.equals(this.name, tag.name) &&
         Objects.equals(this.tagType, tag.tagType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, tagType);
+    return Objects.hash(id, name, tagType);
   }
 
   @Override
@@ -123,6 +147,7 @@ public class TagDto  implements Serializable {
     StringBuilder sb = new StringBuilder();
     sb.append("class TagDto {\n");
     
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    tagType: ").append(toIndentedString(tagType)).append("\n");
     sb.append("}");

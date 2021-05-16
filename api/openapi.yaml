@@ -292,6 +292,8 @@ paths:
           $ref: "#/components/responses/401"
         403:
           $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
   /users/{userId}/dogs/{dogId}:
     get:
       tags:
@@ -449,6 +451,76 @@ paths:
               schema:
                 type: string
                 format: binary
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+  /users/{userId}/tags:
+    post:
+      operationId: addTag
+      tags:
+        - "Tags"
+      description: A user can add tag to his own profile.
+      summary: "Add tag to user profile"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+            encoding:
+              tagDto:
+                contentType: application/json
+        description: "Tag object that needs to be created"
+      responses:
+        201:
+          description: The tag was succesfully created
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+
+  /users/{userId}/tags/{tagId}:
+    delete:
+      operationId: deleteTag
+      tags:
+        - "Tags"
+      description: A user can delete his own tag.
+      summary: "Delete tag"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+        - in: path
+          name: tagId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the tag to delete
+      responses:
+        204:
+          description: A tag with tagId which was deleted
         400:
           $ref: '#/components/responses/400'
         403:
@@ -1075,6 +1147,9 @@ components:
     Tag:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
         name:
           type: string
         tagType:
