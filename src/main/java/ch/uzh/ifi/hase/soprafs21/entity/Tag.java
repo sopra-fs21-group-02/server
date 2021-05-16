@@ -14,14 +14,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "tags_without_owner",
-        includeAllAttributes = true,
-        attributeNodes = {
-                @NamedAttributeNode("id"),
-                @NamedAttributeNode("tagType"),
-                @NamedAttributeNode("name"),
-        }
-)
+
 
 @Table(name = "TAGS", schema="soprafs21")
 public class Tag {
@@ -38,7 +31,7 @@ public class Tag {
     @Column(nullable = false)
     private TagType tagType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn
     private User owner;
  }

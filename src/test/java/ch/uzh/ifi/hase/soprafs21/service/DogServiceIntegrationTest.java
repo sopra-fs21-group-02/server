@@ -94,6 +94,18 @@ public class DogServiceIntegrationTest {
     }
 
     @Test
+    void testAddDogNotExistingUser() {
+        User newUser = User.builder().id(66L).build();
+        dog.setOwner(newUser);
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.addDog(dog));
+
+        String expectedMessage = "No User with provided id exists";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     void testDeleteDogSuccess() {
         dogService.deleteDog(dog.getOwner().getId(), dog.getId());
         Optional<Dog> notExistingDog = dogRepository.findById(dog.getId());
@@ -115,6 +127,16 @@ public class DogServiceIntegrationTest {
         Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.deleteDog(3L , dog.getId()));
 
         String expectedMessage = "User is not permitted to delete another user dogs";
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void testDeleteDogNotExistingUser() {
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dogService.deleteDog(55L, dog.getId()));
+
+        String expectedMessage = "No User with provided id exists";
         String actualMessage = ex.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
@@ -173,6 +195,5 @@ public class DogServiceIntegrationTest {
         String actualMessage = ex.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
-
     }
 }
