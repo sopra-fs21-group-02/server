@@ -825,6 +825,7 @@ paths:
           $ref: "#/components/responses/403"
   /paths/{pathId}:
     delete:
+      operationId: deletePath
       tags:
         - "Paths"
       description: A user can delete a path created by him.

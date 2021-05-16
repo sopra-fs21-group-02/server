@@ -14,9 +14,13 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Polygon;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -53,11 +57,24 @@ public class PathsApiControllerTest {
     private Path path2Mock;
 
     private User creator;
+    @Mock
+    private Authentication authenticationMock;
+
+    @Mock
+    private SecurityContext securityContextMock;
+
 
     @BeforeEach
     public void setup() {
 
         MockitoAnnotations.openMocks(this);
+        UserOverviewDto userOverviewDto = new UserOverviewDto();
+        userOverviewDto.setEmail("mark@twen.de");
+        userOverviewDto.setId(1L);
+        userOverviewDto.setName("mark");
+        Mockito.when(authenticationMock.getPrincipal()).thenReturn(userOverviewDto);
+        Mockito.when(securityContextMock.getAuthentication()).thenReturn(authenticationMock);
+        SecurityContextHolder.setContext(securityContextMock);
         creator = User.builder().id(1L).name("Piter").email("mark@twen.de").build();
     }
 
@@ -120,6 +137,13 @@ public class PathsApiControllerTest {
 
         ResponseEntity<Void> responseEntity = pathsApiController.addPath(routeDto);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void deletePathWithId_Success() throws Exception {
+        long pathId =1L;
+        ResponseEntity<Void> responseEntity = pathsApiController.deletePath(pathId);
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
     }
 
     @Test
