@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.14.0"
+  version: "1.15.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -491,6 +491,8 @@ paths:
           $ref: "#/components/responses/401"
         403:
           $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
 
   /users/{userId}/tags/{tagId}:
     delete:
