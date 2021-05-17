@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.locationtech.jts.geom.LineString;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class Path {
 
     @JoinColumn
     @ManyToOne
+    @JsonIgnore
     private User creator;
 
 }

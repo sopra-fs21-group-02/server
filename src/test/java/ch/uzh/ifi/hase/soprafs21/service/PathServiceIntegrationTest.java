@@ -1,13 +1,15 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
-import ch.uzh.ifi.hase.soprafs21.entity.Park;
 import ch.uzh.ifi.hase.soprafs21.entity.Path;
 import ch.uzh.ifi.hase.soprafs21.repository.PathRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.locationtech.jts.geom.*;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Polygon;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -111,31 +114,19 @@ public class PathServiceIntegrationTest {
     }
 
     @Test
-    void testGetAllPathsInArea(){
-        Coordinate [] coordinates = new Coordinate[5];
-        coordinates[0] = new Coordinate(8.400000, 47.378622);
-        coordinates[1] = new Coordinate(8.400005, 47.380000);
-        LineString routeCoordinates = geometryFactory.createLineString(coordinates);
-        Path path1 = Path.builder().route(routeCoordinates).creator(userRepository.getOne(1L)).distance(2.0).build();
-        pathRepository.saveAndFlush(path1);
-
-        coordinates[0] = new Coordinate( 8.470429, 47.357797);
-        coordinates[1] = new Coordinate(8.437273, 47.362384);
-        routeCoordinates = geometryFactory.createLineString(coordinates);
-        Path path2 = Path.builder().route(routeCoordinates).creator(userRepository.getOne(1L)).distance(2.0).build();
-        pathRepository.saveAndFlush(path1);
+    void testGetPathsInArea() {
 
         Coordinate [] coordinatesArea = new Coordinate[5];
-        coordinatesArea[0] = new Coordinate(8.432962, 47.380000);
+        coordinatesArea[0] = new Coordinate(8.432962, 47.378622);
         coordinatesArea[1] = new Coordinate(8.474358, 47.373311);
         coordinatesArea[2] = new Coordinate( 8.470429, 47.357797);
         coordinatesArea[3] = new Coordinate(8.437273, 47.362384);
-        //coordinatesArea[4] = new Coordinate(8.432962, 47.380000);
+        coordinatesArea[4] = new Coordinate(8.432962, 47.378622);
         Polygon polygon = geometryFactory.createPolygon(coordinatesArea);
 
         List<Path> pathsInArea = pathService.getAllPathsInArea(polygon);
         assertEquals(2, pathsInArea.size());
-        assertEquals(1, pathsInArea.get(0).getCreator().getId());
-        assertEquals(3, pathsInArea.get(1).getCreator().getId());
+        assertEquals(1, pathsInArea.get(0).getId());
+        assertEquals(4, pathsInArea.get(1).getId());
     }
 }

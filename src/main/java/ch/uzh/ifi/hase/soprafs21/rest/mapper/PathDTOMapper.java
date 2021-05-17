@@ -17,7 +17,7 @@ public interface PathDTOMapper {
     SpatialDTOMapper SPATIAL_MAPPER = Mappers.getMapper(SpatialDTOMapper.class);
     UserDTOMapper USER_DTO_MAPPER =Mappers.getMapper(UserDTOMapper.class);
 
-    @Mapping(expression = "java(routeDto.getId())", target = "id")
+    @Mapping(target = "id", ignore = true)
     @Mapping(expression = "java(routeDto.getDistance())", target = "distance")
     @Mapping(expression = "java(creator)", target = "creator")
     @Mapping(expression = "java(SPATIAL_MAPPER.getLineString(routeDto.getListOfCoordinates(), geometryFactory))", target = "route")
