@@ -53,13 +53,15 @@ public interface UsersApi {
      *         or Invalid Request (status code 400)
      *         or User unauthenticated (status code 401)
      *         or User not permitted (status code 403)
+     *         or Resource not found (status code 404)
      */
     @ApiOperation(value = "Add dog to user profile", nickname = "addDog", notes = "A user can add dog to his own profile.", tags={ "Dogs", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "The dog was susscesfully created"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
         @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 403, message = "User not permitted") })
+        @ApiResponse(code = 403, message = "User not permitted"),
+        @ApiResponse(code = 404, message = "Resource not found") })
     @PostMapping(
         value = "/users/{userId}/dogs",
         produces = { "application/json" },

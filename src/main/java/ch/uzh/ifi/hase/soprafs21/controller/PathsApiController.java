@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Path;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.WalkingRouteDto;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.PathDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.PathService;
@@ -8,6 +9,7 @@ import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -53,5 +55,11 @@ public class PathsApiController implements PathsApi {
         pathService.savePath(path);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
+    }
+
+    @Override
+    public ResponseEntity<Void> deletePath(Long pathId) throws Exception {
+        pathService.deletePath(pathId);
+        return ResponseEntity.noContent().build();
     }
 }
