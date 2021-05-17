@@ -118,4 +118,10 @@ class ParksApiControllerTest {
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertEquals(2, entity.getBody().size());
     }
+
+    @Test
+    void testDeletePark() throws Exception {
+        assertEquals(HttpStatus.NO_CONTENT, parksApiController.deletePark(1L).getStatusCode());
+        verify(parkServiceMock).deletePark(eq(1L));
+    }
 }
