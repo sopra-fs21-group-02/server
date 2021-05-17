@@ -776,6 +776,7 @@ paths:
           $ref: "#/components/responses/401"
   /paths:
     get:
+      operationId: getPaths
       tags:
         - "Paths"
       summary: "Return all paths"

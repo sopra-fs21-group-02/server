@@ -9,14 +9,25 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {SpatialDTOMapper.class})
+import java.util.List;
+
+@Mapper(uses = {SpatialDTOMapper.class,UserDTOMapper.class})
 public interface PathDTOMapper {
     PathDTOMapper INSTANCE = Mappers.getMapper(PathDTOMapper.class);
     SpatialDTOMapper SPATIAL_MAPPER = Mappers.getMapper(SpatialDTOMapper.class);
+    UserDTOMapper USER_DTO_MAPPER =Mappers.getMapper(UserDTOMapper.class);
 
-    @Mapping(expression = "java(routeDto.getId())", target = "id")
+    @Mapping(target = "id", ignore = true)
     @Mapping(expression = "java(routeDto.getDistance())", target = "distance")
     @Mapping(expression = "java(creator)", target = "creator")
     @Mapping(expression = "java(SPATIAL_MAPPER.getLineString(routeDto.getListOfCoordinates(), geometryFactory))", target = "route")
     Path toPathEntity(WalkingRouteDto routeDto, GeometryFactory geometryFactory, User creator);
+
+    @Mapping(expression = "java(pathEntity.getId())", target = "id")
+    @Mapping(expression = "java(pathEntity.getDistance())", target = "distance")
+    @Mapping(expression = "java(USER_DTO_MAPPER.toOverviewDTO(pathEntity.getCreator()))",target = "creator")
+    @Mapping(expression = "java(SPATIAL_MAPPER.getCoordinateDTOList(pathEntity.getRoute()))", target="listOfCoordinates")
+    WalkingRouteDto toRouteDto(Path pathEntity);
+
+    List<WalkingRouteDto> toWalkingRouteDtoList(List<Path> pathInPolygon);
 }

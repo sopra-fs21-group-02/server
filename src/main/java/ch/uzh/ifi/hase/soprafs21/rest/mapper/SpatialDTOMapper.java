@@ -36,4 +36,13 @@ public interface SpatialDTOMapper {
     default LineString getLineString(List<CoordinateDto> coordinateDtoList, GeometryFactory geometryFactory) {
         return geometryFactory.createLineString(getCoordinates(coordinateDtoList));
     }
+
+    default List<CoordinateDto> getCoordinateDTOList(LineString lineString){
+        if(lineString == null){
+            return null;
+        }
+        return getCoordinatesList(lineString.getCoordinates());
+    }
+
+    List<CoordinateDto> getCoordinatesList(Coordinate[] coordinateDtoArray);
 }

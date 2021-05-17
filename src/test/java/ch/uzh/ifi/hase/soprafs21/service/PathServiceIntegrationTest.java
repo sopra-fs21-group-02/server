@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Polygon;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class PathServiceIntegrationTest {
+class PathServiceIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -107,5 +111,22 @@ public class PathServiceIntegrationTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void testGetPathsInArea() {
+
+        Coordinate [] coordinatesArea = new Coordinate[5];
+        coordinatesArea[0] = new Coordinate(8.432962, 47.378622);
+        coordinatesArea[1] = new Coordinate(8.474358, 47.373311);
+        coordinatesArea[2] = new Coordinate( 8.470429, 47.357797);
+        coordinatesArea[3] = new Coordinate(8.437273, 47.362384);
+        coordinatesArea[4] = new Coordinate(8.432962, 47.378622);
+        Polygon polygon = geometryFactory.createPolygon(coordinatesArea);
+
+        List<Path> pathsInArea = pathService.getAllPathsInArea(polygon);
+        assertEquals(2, pathsInArea.size());
+        assertEquals(1, pathsInArea.get(0).getId());
+        assertEquals(4, pathsInArea.get(1).getId());
     }
 }
