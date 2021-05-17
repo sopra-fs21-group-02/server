@@ -27,6 +27,5 @@ public class Park {
 
     @JoinColumn(nullable = false)
     @ManyToOne
-    @JsonIgnore
     private User creator;
 }

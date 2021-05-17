@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -70,5 +71,11 @@ public class ParksApiController implements ParksApi {
         Polygon areaFilterPolygon = geometryFactory.createPolygon(SpatialDTOMapper.INSTANCE.getCoordinates(filter.getVisibleArea()));
         List<Park> parksInPolygon = parkService.getAllParksInArea(areaFilterPolygon);
         return ResponseEntity.ok(ParkDTOMapper.INSTANCE.toParkDTOList(parksInPolygon));
+    }
+
+    @Override
+    public ResponseEntity<Void> deletePark(@ApiParam(value = "Numeric ID of the park",required=true) @PathVariable("parkId") Long parkId) throws Exception {
+        parkService.deletePark(parkId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
