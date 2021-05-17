@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class PathServiceIntegrationTest {
+class PathServiceIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
