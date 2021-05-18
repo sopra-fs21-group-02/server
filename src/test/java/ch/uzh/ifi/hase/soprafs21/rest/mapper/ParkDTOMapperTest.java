@@ -11,9 +11,7 @@ import org.locationtech.jts.geom.Point;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -33,12 +31,13 @@ class ParkDTOMapperTest {
     @Test
     void toParkDTO() {
         Point newLocation = new GeometryFactory().createPoint(new Coordinate(8.461859195948641, 47.35997146785179));
-        Park park = Park.builder().id(1L).creator(user).coordinate(newLocation).build();
+        Park park = Park.builder().id(1L).creator(user).description("Some description").coordinate(newLocation).build();
 
         ParkDto parkDto = ParkDTOMapper.INSTANCE.toParkDTO(park);
 
         assertEquals(1L, parkDto.getId());
         assertEquals(user.getId(), parkDto.getCreatorId());
+        assertEquals(park.getDescription(), parkDto.getDescription());
         assertEquals(newLocation.getX(), parkDto.getCoordinate().getLongitude());
         assertEquals(newLocation.getY(), parkDto.getCoordinate().getLatitude());
     }
@@ -49,12 +48,14 @@ class ParkDTOMapperTest {
 
         ParkDto parkDto = new ParkDto();
         parkDto.setCreatorId(1L);
+        parkDto.setDescription("Some description");
         parkDto.setCoordinate(SpatialDTOMapper.INSTANCE.getCoordinateDTO(newLocation));
 
         when(geometryFactoryMock.createPoint(any(Coordinate.class))).thenReturn(newLocation);
         Park park = ParkDTOMapper.INSTANCE.toParkEntity(parkDto, user, geometryFactoryMock);
 
         assertEquals(user.getId(), park.getCreator().getId());
+        assertEquals(parkDto.getDescription(), park.getDescription());
         assertEquals(newLocation.getX(), park.getCoordinate().getX());
         assertEquals(newLocation.getY(), park.getCoordinate().getY());
     }

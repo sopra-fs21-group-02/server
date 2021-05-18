@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;

@@ -24,6 +24,9 @@ public class ParkDto  implements Serializable {
   @JsonProperty("creatorId")
   private Long creatorId;
 
+  @JsonProperty("description")
+  private String description;
+
   @JsonProperty("coordinate")
   private CoordinateDto coordinate;
 
@@ -68,6 +71,26 @@ public class ParkDto  implements Serializable {
     this.creatorId = creatorId;
   }
 
+  public ParkDto description(String description) {
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * Get description
+   * @return description
+  */
+  @ApiModelProperty(value = "")
+
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   public ParkDto coordinate(CoordinateDto coordinate) {
     this.coordinate = coordinate;
     return this;
@@ -102,12 +125,13 @@ public class ParkDto  implements Serializable {
     ParkDto park = (ParkDto) o;
     return Objects.equals(this.id, park.id) &&
         Objects.equals(this.creatorId, park.creatorId) &&
+        Objects.equals(this.description, park.description) &&
         Objects.equals(this.coordinate, park.coordinate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, creatorId, coordinate);
+    return Objects.hash(id, creatorId, description, coordinate);
   }
 
   @Override
@@ -117,6 +141,7 @@ public class ParkDto  implements Serializable {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    creatorId: ").append(toIndentedString(creatorId)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    coordinate: ").append(toIndentedString(coordinate)).append("\n");
     sb.append("}");
     return sb.toString();

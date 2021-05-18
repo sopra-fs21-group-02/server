@@ -22,6 +22,8 @@ public class DogService {
 
     private final UserService userService;
 
+    private static final String NO_USER = "No User with provided id exists";
+
     @Autowired
     public DogService(DogRepository dogRepository, UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
@@ -38,7 +40,7 @@ public class DogService {
     public Dog addDog(Dog dogToAdd){
         Optional<User> optionalUser = this.userRepository.findById(dogToAdd.getOwner().getId());
         if(optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No User with provided id exists");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, NO_USER);
         }
         if (!userService.isRequesterAndAuthenticatedUserTheSame(dogToAdd.getOwner().getId())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to manipulate this dog");
@@ -64,7 +66,7 @@ public class DogService {
     public void deleteDog(Long ownerId, Long dogId){
         Optional<User> optionalUser = this.userRepository.findById(ownerId);
         if(optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No User with provided id exists");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, NO_USER);
         }
         if (!userService.isRequesterAndAuthenticatedUserTheSame(ownerId) ||
                 !optionalUser.get().getId().equals(ownerId)){
@@ -86,7 +88,7 @@ public class DogService {
     public Dog editDog(Dog dog) {
         Optional<User> optionalUser = this.userRepository.findById(dog.getOwner().getId());
         if(optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No User with provided id exists");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, NO_USER);
         }
         Optional<Dog> optionalDog = dogRepository.findById(dog.getId());
         if(optionalDog.isEmpty()) {
