@@ -1010,6 +1010,8 @@ components:
           type: integer
           format: int64
           readOnly: true
+        dexcription:
+          type: string
         coordinate:
           $ref: '#/components/schemas/Coordinate'
       required:

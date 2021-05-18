@@ -25,6 +25,9 @@ public class Park {
     @Column(nullable = false)
     private Point coordinate;
 
+    @Column
+    private String description;
+
     @JoinColumn(nullable = false)
     @ManyToOne
     @JsonIgnore
