@@ -40,7 +40,6 @@ class TagDTOMapperTest {
     void toTagEntity() throws IOException {
         Tag newTag = TagDTOMapper.INSTANCE.toTagEntity(tagDto);
 
-        assertEquals(tagDto.getId(), newTag.getId());
         assertEquals(tagDto.getName(), newTag.getName());
         assertEquals(tagDto.getTagType().toString(), newTag.getTagType().toString());
     }

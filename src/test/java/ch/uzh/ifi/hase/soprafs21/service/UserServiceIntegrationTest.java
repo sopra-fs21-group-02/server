@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
-import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;

@@ -61,40 +61,6 @@ public interface PathsApi {
 
 
     /**
-     * GET /paths : Return all paths
-     *
-     * @param filter Filter to specify the visual area on the map (required)
-     * @return A list of paths (status code 200)
-     *         or Invalid Request (status code 400)
-     *         or User unauthenticated (status code 401)
-     *         or Resource not found (status code 404)
-     */
-    @ApiOperation(value = "Return all paths", nickname = "pathsGet", notes = "", response = WalkingRouteDto.class, responseContainer = "List", tags={ "Paths", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "A list of paths", response = WalkingRouteDto.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
-        @ApiResponse(code = 401, message = "User unauthenticated"),
-        @ApiResponse(code = 404, message = "Resource not found") })
-    @GetMapping(
-        value = "/paths",
-        produces = { "application/json" }
-    )
-    default ResponseEntity<List<WalkingRouteDto>> pathsGet(@NotNull @ApiParam(value = "Filter to specify the visual area on the map", required = true) @Valid AreaFilterDto filter) throws Exception {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"distance\" : 6.027456183070403, \"listOfCoordinates\" : [ { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 } ], \"id\" : 0 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
      * DELETE /paths/{pathId} : Delete path with pathId
      * A user can delete a path created by him.
      *
@@ -105,7 +71,7 @@ public interface PathsApi {
      *         or Resource not found (status code 404)
      *         or User not permitted (status code 403)
      */
-    @ApiOperation(value = "Delete path with pathId", nickname = "pathsPathIdDelete", notes = "A user can delete a path created by him.", tags={ "Paths", })
+    @ApiOperation(value = "Delete path with pathId", nickname = "deletePath", notes = "A user can delete a path created by him.", tags={ "Paths", })
     @ApiResponses(value = { 
         @ApiResponse(code = 204, message = "A path with pathId was deleted"),
         @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
@@ -116,7 +82,41 @@ public interface PathsApi {
         value = "/paths/{pathId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<Void> pathsPathIdDelete(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId) throws Exception {
+    default ResponseEntity<Void> deletePath(@ApiParam(value = "Numeric ID of the path",required=true) @PathVariable("pathId") Long pathId) throws Exception {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /paths : Return all paths
+     *
+     * @param filter Filter to specify the visual area on the map (required)
+     * @return A list of paths (status code 200)
+     *         or Invalid Request (status code 400)
+     *         or User unauthenticated (status code 401)
+     *         or Resource not found (status code 404)
+     */
+    @ApiOperation(value = "Return all paths", nickname = "getPaths", notes = "", response = WalkingRouteDto.class, responseContainer = "List", tags={ "Paths", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "A list of paths", response = WalkingRouteDto.class, responseContainer = "List"),
+        @ApiResponse(code = 400, message = "Invalid Request", response = ErrorResponseDto.class),
+        @ApiResponse(code = 401, message = "User unauthenticated"),
+        @ApiResponse(code = 404, message = "Resource not found") })
+    @GetMapping(
+        value = "/paths",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<WalkingRouteDto>> getPaths(@NotNull @ApiParam(value = "Filter to specify the visual area on the map", required = true) @Valid AreaFilterDto filter) throws Exception {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"distance\" : 6.027456183070403, \"listOfCoordinates\" : [ { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 } ], \"id\" : 0 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

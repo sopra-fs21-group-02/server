@@ -14,19 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkService {
 
     private final ParkRepository parkRepository;
 
-    private final UserRepository userRepository;
-
     private final UserService userService;
 
     @Autowired
-    public ParkService(ParkRepository parkRepository, UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
+    public ParkService(ParkRepository parkRepository, UserService userService) {
         this.parkRepository = parkRepository;
         this.userService = userService;
     }
@@ -34,7 +32,7 @@ public class ParkService {
     @Transactional
     public Park addPark(Park parkToAdd){
         if (!userService.isRequesterAndAuthenticatedUserTheSame(parkToAdd.getCreator().getId())){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to manipulate this park");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to add another user parks");
         }
         return this.parkRepository.saveAndFlush(parkToAdd);
     }
@@ -43,5 +41,16 @@ public class ParkService {
         return this.parkRepository.findByArea(areaFilterPolygon);
     }
 
+    @Transactional
+    public void deletePark(Long parkId){
+        Optional<Park> optionalPark = this.parkRepository.findById(parkId);
+        if(optionalPark.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Park with provided id exists");
+        }
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(optionalPark.get().getCreator().getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,  "User is not permitted to delete another user parks");
+        }
+        this.parkRepository.delete(optionalPark.get());
+    }
 
 }
