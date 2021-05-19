@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
-import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
@@ -24,6 +22,9 @@ public class Park {
 
     @Column(nullable = false)
     private Point coordinate;
+
+    @Column
+    private String description;
 
     @JoinColumn(nullable = false)
     @ManyToOne

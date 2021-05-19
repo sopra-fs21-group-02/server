@@ -111,7 +111,7 @@ public interface ParksApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"coordinate\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"creatorId\" : 6, \"id\" : 0 }";
+                    String exampleString = "{ \"coordinate\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"creatorId\" : 6, \"description\" : \"description\", \"id\" : 0 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

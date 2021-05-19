@@ -48,7 +48,7 @@ public class TagServiceIntegrationTest {
     private Tag tag;
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         UserOverviewDto userOverviewDto = new UserOverviewDto();
         userOverviewDto.setEmail("mark@twen.de");
         userOverviewDto.setId(1L);

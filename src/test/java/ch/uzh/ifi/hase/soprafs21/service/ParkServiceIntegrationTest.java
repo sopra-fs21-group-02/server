@@ -1,13 +1,8 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
-import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.Park;
-import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.ParkRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.OnlineStatusDto;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.ParkDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserOverviewDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,13 +63,14 @@ public class ParkServiceIntegrationTest {
 
         Coordinate coordinate = new Coordinate(8.432962, 47.378622);
         Point location = geometryFactory.createPoint(coordinate);
-        park = Park.builder().coordinate(location).creator(userRepository.getOne(1L)).build();
+        park = Park.builder().coordinate(location).description("Some description").creator(userRepository.getOne(1L)).build();
     }
 
     @Test
     void testAddPark() {
         Park persistedPark = parkService.addPark(park);
 
+        assertEquals(park.getDescription(), persistedPark.getDescription());
         assertEquals(park.getCreator().getId(), persistedPark.getCreator().getId());
         assertEquals(park.getCoordinate().getX(), persistedPark.getCoordinate().getX());
         assertEquals(park.getCoordinate().getY(), persistedPark.getCoordinate().getY());

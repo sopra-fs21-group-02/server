@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -30,9 +29,7 @@ import java.time.LocalDate;
         }
 )
 @Table(name = "DOGS", schema="soprafs21")
-public class Dog implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Dog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
