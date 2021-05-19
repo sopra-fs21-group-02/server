@@ -14,8 +14,6 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-
-
 @Table(name = "TAGS", schema="soprafs21")
 public class Tag {
 
@@ -31,6 +29,7 @@ public class Tag {
 
     @ManyToOne
     @JoinColumn
+    @ToString.Exclude
     private User owner;
  }
 

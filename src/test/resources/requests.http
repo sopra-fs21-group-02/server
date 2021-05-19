@@ -125,3 +125,13 @@ Content-Type: application/json
     });
 %}
 ###
+POST {{backend-url}}/v1/users/1/tags
+Authorization: Bearer {{email}}
+Content-Type: application/json
+
+{
+    "name": "somethingee6",
+    "tagType": "OFFERING"
+}
+
+###

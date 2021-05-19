@@ -1,10 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
 import ch.uzh.ifi.hase.soprafs21.constant.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,8 +14,8 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedEntityGraph(name = "dogs_without_picture_and_owner",
-        includeAllAttributes = true,
         attributeNodes = {
             @NamedAttributeNode("id"),
             @NamedAttributeNode("name"),
@@ -33,6 +30,7 @@ public class Dog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
@@ -57,5 +55,6 @@ public class Dog {
 
     @ManyToOne
     @JoinColumn
+    @ToString.Exclude
     private User owner;
    }
