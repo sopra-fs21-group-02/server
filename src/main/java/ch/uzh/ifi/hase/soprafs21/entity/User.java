@@ -76,7 +76,7 @@ public class User {
     private String bio;
 
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
-    private List<Dog> listOfDogs;
+    private Set<Dog> listOfDogs;
 
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private Set<Tag> tags;
