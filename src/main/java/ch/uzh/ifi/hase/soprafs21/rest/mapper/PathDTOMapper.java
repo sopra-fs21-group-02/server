@@ -20,11 +20,13 @@ public interface PathDTOMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(expression = "java(routeDto.getDistance())", target = "distance")
     @Mapping(expression = "java(creator)", target = "creator")
+    @Mapping(expression = "java(routeDto.getDescription())", target = "description")
     @Mapping(expression = "java(SPATIAL_MAPPER.getLineString(routeDto.getListOfCoordinates(), geometryFactory))", target = "route")
     Path toPathEntity(WalkingRouteDto routeDto, GeometryFactory geometryFactory, User creator);
 
     @Mapping(expression = "java(pathEntity.getId())", target = "id")
     @Mapping(expression = "java(pathEntity.getDistance())", target = "distance")
+    @Mapping(source = "description", target = "description")
     @Mapping(expression = "java(USER_DTO_MAPPER.toOverviewDTO(pathEntity.getCreator()))",target = "creator")
     @Mapping(expression = "java(SPATIAL_MAPPER.getCoordinateDTOList(pathEntity.getRoute()))", target="listOfCoordinates")
     WalkingRouteDto toRouteDto(Path pathEntity);

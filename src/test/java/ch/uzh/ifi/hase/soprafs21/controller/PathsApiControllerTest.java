@@ -96,6 +96,7 @@ public class PathsApiControllerTest {
         WalkingRouteDto routeDto =new WalkingRouteDto();
         routeDto.setCreator(userOverviewDto);
         routeDto.setDistance(5.5d);
+        routeDto.setDescription("Path1");
 
         given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(userOverviewDto.getId())).willReturn(Boolean.FALSE);
         assertThrows(ResponseStatusException.class, () -> pathsApiController.addPath(routeDto));
@@ -131,6 +132,7 @@ public class PathsApiControllerTest {
         routeDto.setCreator(userOverviewDto);
         routeDto.setDistance(5.5d);
         routeDto.setListOfCoordinates(coordinateDtoList);
+        routeDto.setDescription("Path2");
         given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(userOverviewDto.getId())).willReturn(Boolean.TRUE);
         given(userServiceMock.getUserById(userOverviewDto.getId())).willReturn(mockedUser);
 
