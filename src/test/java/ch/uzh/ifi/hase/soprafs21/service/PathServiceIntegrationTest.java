@@ -129,6 +129,7 @@ class PathServiceIntegrationTest {
         assertEquals(1, pathsInArea.get(0).getId());
         assertEquals(4, pathsInArea.get(1).getId());
         assertEquals(3,pathsInArea.get(1).getCreator().getId());
+        assertEquals("Path4",pathsInArea.get(1).getDescription());
 
     }
 }

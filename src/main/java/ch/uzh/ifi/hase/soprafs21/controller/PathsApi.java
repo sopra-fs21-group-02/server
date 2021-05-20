@@ -111,7 +111,7 @@ public interface PathsApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"distance\" : 6.027456183070403, \"listOfCoordinates\" : [ { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 } ], \"id\" : 0 }";
+                    String exampleString = "{ \"creator\" : { \"profilePicture\" : \"profilePicture\", \"latestLocation\" : { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, \"name\" : \"name\", \"id\" : 0, \"email\" : \"email\" }, \"distance\" : 6.027456183070403, \"listOfCoordinates\" : [ { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 }, { \"latitude\" : 1.4658129805029452, \"longitude\" : 6.027456183070403 } ], \"description\" : \"description\", \"id\" : 0 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

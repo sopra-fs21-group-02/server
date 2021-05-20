@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.16.0"
+  version: "1.17.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -1036,6 +1036,8 @@ components:
         distance:
           type: number
           format: double
+        description:
+          type: string
       required:
         - listOfCoordinates
     Review:

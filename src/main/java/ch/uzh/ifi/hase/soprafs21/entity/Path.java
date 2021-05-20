@@ -21,15 +21,18 @@ public class Path {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private LineString route;
 
     @Column
     private Double distance;
 
-    @JoinColumn
+    @JoinColumn(nullable = false)
     @ManyToOne
     @JsonIgnore
     private User creator;
+
+    @Column
+    private String description;
 
 }
