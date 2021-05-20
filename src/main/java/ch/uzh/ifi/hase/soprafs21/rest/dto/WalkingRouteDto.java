@@ -34,6 +34,9 @@ public class WalkingRouteDto  implements Serializable {
   @JsonProperty("distance")
   private Double distance;
 
+  @JsonProperty("description")
+  private String description;
+
   public WalkingRouteDto id(Long id) {
     this.id = id;
     return this;
@@ -122,6 +125,26 @@ public class WalkingRouteDto  implements Serializable {
     this.distance = distance;
   }
 
+  public WalkingRouteDto description(String description) {
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * Get description
+   * @return description
+  */
+  @ApiModelProperty(value = "")
+
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -135,12 +158,13 @@ public class WalkingRouteDto  implements Serializable {
     return Objects.equals(this.id, walkingRoute.id) &&
         Objects.equals(this.creator, walkingRoute.creator) &&
         Objects.equals(this.listOfCoordinates, walkingRoute.listOfCoordinates) &&
-        Objects.equals(this.distance, walkingRoute.distance);
+        Objects.equals(this.distance, walkingRoute.distance) &&
+        Objects.equals(this.description, walkingRoute.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, creator, listOfCoordinates, distance);
+    return Objects.hash(id, creator, listOfCoordinates, distance, description);
   }
 
   @Override
@@ -152,6 +176,7 @@ public class WalkingRouteDto  implements Serializable {
     sb.append("    creator: ").append(toIndentedString(creator)).append("\n");
     sb.append("    listOfCoordinates: ").append(toIndentedString(listOfCoordinates)).append("\n");
     sb.append("    distance: ").append(toIndentedString(distance)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("}");
     return sb.toString();
   }

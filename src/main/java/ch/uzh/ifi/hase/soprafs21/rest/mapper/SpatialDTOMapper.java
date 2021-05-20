@@ -8,6 +8,7 @@ import org.locationtech.jts.geom.Point;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper
@@ -44,5 +45,15 @@ public interface SpatialDTOMapper {
         return getCoordinatesList(lineString.getCoordinates());
     }
 
-    List<CoordinateDto> getCoordinatesList(Coordinate[] coordinateDtoArray);
+    default List<CoordinateDto> getCoordinatesList(Coordinate[] coordinateDtoArray){
+        if(coordinateDtoArray == null){
+            return null;
+        }
+        List<CoordinateDto> list = new ArrayList<CoordinateDto>( coordinateDtoArray.length );
+        for(Coordinate coordinate :coordinateDtoArray){
+            list.add(new CoordinateDto().longitude(coordinate.getX()).latitude(coordinate.getY()));
+        }
+        return list;
+
+    }
 }
