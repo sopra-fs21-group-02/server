@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: "Dogs app"
-  version: "1.15.0"
+  version: "1.16.0"
   description: "This is the API definition of the dogs owners app."
 servers:
   - url: https://api.server.test/v1
@@ -1012,6 +1012,8 @@ components:
           type: integer
           format: int64
           readOnly: true
+        description:
+          type: string
         coordinate:
           $ref: '#/components/schemas/Coordinate'
       required:

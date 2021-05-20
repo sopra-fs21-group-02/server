@@ -14,12 +14,8 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-
-
 @Table(name = "TAGS", schema="soprafs21")
 public class Tag {
-
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +29,7 @@ public class Tag {
 
     @ManyToOne
     @JoinColumn
+    @ToString.Exclude
     private User owner;
  }
 

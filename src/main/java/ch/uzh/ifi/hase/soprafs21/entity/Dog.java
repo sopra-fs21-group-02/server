@@ -1,13 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
 import ch.uzh.ifi.hase.soprafs21.constant.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -18,8 +14,8 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedEntityGraph(name = "dogs_without_picture_and_owner",
-        includeAllAttributes = true,
         attributeNodes = {
             @NamedAttributeNode("id"),
             @NamedAttributeNode("name"),
@@ -30,12 +26,11 @@ import java.time.LocalDate;
         }
 )
 @Table(name = "DOGS", schema="soprafs21")
-public class Dog implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Dog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
@@ -60,5 +55,6 @@ public class Dog implements Serializable {
 
     @ManyToOne
     @JoinColumn
+    @ToString.Exclude
     private User owner;
    }

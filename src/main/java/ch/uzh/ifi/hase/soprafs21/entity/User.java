@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -33,9 +32,7 @@ import java.util.Set;
 )
 
 @Table(name = "USERS", schema="soprafs21")
-public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,7 +76,7 @@ public class User implements Serializable {
     private String bio;
 
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
-    private List<Dog> listOfDogs;
+    private Set<Dog> listOfDogs;
 
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private Set<Tag> tags;
