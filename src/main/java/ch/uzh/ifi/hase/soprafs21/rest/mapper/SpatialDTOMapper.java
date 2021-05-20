@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs21.rest.dto.CoordinateDto;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.WalkingRouteDto;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
@@ -8,6 +9,8 @@ import org.locationtech.jts.geom.Point;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Mapper
@@ -44,5 +47,15 @@ public interface SpatialDTOMapper {
         return getCoordinatesList(lineString.getCoordinates());
     }
 
-    List<CoordinateDto> getCoordinatesList(Coordinate[] coordinateDtoArray);
+    default List<CoordinateDto> getCoordinatesList(Coordinate[] coordinateDtoArray){
+        if(coordinateDtoArray == null){
+            return null;
+        }
+        List<CoordinateDto> list = new ArrayList<CoordinateDto>( coordinateDtoArray.length );
+        for(Coordinate coordinate :coordinateDtoArray){
+            list.add(new CoordinateDto().longitude(coordinate.getX()).latitude(coordinate.getY()));
+        }
+        return list;
+
+    }
 }
