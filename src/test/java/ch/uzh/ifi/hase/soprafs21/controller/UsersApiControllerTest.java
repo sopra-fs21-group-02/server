@@ -1,18 +1,17 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
-import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.entity.*;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs21.rest.mapper.ConversationDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
-import ch.uzh.ifi.hase.soprafs21.service.DogService;
-import ch.uzh.ifi.hase.soprafs21.service.JwtTokenUtil;
-import ch.uzh.ifi.hase.soprafs21.service.TagService;
-import ch.uzh.ifi.hase.soprafs21.service.UserService;
+import ch.uzh.ifi.hase.soprafs21.service.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,10 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -46,6 +43,9 @@ class UsersApiControllerTest {
     private DogService dogServiceMock;
 
     @Mock
+    private ChatService chatServiceMock;
+
+    @Mock
     private TagService tagServiceMock;
 
     @Mock
@@ -61,7 +61,16 @@ class UsersApiControllerTest {
     private User user2;
 
     @Mock
+    private ChatMessage message;
+
+    @Mock
+    private Conversation conversation;
+
+    @Mock
     private Polygon polygon;
+
+    @Mock
+    private Point point;
 
     @BeforeEach
     public void setup() {
@@ -269,6 +278,19 @@ class UsersApiControllerTest {
     }
 
     @Test
+    void testAddDogSuccess() throws Exception {
+        DogDto dogDto = new DogDto();
+        dogDto.setName("D1");
+        dogDto.setBreed("B1");
+        dogDto.setSex(GenderDto.MALE);
+
+        when(userServiceMock.getUserById(eq(1L))).thenReturn(user1);
+        ResponseEntity<Void> responseEntity = usersApiController.addDog(1L, dogDto, null);
+        verify(dogServiceMock).addDog(Mockito.any(Dog.class));
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
     void testAddDogWithId() {
         DogDto dogDto = new DogDto();
         dogDto.setName("D1");
@@ -315,6 +337,17 @@ class UsersApiControllerTest {
     }
 
     @Test
+    void testAddTagSuccess() throws Exception {
+        TagDto tagDto = new TagDto();
+        tagDto.setName("Something");
+
+        when(userServiceMock.getUserById(eq(1L))).thenReturn(user1);
+        ResponseEntity<Void> responseEntity = usersApiController.addTag(1L, tagDto);
+        verify(tagServiceMock).addTag(Mockito.any(Tag.class));
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
     void testAddTagWithId() {
         TagDto tagDto = new TagDto();
         tagDto.setId(1L);
@@ -329,4 +362,44 @@ class UsersApiControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, usersApiController.deleteTag(1L, 1L).getStatusCode());
         verify(tagServiceMock).deleteTag(eq(1L), eq(1L));
     }
+
+    @Test
+    void testGetAllConversations() throws Exception {
+        List<ChatMessage> messages = new ArrayList<>();
+        messages.add(message);
+        Conversation conversation = Conversation.builder().participant1(user1).participant2(user2).messages(messages).build();
+        List<Conversation> conversations = new ArrayList<>();
+        conversations.add(conversation);
+        when(userServiceMock.getUserById(1L)).thenReturn(user1);
+        when(user1.getId()).thenReturn(1L);
+        when(chatServiceMock.getAllConversations(1L)).thenReturn(conversations);
+        when(message.getTimeStamp()).thenReturn(LocalDateTime.now());
+        ResponseEntity<List<ConversationDto>> responseEntity = usersApiController.getAllConversations(1L);
+        assertEquals(1, responseEntity.getBody().size());
+    }
+
+    @Test
+    void testGetAllMessages() throws Exception {
+        ChatMessage message1 = ChatMessage.builder().sender(user1).receiver(user2).message("Some text").timeStamp(LocalDateTime.now()).build();
+        ChatMessage message2 = ChatMessage.builder().sender(user1).receiver(user2).message("Some text1").timeStamp(LocalDateTime.now()).build();
+        List<ChatMessage> messages = Arrays.asList(message1, message2);
+        when(userServiceMock.getUserById(1L)).thenReturn(user1);
+        when(userServiceMock.getUserById(2L)).thenReturn(user2);
+        when(user1.getId()).thenReturn(1L);
+        when(user2.getId()).thenReturn(2L);
+        when(chatServiceMock.getAllMessages(user1, user2)).thenReturn(messages);
+        ResponseEntity<List<ChatMessageDto>> responseEntity = usersApiController.getAllMessages(user1.getId(), user2.getId());
+        assertEquals(2, responseEntity.getBody().size());
+    }
+
+    @Test
+    void testUpdateUserLocation() throws Exception {
+        CoordinateDto coordinateDto = new CoordinateDto();
+        coordinateDto.setLongitude(4.5555);
+        coordinateDto.setLatitude(47.5555);
+        when(geometryFactoryMock.createPoint(Mockito.any(Coordinate.class))).thenReturn(point);
+        assertEquals(HttpStatus.NO_CONTENT, usersApiController.updateLocation(1L, coordinateDto).getStatusCode());
+        verify(userServiceMock).updateUserLocation(1L, point);
+    }
+
 }

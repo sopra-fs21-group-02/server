@@ -113,7 +113,7 @@ public class UsersApiController implements UsersApi {
             return ResponseEntity.ok(ChatMessageDTOMapper.INSTANCE.toDTO(messages));
         }
         catch (NoSuchElementException exception) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -125,7 +125,7 @@ public class UsersApiController implements UsersApi {
             return ResponseEntity.ok(ConversationDTOMapper.INSTANCE.toDTO(conversations));
         }
         catch (NoSuchElementException exception) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
