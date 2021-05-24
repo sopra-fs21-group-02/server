@@ -49,7 +49,7 @@ public interface SpatialDTOMapper {
         if(coordinateDtoArray == null){
             return null;
         }
-        List<CoordinateDto> list = new ArrayList<CoordinateDto>( coordinateDtoArray.length );
+        List<CoordinateDto> list = new ArrayList<>( coordinateDtoArray.length );
         for(Coordinate coordinate :coordinateDtoArray){
             list.add(new CoordinateDto().longitude(coordinate.getX()).latitude(coordinate.getY()));
         }

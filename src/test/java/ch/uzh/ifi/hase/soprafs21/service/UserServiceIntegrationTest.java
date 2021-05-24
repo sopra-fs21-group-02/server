@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class UserServiceIntegrationTest {
+class UserServiceIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -165,4 +165,5 @@ public class UserServiceIntegrationTest {
         this.userService.deleteUser(2L);
         assertEquals(0, conversationRepository.findByUser(userRepository.findById(1L).get()).size());
     }
+
 }

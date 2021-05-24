@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ParkServiceIntegrationTest {
+class ParkServiceIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -42,6 +42,9 @@ public class ParkServiceIntegrationTest {
 
     @Autowired
     private ParkService parkService;
+
+    @Autowired
+    private UserService userService;
 
     @Mock
     private Authentication authenticationMock;
@@ -141,5 +144,16 @@ public class ParkServiceIntegrationTest {
         String actualMessage = ex.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void testDeleteParkCreator(){
+        Park persistedPark = this.parkService.addPark(park);
+        assertNotNull(this.parkRepository.findById(persistedPark.getId()));
+        assertEquals(1L, persistedPark.getCreator().getId());
+
+        this.userService.deleteUser(persistedPark.getCreator().getId());
+        assertNotNull(this.parkRepository.findById(persistedPark.getId()));
+        assertNull(this.parkRepository.findById(persistedPark.getId()).get().getCreator());
     }
 }

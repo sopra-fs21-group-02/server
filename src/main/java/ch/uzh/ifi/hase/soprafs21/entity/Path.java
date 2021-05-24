@@ -1,9 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 import org.locationtech.jts.geom.LineString;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = "creator")
 @Entity
 @Table(name = "PATHS", schema="soprafs21")
 public class Path {
@@ -27,7 +25,7 @@ public class Path {
     @Column
     private Double distance;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn
     @ManyToOne
     @JsonIgnore
     private User creator;

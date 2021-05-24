@@ -1,11 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.OnlineStatus;
-import ch.uzh.ifi.hase.soprafs21.entity.Conversation;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.ChatMessageRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.ConversationRepository;
-import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserEditDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserLoginPostDto;
@@ -20,7 +18,6 @@ import io.jsonwebtoken.Claims;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +30,6 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * User Service

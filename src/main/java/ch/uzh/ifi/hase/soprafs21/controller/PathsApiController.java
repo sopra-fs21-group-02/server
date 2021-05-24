@@ -54,11 +54,11 @@ public class PathsApiController extends SpatialApiController implements PathsApi
         if (walkingRouteDto.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id is not allowed in POST");
         }
-        if (!userService.isRequesterAndAuthenticatedUserTheSame(walkingRouteDto.getCreator().getId())){
+        if (!userService.isRequesterAndAuthenticatedUserTheSame(walkingRouteDto.getCreator().getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not permitted to add this Route");
         }
 
-        Path path = PathDTOMapper.INSTANCE.toPathEntity(walkingRouteDto, geometryFactory,userService.getUserById(walkingRouteDto.getCreator().getId()));
+        Path path = PathDTOMapper.INSTANCE.toPathEntity(walkingRouteDto, geometryFactory, userService.getUserById(walkingRouteDto.getCreator().getId()));
         pathService.savePath(path);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 

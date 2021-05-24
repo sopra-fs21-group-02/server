@@ -1,15 +1,13 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
-import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.Park;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.AreaFilterDto;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.ParkDto;
-import ch.uzh.ifi.hase.soprafs21.rest.mapper.DogDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.ParkDTOMapper;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.SpatialDTOMapper;
-import ch.uzh.ifi.hase.soprafs21.rest.mapper.UserDTOMapper;
-import ch.uzh.ifi.hase.soprafs21.service.*;
+import ch.uzh.ifi.hase.soprafs21.service.ParkService;
+import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -18,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.server.ResponseStatusException;
 

@@ -10,7 +10,6 @@ import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 
@@ -81,6 +80,22 @@ public class User {
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private Set<Tag> tags;
 
+    @OneToMany(mappedBy = "creator")
+    private Set<Park> parks;
+
+    @OneToMany(mappedBy = "creator")
+    private Set<Path> paths;
+
     @Column
     private Point lastUserLocation;
+
+    @PreRemove
+    private void preRemove() {
+        for (Park park : parks){
+                park.setCreator(null);
+            }
+            for (Path path : paths){
+                path.setCreator(null);
+            }
+    }
 }

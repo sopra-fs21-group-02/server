@@ -136,7 +136,7 @@ class UsersApiControllerTest {
         given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.TRUE);
 
         ResponseEntity<Void> responseEntity = usersApiController.usersUserIdLogoutPut(mockUserId);
-        verify(userServiceMock).logoutUser(eq(mockUserId));
+        verify(userServiceMock).logoutUser(mockUserId);
         assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
     }
 
@@ -242,7 +242,7 @@ class UsersApiControllerTest {
         AreaFilterDto areaFilter = new AreaFilterDto();
         areaFilter.addVisibleAreaItem(coordinateDto1).addVisibleAreaItem(coordinateDto2).addVisibleAreaItem(coordinateDto3);
         Coordinate [] coordinates = SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea());
-        when(geometryFactoryMock.createPolygon(eq (coordinates))).thenReturn(polygon);
+        when(geometryFactoryMock.createPolygon(coordinates)).thenReturn(polygon);
 
         List<User> listUsers = Arrays.asList(user1, user2);
         when(userServiceMock.getAllUsersInArea(any())).thenReturn(listUsers);
@@ -258,7 +258,7 @@ class UsersApiControllerTest {
         given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.TRUE);
 
         ResponseEntity<Void> responseEntity = usersApiController.usersUserIdDelete(mockUserId);
-        verify(userServiceMock).deleteUser(eq(mockUserId));
+        verify(userServiceMock).deleteUser(mockUserId);
         assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
     }
 
@@ -284,7 +284,7 @@ class UsersApiControllerTest {
         dogDto.setBreed("B1");
         dogDto.setSex(GenderDto.MALE);
 
-        when(userServiceMock.getUserById(eq(1L))).thenReturn(user1);
+        when(userServiceMock.getUserById(1L)).thenReturn(user1);
         ResponseEntity<Void> responseEntity = usersApiController.addDog(1L, dogDto, null);
         verify(dogServiceMock).addDog(Mockito.any(Dog.class));
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -309,7 +309,7 @@ class UsersApiControllerTest {
         given(userServiceMock.isRequesterAndAuthenticatedUserTheSame(mockUserId)).willReturn(Boolean.TRUE);
 
         ResponseEntity<Void> responseEntity = usersApiController.usersUserIdPut(mockUserId,mockedEditDto);
-        verify(userServiceMock).updateUserDetails(eq(mockUserId),eq(mockedEditDto));
+        verify(userServiceMock).updateUserDetails(mockUserId, mockedEditDto);
         assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
     }
 
@@ -341,7 +341,7 @@ class UsersApiControllerTest {
         TagDto tagDto = new TagDto();
         tagDto.setName("Something");
 
-        when(userServiceMock.getUserById(eq(1L))).thenReturn(user1);
+        when(userServiceMock.getUserById(1L)).thenReturn(user1);
         ResponseEntity<Void> responseEntity = usersApiController.addTag(1L, tagDto);
         verify(tagServiceMock).addTag(Mockito.any(Tag.class));
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -360,7 +360,7 @@ class UsersApiControllerTest {
     @Test
     void testDeleteTag() throws Exception {
         assertEquals(HttpStatus.NO_CONTENT, usersApiController.deleteTag(1L, 1L).getStatusCode());
-        verify(tagServiceMock).deleteTag(eq(1L), eq(1L));
+        verify(tagServiceMock).deleteTag(1L,1L);
     }
 
     @Test

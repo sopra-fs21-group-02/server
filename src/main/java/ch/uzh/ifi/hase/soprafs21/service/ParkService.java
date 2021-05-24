@@ -1,11 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
-import ch.uzh.ifi.hase.soprafs21.entity.Dog;
 import ch.uzh.ifi.hase.soprafs21.entity.Park;
-import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.repository.DogRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.ParkRepository;
-import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
