@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @Sql(value = {"/data_init.sql"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class TagServiceIntegrationTest {
+class TagServiceIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;

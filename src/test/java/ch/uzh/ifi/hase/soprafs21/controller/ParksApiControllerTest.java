@@ -75,7 +75,7 @@ class ParksApiControllerTest {
 
     @Test
     void testAddParkSuccess() throws Exception {
-        when(userServiceMock.getUserById(eq(1L))).thenReturn(creator);
+        when(userServiceMock.getUserById(1L)).thenReturn(creator);
         when(geometryFactoryMock.createPoint(Mockito.any(Coordinate.class))).thenReturn(location);
         ResponseEntity<Void> responseEntity = parksApiController.addPark(parkDto);
         verify(parkServiceMock).addPark(Mockito.any(Park.class));
@@ -107,7 +107,7 @@ class ParksApiControllerTest {
         AreaFilterDto areaFilter = new AreaFilterDto();
         areaFilter.addVisibleAreaItem(coordinateDto1).addVisibleAreaItem(coordinateDto2).addVisibleAreaItem(coordinateDto3);
         Coordinate [] coordinates = SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea());
-        when(geometryFactoryMock.createPolygon(eq (coordinates))).thenReturn(polygon);
+        when(geometryFactoryMock.createPolygon(coordinates)).thenReturn(polygon);
 
         when(park1Mock.getCreator()).thenReturn(creator);
         when(park2Mock.getCreator()).thenReturn(creator);
@@ -122,6 +122,6 @@ class ParksApiControllerTest {
     @Test
     void testDeletePark() throws Exception {
         assertEquals(HttpStatus.NO_CONTENT, parksApiController.deletePark(1L).getStatusCode());
-        verify(parkServiceMock).deletePark(eq(1L));
+        verify(parkServiceMock).deletePark(1L);
     }
 }

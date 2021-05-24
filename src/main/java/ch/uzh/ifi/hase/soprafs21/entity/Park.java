@@ -1,9 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Entity
+@EqualsAndHashCode(exclude = "creator")
 @Table(name = "PARKS", schema="soprafs21")
 public class Park {
 
@@ -26,7 +24,7 @@ public class Park {
     @Column
     private String description;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn
     @ManyToOne
     private User creator;
 }

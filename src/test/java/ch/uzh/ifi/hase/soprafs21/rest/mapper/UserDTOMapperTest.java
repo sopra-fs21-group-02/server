@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * DTOMapperTest
  * Tests if the mapping between the internal and the external/API representation works.
  */
-public class UserDTOMapperTest {
+class UserDTOMapperTest {
     @Test
-    public void toOverviewDTO() {
+    void toOverviewDTO() {
         Point newLocation = new GeometryFactory().createPoint(new Coordinate(8.461859195948641, 47.35997146785179));
         User user = User.builder().id(1L).email("email1").name("name1").profilePictureURL("url1").status(OnlineStatus.ONLINE).lastUserLocation(newLocation).build();
 

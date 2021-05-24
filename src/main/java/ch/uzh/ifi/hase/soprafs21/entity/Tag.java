@@ -15,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TAGS", schema="soprafs21")
-public class Tag {
+public class  Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

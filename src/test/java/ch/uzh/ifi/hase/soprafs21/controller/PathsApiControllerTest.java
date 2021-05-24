@@ -33,7 +33,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
-public class PathsApiControllerTest {
+class PathsApiControllerTest {
 
     @InjectMocks
     private PathsApiController pathsApiController;
@@ -166,7 +166,7 @@ public class PathsApiControllerTest {
         AreaFilterDto areaFilter = new AreaFilterDto();
         areaFilter.addVisibleAreaItem(coordinateDto1).addVisibleAreaItem(coordinateDto2).addVisibleAreaItem(coordinateDto3);
         Coordinate[] coordinates = SpatialDTOMapper.INSTANCE.getCoordinates(areaFilter.getVisibleArea());
-        when(geometryFactoryMock.createPolygon(eq (coordinates))).thenReturn(polygon);
+        when(geometryFactoryMock.createPolygon(coordinates)).thenReturn(polygon);
 
         when(path1Mock.getCreator()).thenReturn(creator);
         when(path2Mock.getCreator()).thenReturn(creator);

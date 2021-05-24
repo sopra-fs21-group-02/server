@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * DTOMapperTest
  * Tests if the mapping between the internal and the external/API representation works.
  */
-public class ChatMessageDTOMapperTest {
+class ChatMessageDTOMapperTest {
     @Test
-    public void testToDTO() {
+    void testToDTO() {
         User sender = User.builder().id(1l).email("email1").name("name1").profilePictureURL("url1").build();
         User receiver = User.builder().id(2l).email("email2").name("name2").profilePictureURL("url2").build();
 
