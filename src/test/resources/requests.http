@@ -135,3 +135,66 @@ Content-Type: application/json
 }
 
 ###
+
+###
+POST {{backend-url}}/v1/paths
+Authorization: Bearer {{email}}
+Content-Type: application/json
+
+{
+    "creator": {
+        "id": 1,
+        "email": "nehasingh1491@gmail.com",
+        "name": "Neha Singh",
+        "profilePicture": "test",
+        "status": "ONLINE",
+        "latestLocation": {
+            "longitude": 47.417190,
+            "latitude": 8.543303
+        }
+    },
+    "listOfCoordinates": [
+        {
+            "longitude": 47.371412,
+            "latitude": 8.451911
+        },
+        {
+            "longitude": 47.364950,
+            "latitude": 8.457969
+        }
+    ],
+    "distance": 1.23,
+    "description":"Path for daily walk"
+}
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 201, "Response status is not 201");
+});
+%}
+
+###
+GET {{backend-url}}/v1/paths?visibleArea%5B0%5D.longitude=8.432962&visibleArea%5B0%5D.latitude=47.378622&visibleArea%5B1%5D.longitude=8.474358&visibleArea%5B1%5D.latitude=47.373311&visibleArea%5B2%5D.longitude=8.470429&visibleArea%5B2%5D.latitude=47.357797&visibleArea%5B3%5D.longitude=8.437273&visibleArea%5B3%5D.latitude=47.362384&visibleArea%5B4%5D.longitude=8.432962&visibleArea%5B4%5D.latitude=47.378622
+Authorization: Bearer {{email}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Check if the new path is included", function (){
+    client.assert(response.body.length === 2 );
+});
+%}
+
+
+###
+DELETE {{backend-url}}/v1/paths/1
+Authorization: Bearer {{email}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+%}
+###
