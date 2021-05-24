@@ -68,7 +68,7 @@ class MessageApiControllerTest {
         when(userServiceMock.getUserById(2L)).thenReturn(receiverMock);
 
         ResponseEntity<Void> responseEntity = messageApiController.sendMessage(message);
-        verify(chatServiceMock).createMessage(senderMock, receiverMock, eq(message.getMessage()));
+        verify(chatServiceMock).createMessage(eq(senderMock), eq(receiverMock), eq(message.getMessage()));
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     }
 }
