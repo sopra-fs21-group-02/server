@@ -81,11 +81,7 @@ public class UsersApiController implements UsersApi {
                 //call method to save or update user in database
                 userLoginPostDto = userService.loginOrRegisterUser(token.getPayload(), refreshToken);
                 //create cookie to hold refresh token
-                refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
-                        .httpOnly(true)
-                        .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME / 1000) //convert expiry time from ms to sec
-                        .build();
-
+                refreshTokenCookie = this.buildRefreshTokenCookie(refreshToken);
             }
             else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
@@ -160,10 +156,7 @@ public class UsersApiController implements UsersApi {
         userLoginPostDto.setAccessTokenExpiry(accessTokenExpiry.toInstant().atOffset(ZoneOffset.ofHours(2)));
         userLoginPostDto.setIsNewUser(Boolean.FALSE);
         //create cookie to hold refresh token
-        newRefreshTokenCookie = ResponseCookie.from("refresh_token", newRefreshToken)
-                .httpOnly(true)
-                .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME / 1000) //convert expiry time from ms to sec
-                .build();
+        newRefreshTokenCookie = this.buildRefreshTokenCookie(newRefreshToken);
 
         return ResponseEntity
                 .ok()
@@ -286,5 +279,14 @@ public class UsersApiController implements UsersApi {
         tagService.addTag(tagToAdd);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    private ResponseCookie buildRefreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from("refresh_token", refreshToken)
+                             .httpOnly(true)
+                             .secure(true)
+                             .sameSite("None")
+                             .maxAge(SecurityConstants.REFRESH_EXPIRATION_TIME / 1000) //convert expiry time from ms to sec
+                             .build();
     }
 }
