@@ -59,8 +59,7 @@ public class ParkDto  implements Serializable {
    * Get creatorId
    * @return creatorId
   */
-  @ApiModelProperty(required = true, readOnly = true, value = "")
-  @NotNull
+  @ApiModelProperty(readOnly = true, value = "")
 
 
   public Long getCreatorId() {
