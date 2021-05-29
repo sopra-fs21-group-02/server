@@ -11,10 +11,6 @@ import java.util.Date;
 @Component
 public class JwtTokenUtil {
 
-
-    public JwtTokenUtil() {
-    }
-
     public String generateToken(String emailId) {
 
         Long now = System.currentTimeMillis();
