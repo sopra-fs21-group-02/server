@@ -1,6 +1,7 @@
 
 # FriendlyFetch — Server Application
 ![Introduction](./docs/introduction_picture.png)
+
 Software Praktikum FS 2021 — Group 2
 
 ## Project Overview
