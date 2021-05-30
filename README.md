@@ -1,10 +1,11 @@
 
 # FriendlyFetch — Server Application
 ![Introduction](./docs/introduction_picture.png)
+
 Software Praktikum FS 2021 — Group 2
 
 ## Project Overview
-FriendlyFetch is a community app for dog owners. It allows them to find other dog owners nearby, share information about dog-friendly parks and walking routes on a map.
+FriendlyFetch is a community app for dog owners. It allows them to find and talk to other dog owners nearby, share information about dog-friendly parks and walking routes on a map, and indicate what they are looking for from others or have to offer to the community.
 ## Technologies
 * Gradle  
   Project build and packaging is based on standard gradle tasks. A list of the most useful ones can be found [here](#build-commands).
@@ -64,4 +65,4 @@ FriendlyFetch was developed during the course "Software Praktikum" in the spring
 
 We'd also like to think our TA Alain Küng and the other groups who have provided feedback during milestone presentations and the beta testing phase.
 ## License
-This project is licensed under the [MIT License](./LICENSE.md)  - see the [LICENSE.md](./LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](./LICENSE.md) file for details.
