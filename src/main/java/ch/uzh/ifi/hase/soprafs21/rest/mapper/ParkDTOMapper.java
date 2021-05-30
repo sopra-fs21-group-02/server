@@ -17,7 +17,7 @@ public interface ParkDTOMapper {
     SpatialDTOMapper SPATIAL_MAPPER = Mappers.getMapper(SpatialDTOMapper.class);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(expression = "java(entity.getCreator().getId())", target = "creatorId")
+    @Mapping(expression = "java(entity.getCreator() != null? entity.getCreator().getId(): null)", target = "creatorId")
     @Mapping(source = "coordinate", target = "coordinate")
     @Mapping(source = "description", target = "description")
     ParkDto toParkDTO(Park entity);
